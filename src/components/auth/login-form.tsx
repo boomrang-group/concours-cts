@@ -1,3 +1,4 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,6 +16,9 @@ import {
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   email: z.string().email("Adresse e-mail invalide."),
@@ -23,6 +27,10 @@ const formSchema = z.object({
 });
 
 export default function LoginForm() {
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -32,14 +40,27 @@ export default function LoginForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
     console.log(values);
-    // Handle login (e.g., API call, set auth token)
-    // For now, mock successful login:
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1500)); 
+    
+    // Mock successful login for now
+    // In a real app, you would set an auth token here
     // if (typeof window !== "undefined") {
     //   localStorage.setItem('userToken', 'fake-token');
-    //   window.location.href = '/dashboard'; // Redirect to dashboard
     // }
+
+    toast({
+      title: "Connexion Réussie !",
+      description: "Vous allez être redirigé vers votre tableau de bord.",
+      variant: "default",
+    });
+
+    form.reset(); 
+    setIsLoading(false);
+    router.push("/dashboard"); 
   }
 
   return (
@@ -99,8 +120,8 @@ export default function LoginForm() {
         </div>
 
 
-        <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-          Se connecter
+        <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90" disabled={isLoading}>
+          {isLoading ? "Connexion en cours..." : "Se connecter"}
         </Button>
         <p className="text-center text-sm text-muted-foreground">
           Pas encore de compte ?{" "}
