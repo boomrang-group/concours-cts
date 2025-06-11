@@ -30,7 +30,10 @@ const formSchema = z.object({
   password: z.string().min(8, "Le mot de passe doit contenir au moins 8 caractères."),
   confirmPassword: z.string(),
   groupName: z.string().optional(),
-  groupMembers: z.number().min(1).max(5).optional(),
+  groupMembers: z.preprocess(
+    (val) => (val === "" ? undefined : Number(val)), // Convert empty string to undefined, otherwise to number
+    z.number().min(1, "Le nombre de membres doit être au moins 1.").max(5, "Le nombre de membres ne peut pas dépasser 5.").optional()
+  ),
   terms: z.boolean().refine(val => val === true, {
     message: "Vous devez accepter les termes et conditions.",
   }),
@@ -40,8 +43,8 @@ const formSchema = z.object({
 }).refine(data => data.accountType === "individual" || (data.accountType === "group" && data.groupName && data.groupName.length > 0), {
   message: "Le nom du groupe est requis pour un compte de groupe.",
   path: ["groupName"],
-}).refine(data => data.accountType === "individual" || (data.accountType === "group" && data.groupMembers && data.groupMembers >= 1 && data.groupMembers <= 5), {
-  message: "Le nombre de membres du groupe doit être entre 1 et 5.",
+}).refine(data => data.accountType === "individual" || (data.accountType === "group" && data.groupMembers !== undefined), {
+  message: "Le nombre de membres du groupe est requis.",
   path: ["groupMembers"],
 });
 
@@ -58,6 +61,8 @@ export default function SignupForm() {
       password: "",
       confirmPassword: "",
       terms: false,
+      groupName: "", // Initialize groupName
+      groupMembers: "" as unknown as number, // Initialize groupMembers as an empty string for the input
     },
   });
 
@@ -139,7 +144,23 @@ export default function SignupForm() {
                 <FormItem>
                   <FormLabel>Nombre de membres (max 5)</FormLabel>
                   <FormControl>
-                    <Input type="number" min="1" max="5" placeholder="Ex: 3" {...field} onChange={e => field.onChange(parseInt(e.target.value,10))} />
+                    <Input 
+                      type="number" 
+                      min="1" 
+                      max="5" 
+                      placeholder="Ex: 3" 
+                      {...field} 
+                      value={field.value === undefined || field.value === null ? "" : String(field.value)}
+                      onChange={e => {
+                        const val = e.target.value;
+                        if (val === "") {
+                           field.onChange(undefined); // Store undefined for empty
+                        } else {
+                           const num = parseInt(val, 10);
+                           field.onChange(isNaN(num) ? undefined : num);
+                        }
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
