@@ -17,7 +17,7 @@ import {
   PersonStandingIcon,
   MusicIcon,
   MessageSquareTextIcon,
-  DramaIcon, // Corrected: Was MaskIcon
+  DramaIcon,
   HeartPulseIcon,
   ActivityIcon,
   ChefHatIcon,
@@ -33,7 +33,7 @@ const categories = [
   { id: "danse", name: "Danse", icon: <PersonStandingIcon className="mr-2 h-4 w-4"/> },
   { id: "musique", name: "Musique", icon: <MusicIcon className="mr-2 h-4 w-4"/> },
   { id: "art_oratoire", name: "Art Oratoire", icon: <MessageSquareTextIcon className="mr-2 h-4 w-4"/> },
-  { id: "theatre", name: "Théâtre", icon: <DramaIcon className="mr-2 h-4 w-4"/> }, // Corrected: Was MaskIcon
+  { id: "theatre", name: "Théâtre", icon: <DramaIcon className="mr-2 h-4 w-4"/> },
   { id: "fitness_yoga", name: "Fitness & Yoga", icon: <HeartPulseIcon className="mr-2 h-4 w-4"/> },
   { id: "gymnastique", name: "Gymnastique", icon: <ActivityIcon className="mr-2 h-4 w-4"/> },
   { id: "cuisine", name: "Cuisine", icon: <ChefHatIcon className="mr-2 h-4 w-4"/> },
@@ -89,7 +89,7 @@ export default function ResultsDisplay() {
           {categories.map(cat => (
             <TabsContent key={cat.id} value={cat.id}>
               {rankingsData[cat.id] && rankingsData[cat.id].length > 0 ? (
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto pt-2">
                   <Table>
                     <TableHeader>
                       <TableRow>
