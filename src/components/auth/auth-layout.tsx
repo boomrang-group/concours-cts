@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import Image from 'next/image';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface AuthLayoutProps {
   children: ReactNode;
@@ -36,21 +37,5 @@ const AuthLayout = ({ children, title, description }: AuthLayoutProps) => {
     </div>
   );
 };
-
-// Need to manually import Card and CardContent as they are used here.
-// This is a workaround for the current setup.
-// Ideally, these components would be properly exported and imported.
-
-const Card = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={`rounded-lg border bg-card text-card-foreground shadow-sm ${className}`}
-    {...props}
-  />
-);
-
-const CardContent = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={`p-6 pt-0 ${className}`} {...props} />
-);
-
 
 export default AuthLayout;
