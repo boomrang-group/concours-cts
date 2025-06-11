@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DownloadIcon, EyeIcon, TrophyIcon, StarIcon } from "lucide-react";
+import { DownloadIcon, EyeIcon, TrophyIcon, StarIcon, AwardIcon } from "lucide-react";
 import Image from "next/image";
 
 // Mock data
