@@ -1,25 +1,43 @@
+
+'use client';
+
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import LiveBattlePlayer from "@/components/competition/live-battle-player";
 import VotingArea from "@/components/competition/voting-area";
-import { TrophyIcon, UsersIcon, PlayCircleIcon, CheckSquareIcon } from "lucide-react";
+import { TrophyIcon, UsersIcon, PlayCircleIcon, CheckSquareIcon, ArrowLeftIcon, EyeIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 // Mock data
 const challenges = [
-  { id: 1, title: "Défi Innovation Tech", category: "Technologie", status: "Ouvert aux votes", submissions: 25, image: "https://placehold.co/600x400.png", dataAiHint: "technology abstract" },
-  { id: 2, title: "Concours d'Art Numérique", category: "Art & Culture", status: "Soumissions en cours", submissions: 18, image: "https://placehold.co/600x400.png", dataAiHint: "digital art" },
-  { id: 3, title: "Projet Impact Social", category: "Social", status: "Évaluation par le jury", submissions: 32, image: "https://placehold.co/600x400.png", dataAiHint: "community people" },
+  { id: "c1", title: "Défi Innovation Tech", category: "Technologie", status: "Ouvert aux votes", submissions: 25, image: "https://placehold.co/600x400.png", dataAiHint: "technology abstract" },
+  { id: "c2", title: "Concours d'Art Numérique", category: "Art & Culture", status: "Soumissions en cours", submissions: 18, image: "https://placehold.co/600x400.png", dataAiHint: "digital art" },
+  { id: "c3", title: "Projet Impact Social", category: "Social", status: "Évaluation par le jury", submissions: 32, image: "https://placehold.co/600x400.png", dataAiHint: "community people" },
 ];
 
-const liveBattles = [
-   { id: 1, title: "Duel des Développeurs: App vs App", time: "Aujourd'hui à 18:00", playerA: "Équipe Alpha", playerB: "Équipe Gamma", image: "https://placehold.co/600x400.png", dataAiHint: "coding screen" },
+interface LiveBattle {
+  id: number;
+  title: string;
+  time: string;
+  playerA: string;
+  playerB: string;
+  image: string;
+  dataAiHint: string;
+  description?: string;
+}
+
+const liveBattles: LiveBattle[] = [
+   { id: 1, title: "Duel des Développeurs: App vs App", time: "Aujourd'hui à 18:00", playerA: "Équipe Alpha", playerB: "Équipe Gamma", image: "https://placehold.co/600x400.png", dataAiHint: "coding screen", description: "Un affrontement épique entre deux applications révolutionnaires. Qui remportera les faveurs du public ?" },
+   { id: 2, title: "Battle Design: UI/UX Challenge", time: "Demain à 16:00", playerA: "Créatifs Unis", playerB: "Pixel Parfait", image: "https://placehold.co/600x400.png", dataAiHint: "design interface", description: "Voyez s'affronter deux visions du design d'interface. Ergonomie contre esthétisme pur !" },
 ];
 
 
 export default function CompetitionPage() {
+  const [selectedBattle, setSelectedBattle] = useState<LiveBattle | null>(null);
+
   return (
     <div className="container py-8 md:py-12">
       <div className="text-center mb-12">
@@ -33,7 +51,7 @@ export default function CompetitionPage() {
       <Tabs defaultValue="challenges" className="w-full">
         <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 mb-8 max-w-lg mx-auto">
           <TabsTrigger value="challenges"><CheckSquareIcon className="mr-2 h-4 w-4"/>Défis & Soumissions</TabsTrigger>
-          <TabsTrigger value="live-battles"><PlayCircleIcon className="mr-2 h-4 w-4"/>Battles en Direct</TabsTrigger>
+          <TabsTrigger value="live-battles" onClick={() => setSelectedBattle(null)}><PlayCircleIcon className="mr-2 h-4 w-4"/>Battles en Direct</TabsTrigger>
           <TabsTrigger value="jury-space" className="hidden md:inline-flex"><UsersIcon className="mr-2 h-4 w-4"/>Espace Jury</TabsTrigger>
         </TabsList>
 
@@ -66,7 +84,7 @@ export default function CompetitionPage() {
                     </Link>
                   ) : (
                     <Link href={`/competition/${challenge.id}`} passHref className="w-full">
-                      <Button className="w-full" variant="outline">
+                       <Button className="w-full" variant="outline" disabled={true}> {/* Disabled until challenge detail page exists */}
                         Voir les détails
                       </Button>
                     </Link>
@@ -74,27 +92,63 @@ export default function CompetitionPage() {
                 </CardFooter>
               </Card>
             ))}
+             {challenges.length === 0 && (
+              <div className="text-center py-12 col-span-full">
+                <CheckSquareIcon className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+                <h3 className="text-xl font-semibold mb-2">Aucun défi pour le moment.</h3>
+                <p className="text-muted-foreground">Revenez bientôt pour découvrir les défis !</p>
+              </div>
+            )}
           </div>
         </TabsContent>
 
         <TabsContent value="live-battles">
-          {liveBattles.length > 0 ? liveBattles.map(battle => (
-            <Card key={battle.id} className="shadow-xl mb-8">
+          {selectedBattle ? (
+            <Card className="shadow-xl mb-8">
               <CardHeader>
-                <CardTitle className="font-headline text-2xl">{battle.title}</CardTitle>
-                <CardDescription>{battle.time} - {battle.playerA} vs {battle.playerB}</CardDescription>
+                <Button variant="outline" onClick={() => setSelectedBattle(null)} className="mb-4 self-start">
+                  <ArrowLeftIcon className="mr-2 h-4 w-4" /> Retour à la liste des battles
+                </Button>
+                <CardTitle className="font-headline text-2xl">{selectedBattle.title}</CardTitle>
+                <CardDescription>{selectedBattle.time} - {selectedBattle.playerA} vs {selectedBattle.playerB}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <LiveBattlePlayer videoSrc={battle.image} videoTitle={battle.title} dataAiHint={battle.dataAiHint} />
-                <VotingArea battleId={battle.id} />
+                <LiveBattlePlayer videoSrc={selectedBattle.image} videoTitle={selectedBattle.title} dataAiHint={selectedBattle.dataAiHint} />
+                <VotingArea battleId={selectedBattle.id} />
               </CardContent>
             </Card>
-          )) : (
+          ) : (
+            liveBattles.length > 0 ? (
+              <div className="space-y-6">
+                 <h2 className="text-2xl font-semibold text-center font-headline mb-6">Choisissez une Battle en Direct</h2>
+                {liveBattles.map(battle => (
+                  <Card key={battle.id} className="shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="relative h-48 md:h-full w-full md:col-span-1 rounded-l-md overflow-hidden">
+                             <Image src={battle.image} alt={battle.title} layout="fill" objectFit="cover" data-ai-hint={battle.dataAiHint} />
+                        </div>
+                        <div className="md:col-span-2 p-6 flex flex-col justify-between">
+                            <div>
+                                <CardTitle className="font-headline text-xl mb-1">{battle.title}</CardTitle>
+                                <CardDescription className="text-sm mb-1">{battle.time}</CardDescription>
+                                <CardDescription className="text-sm font-medium mb-2">{battle.playerA} vs {battle.playerB}</CardDescription>
+                                <p className="text-xs text-muted-foreground mb-3">{battle.description}</p>
+                            </div>
+                            <Button onClick={() => setSelectedBattle(battle)} className="w-full md:w-auto self-end bg-primary text-primary-foreground hover:bg-primary/90">
+                                <PlayCircleIcon className="mr-2 h-4 w-4" /> Regarder et Voter
+                            </Button>
+                        </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            ) : (
             <div className="text-center py-12">
               <PlayCircleIcon className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
               <h3 className="text-xl font-semibold mb-2">Aucune battle en direct pour le moment.</h3>
               <p className="text-muted-foreground">Revenez bientôt pour assister aux prochains duels !</p>
             </div>
+            )
           )}
         </TabsContent>
         
@@ -109,7 +163,7 @@ export default function CompetitionPage() {
               <p className="mb-4 text-muted-foreground">
                 Si vous êtes membre du jury, veuillez vous connecter pour accéder à votre espace d'évaluation.
               </p>
-              <Link href="/jury/login"> {/* Assuming a specific jury login */}
+              <Link href="/jury/login">
                 <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
                   Accéder à l'Espace Jury
                 </Button>
@@ -121,3 +175,5 @@ export default function CompetitionPage() {
     </div>
   );
 }
+
+    
