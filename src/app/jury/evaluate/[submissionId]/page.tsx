@@ -12,7 +12,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils"; // Added import
+import { cn } from "@/lib/utils"; 
 
 // Mock submission data - in a real app, fetch this based on submissionId
 const mockSubmissionsData: { [key: string]: any } = {
@@ -60,7 +60,7 @@ const mockSubmissionsData: { [key: string]: any } = {
     description: "Un programme d'alphabétisation mobile pour les communautés rurales, utilisant des tablettes et du contenu éducatif adapté.",
     submittedBy: "Les Bienfaiteurs",
     fileType: "video",
-    fileUrl: "https://placehold.co/800x450.png",
+    fileUrl: "https://placehold.co/800x450.mp4", // Using a common video placeholder extension
     dataAiHint: "community video",
      criteria: [
       { id: "relevance", name: "Pertinence Sociale", score: 80 },
@@ -78,13 +78,11 @@ const FileDisplay = ({ fileType, fileUrl, title, dataAiHint }: { fileType: strin
       return <Image src={fileUrl} alt={`Aperçu de ${title}`} width={600} height={400} className="rounded-md shadow-md object-cover mx-auto" data-ai-hint={dataAiHint} />;
     case 'video':
       return (
-        <div className="aspect-video bg-muted rounded-md flex flex-col items-center justify-center text-muted-foreground">
-          <VideoIcon className="h-16 w-16 mb-2" />
-          <p>Aperçu vidéo de "{title}"</p>
-          <p className="text-xs">(Lecteur vidéo à implémenter)</p>
-          <Button variant="outline" size="sm" className="mt-2" asChild>
-            <a href={fileUrl} target="_blank" rel="noopener noreferrer">Voir la vidéo</a>
-          </Button>
+        <div className="aspect-video w-full max-w-2xl mx-auto bg-muted rounded-md shadow-md overflow-hidden">
+          <video src={fileUrl} controls className="w-full h-full object-contain" title={`Vidéo: ${title}`}>
+            Votre navigateur ne supporte pas l'élément vidéo.
+            <a href={fileUrl} target="_blank" rel="noopener noreferrer">Télécharger la vidéo</a>
+          </video>
         </div>
       );
     case 'document':
@@ -230,3 +228,4 @@ export default function EvaluateSubmissionPage() {
 }
 
     
+
