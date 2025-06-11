@@ -39,14 +39,20 @@ const Header = () => {
 
   // Placeholder for actual auth check
   useEffect(() => {
-    // Check local storage or auth context
-    // setIsLoggedIn(!!localStorage.getItem('userToken')); 
+    // Simulate checking auth status, e.g., from localStorage or an auth context
+    // For demonstration, let's toggle it to true after a delay to see the change
+    // const token = localStorage.getItem('userToken');
+    // setIsLoggedIn(!!token);
+
+    // To test the logged-in state visually without full auth:
+    // setTimeout(() => setIsLoggedIn(true), 3000);
   }, []);
 
   const handleLogout = () => {
     // Clear token, redirect, etc.
     setIsLoggedIn(false);
     // localStorage.removeItem('userToken');
+    // router.push('/'); // or login page
   };
 
   const closeSheet = () => setIsSheetOpen(false);
