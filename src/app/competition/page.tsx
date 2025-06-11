@@ -53,11 +53,23 @@ export default function CompetitionPage() {
                 </CardContent>
                 <CardFooter>
                   {challenge.status === "Ouvert aux votes" ? (
-                    <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">Voter Maintenant</Button>
+                    <Link href={`/competition/${challenge.id}/vote-challenge`} passHref className="w-full">
+                      <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                        Voter Maintenant
+                      </Button>
+                    </Link>
+                  ) : challenge.status === "Soumissions en cours" ? (
+                    <Link href="/submission" passHref className="w-full">
+                      <Button className="w-full" variant="outline">
+                        Soumettre un projet
+                      </Button>
+                    </Link>
                   ) : (
-                    <Button className="w-full" variant="outline" disabled={challenge.status !== "Soumissions en cours"}>
-                      {challenge.status === "Soumissions en cours" ? "Soumettre un projet" : "Voir les détails"}
-                    </Button>
+                    <Link href={`/competition/${challenge.id}`} passHref className="w-full">
+                      <Button className="w-full" variant="outline">
+                        Voir les détails
+                      </Button>
+                    </Link>
                   )}
                 </CardFooter>
               </Card>
