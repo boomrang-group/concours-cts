@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -5,33 +6,65 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DownloadIcon, EyeIcon, TrophyIcon, StarIcon, AwardIcon } from "lucide-react";
+import { 
+  DownloadIcon, 
+  EyeIcon, 
+  TrophyIcon, 
+  StarIcon, 
+  AwardIcon,
+  MicIcon,
+  FeatherIcon,
+  PersonStandingIcon,
+  MusicIcon,
+  MessageSquareTextIcon,
+  MaskIcon,
+  HeartPulseIcon,
+  ActivityIcon,
+  ChefHatIcon,
+  PaletteIcon,
+  PaintbrushIcon,
+  LightbulbIcon
+} from "lucide-react";
 import Image from "next/image";
 
-// Mock data
 const categories = [
-  { id: "tech", name: "Technologie", icon: <TrophyIcon className="mr-2 h-4 w-4"/> },
-  { id: "art", name: "Art & Culture", icon: <StarIcon className="mr-2 h-4 w-4"/> },
-  { id: "social", name: "Impact Social", icon: <TrophyIcon className="mr-2 h-4 w-4"/> },
-  { id: "environment", name: "Environnement", icon: <StarIcon className="mr-2 h-4 w-4"/> },
+  { id: "slam", name: "Slam", icon: <MicIcon className="mr-2 h-4 w-4"/> },
+  { id: "poesie", name: "Poésie", icon: <FeatherIcon className="mr-2 h-4 w-4"/> },
+  { id: "danse", name: "Danse", icon: <PersonStandingIcon className="mr-2 h-4 w-4"/> },
+  { id: "musique", name: "Musique", icon: <MusicIcon className="mr-2 h-4 w-4"/> },
+  { id: "art_oratoire", name: "Art Oratoire", icon: <MessageSquareTextIcon className="mr-2 h-4 w-4"/> },
+  { id: "theatre", name: "Théâtre", icon: <MaskIcon className="mr-2 h-4 w-4"/> },
+  { id: "fitness_yoga", name: "Fitness & Yoga", icon: <HeartPulseIcon className="mr-2 h-4 w-4"/> },
+  { id: "gymnastique", name: "Gymnastique", icon: <ActivityIcon className="mr-2 h-4 w-4"/> },
+  { id: "cuisine", name: "Cuisine", icon: <ChefHatIcon className="mr-2 h-4 w-4"/> },
+  { id: "modelisme", name: "Modélisme", icon: <PaletteIcon className="mr-2 h-4 w-4"/> },
+  { id: "peinture", name: "Peinture", icon: <PaintbrushIcon className="mr-2 h-4 w-4"/> },
+  { id: "entrepreneuriat", name: "Entrepreneuriat", icon: <LightbulbIcon className="mr-2 h-4 w-4"/> },
 ];
 
 const rankingsData: { [key: string]: any[] } = {
-  tech: [
-    { rank: 1, name: "Projet 'Quantum Leap'", team: "Les Visionnaires", score: 95.5, prize: "Incubation + 5000 USD", avatar: "https://placehold.co/40x40.png", dataAiHint: "person avatar" },
-    { rank: 2, name: "App 'ConnectLocal'", team: "Innovatech Plus", score: 92.1, prize: "Mentorate + 2000 USD", avatar: "https://placehold.co/40x40.png", dataAiHint: "person avatar" },
-    { rank: 3, name: "Plateforme 'EduSphere'", team: "Campus Coders", score: 89.7, prize: "Matériel Tech", avatar: "https://placehold.co/40x40.png", dataAiHint: "person avatar" },
+  entrepreneuriat: [
+    { rank: 1, name: "Projet 'StartUp Vision'", team: "Les Futurs CEO", score: 95.5, prize: "Incubation + 5000 USD", avatar: "https://placehold.co/40x40.png", dataAiHint: "business team" },
+    { rank: 2, name: "App 'Service Connect'", team: "Digital Innovators", score: 92.1, prize: "Mentorate + 2000 USD", avatar: "https://placehold.co/40x40.png", dataAiHint: "app interface" },
+    { rank: 3, name: "Plateforme 'EcoSolutions'", team: "Green Techies", score: 89.7, prize: "Matériel Tech", avatar: "https://placehold.co/40x40.png", dataAiHint: "eco friendly" },
   ],
-  art: [
-    { rank: 1, name: "Film d'animation 'Rêves Kinois'", team: "Studio Étoile", score: 96.2, prize: "Bourse de production", avatar: "https://placehold.co/40x40.png", dataAiHint: "person avatar" },
-    { rank: 2, name: "Expo Photo 'Visages du Congo'", team: "Objectif Congo", score: 91.5, prize: "Exposition en galerie", avatar: "https://placehold.co/40x40.png", dataAiHint: "person avatar" },
+  musique: [
+    { rank: 1, name: "Composition 'Harmonie Nouvelle'", team: "Mélodie Pure", score: 96.2, prize: "Enregistrement Studio", avatar: "https://placehold.co/40x40.png", dataAiHint: "musician" },
+    { rank: 2, name: "Chanson 'Voix du Congo'", team: "Rythmes d'Afrique", score: 91.5, prize: "Equipement Musical", avatar: "https://placehold.co/40x40.png", dataAiHint: "singer" },
   ],
-  social: [
-     { rank: 1, name: "Initiative 'Santé Pour Tous'", team: "Les Bienfaiteurs", score: 94.0, prize: "Financement projet + Partenariat ONG", avatar: "https://placehold.co/40x40.png", dataAiHint: "person avatar" },
+  peinture: [
+     { rank: 1, name: "Tableau 'Renaissance Africaine'", team: "Pinceau d'Or", score: 94.0, prize: "Exposition + Matériel d'Art", avatar: "https://placehold.co/40x40.png", dataAiHint: "painting art" },
   ],
-  environment: [
-     { rank: 1, name: "Projet 'Forêt Urbaine'", team: "Green Congo", score: 93.3, prize: "Soutien logistique + Visibilité", avatar: "https://placehold.co/40x40.png", dataAiHint: "person avatar" },
+  danse: [
+     { rank: 1, name: "Chorégraphie 'Origines'", team: "Corps en Mouvement", score: 93.3, prize: "Stage de Danse Pro", avatar: "https://placehold.co/40x40.png", dataAiHint: "dancer silhouette" },
   ],
+  cuisine: [
+    { rank: 1, name: "Plat Signature 'Saveurs du Fleuve'", team: "Toque Créative", score: 95.0, prize: "Stage Culinaire", avatar: "https://placehold.co/40x40.png", dataAiHint: "gourmet dish" },
+  ],
+  slam: [
+    { rank: 1, name: "Texte 'Paroles Vivantes'", team: "Le Verbe Haut", score: 92.5, prize: "Publication Recueil", avatar: "https://placehold.co/40x40.png", dataAiHint: "microphone stage" },
+  ],
+   // Add more mock data for other new categories as needed
 };
 
 export default function ResultsDisplay() {
@@ -44,10 +77,10 @@ export default function ResultsDisplay() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="tech" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-6">
+        <Tabs defaultValue="entrepreneuriat" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1 mb-6">
             {categories.map(cat => (
-              <TabsTrigger key={cat.id} value={cat.id} className="flex items-center text-xs sm:text-sm">
+              <TabsTrigger key={cat.id} value={cat.id} className="flex items-center text-xs sm:text-sm py-1.5 px-2">
                 {cat.icon}{cat.name}
               </TabsTrigger>
             ))}

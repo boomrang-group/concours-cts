@@ -1,3 +1,4 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,10 +34,18 @@ const submissionFormSchema = z.object({
 });
 
 const categories = [
-  { id: "tech", name: "Technologie & Innovation" },
-  { id: "art", name: "Art & Culture" },
-  { id: "social", name: "Impact Social" },
-  { id: "environment", name: "Environnement & Développement Durable" },
+  { id: "slam", name: "Slam" },
+  { id: "poesie", name: "Poésie" },
+  { id: "danse", name: "Danse" },
+  { id: "musique", name: "Musique" },
+  { id: "art_oratoire", name: "Art Oratoire (Débat)" },
+  { id: "theatre", name: "Théâtre" },
+  { id: "fitness_yoga", name: "Fitness et Yoga" },
+  { id: "gymnastique", name: "Gymnastique" },
+  { id: "cuisine", name: "Cuisine" },
+  { id: "modelisme", name: "Modélisme (Mode/Design)" },
+  { id: "peinture", name: "Peinture" },
+  { id: "entrepreneuriat", name: "Entrepreneuriat" },
 ];
 
 export default function SubmissionForm() {
