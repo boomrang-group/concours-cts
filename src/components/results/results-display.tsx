@@ -89,7 +89,7 @@ export default function ResultsDisplay() {
           {categories.map(cat => (
             <TabsContent key={cat.id} value={cat.id}>
               {rankingsData[cat.id] && rankingsData[cat.id].length > 0 ? (
-                <div className="overflow-x-auto pt-2">
+                <div className="overflow-x-auto pt-6">
                   <Table>
                     <TableHeader>
                       <TableRow>
