@@ -59,7 +59,7 @@ export default function WinnerProfileCard({ winner }: WinnerProfileCardProps) {
             <h5 className="text-sm font-semibold mb-2 text-left">Média du Projet:</h5>
             <a href={winner.media.url} target="_blank" rel="noopener noreferrer" className="block hover:opacity-80 transition-opacity">
               <div className="relative w-full h-40 rounded-md overflow-hidden bg-muted">
-                <Image src={winner.media.url} alt={winner.media.title} layout="fill" objectFit="cover" data-ai-hint={winner.media.dataAiHint}/>
+                <Image src={winner.media.url} alt={winner.media.title} fill className="object-cover" data-ai-hint={winner.media.dataAiHint}/>
                 <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
                    <ExternalLinkIcon className="h-8 w-8 text-white"/>
                 </div>

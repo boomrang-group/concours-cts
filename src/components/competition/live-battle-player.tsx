@@ -37,7 +37,7 @@ export default function LiveBattlePlayer({ videoSrc, videoTitle, dataAiHint }: L
     <Card className="overflow-hidden shadow-md">
       <CardContent className="p-0">
         <div className="aspect-video bg-black flex items-center justify-center relative group">
-          <Image src={videoSrc} alt={videoTitle} layout="fill" objectFit="cover" data-ai-hint={dataAiHint} />
+          <Image src={videoSrc} alt={videoTitle} fill className="object-cover" data-ai-hint={dataAiHint} />
           <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors flex items-center justify-center">
             <Button variant="ghost" size="icon" className="text-white h-16 w-16 hover:bg-white/20" onClick={() => setIsPlaying(!isPlaying)}>
               {isPlaying ? <PauseIcon className="h-10 w-10" /> : <PlayIcon className="h-10 w-10" />}

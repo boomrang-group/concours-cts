@@ -56,7 +56,7 @@ export default function VoteChallengePage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
                 <div className="md:col-span-1">
                   <div className="relative w-full aspect-video rounded-md overflow-hidden">
-                     <Image src={submission.image} alt={submission.name} layout="fill" objectFit="cover" data-ai-hint={submission.dataAiHint} />
+                     <Image src={submission.image} alt={submission.name} fill className="object-cover" data-ai-hint={submission.dataAiHint} />
                   </div>
                 </div>
                 <div className="md:col-span-2 space-y-3">

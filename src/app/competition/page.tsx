@@ -61,7 +61,7 @@ export default function CompetitionPage() {
               <Card key={challenge.id} className="shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
                 <CardHeader>
                   <div className="relative w-full h-48 mb-4 rounded-t-md overflow-hidden">
-                    <Image src={challenge.image} alt={challenge.title} layout="fill" objectFit="cover" data-ai-hint={challenge.dataAiHint} />
+                    <Image src={challenge.image} alt={challenge.title} fill className="object-cover" data-ai-hint={challenge.dataAiHint} />
                   </div>
                   <CardTitle className="font-headline">{challenge.title}</CardTitle>
                   <CardDescription>{challenge.category} - {challenge.submissions} soumissions</CardDescription>
@@ -84,7 +84,7 @@ export default function CompetitionPage() {
                     </Link>
                   ) : (
                     <Link href={`/competition/${challenge.id}`} passHref className="w-full">
-                       <Button className="w-full" variant="outline" disabled={true}> {/* Disabled until challenge detail page exists */}
+                       <Button className="w-full" variant="outline">
                         Voir les détails
                       </Button>
                     </Link>
@@ -125,7 +125,7 @@ export default function CompetitionPage() {
                   <Card key={battle.id} className="shadow-lg hover:shadow-xl transition-shadow duration-300">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="relative h-48 md:h-full w-full md:col-span-1 rounded-l-md overflow-hidden">
-                             <Image src={battle.image} alt={battle.title} layout="fill" objectFit="cover" data-ai-hint={battle.dataAiHint} />
+                             <Image src={battle.image} alt={battle.title} fill className="object-cover" data-ai-hint={battle.dataAiHint} />
                         </div>
                         <div className="md:col-span-2 p-6 flex flex-col justify-between">
                             <div>
