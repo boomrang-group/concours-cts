@@ -7,16 +7,28 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import LiveBattlePlayer from "@/components/competition/live-battle-player";
 import VotingArea from "@/components/competition/voting-area";
-import { TrophyIcon, UsersIcon, PlayCircleIcon, CheckSquareIcon, ArrowLeftIcon, EyeIcon } from "lucide-react";
+import { 
+  TrophyIcon, 
+  UsersIcon, 
+  PlayCircleIcon, 
+  CheckSquareIcon, 
+  ArrowLeftIcon, 
+  MicIcon,
+  FeatherIcon,
+  PersonStandingIcon,
+  MusicIcon,
+  MessageSquareTextIcon,
+  DramaIcon,
+  HeartPulseIcon,
+  ActivityIcon,
+  ChefHatIcon,
+  PaletteIcon,
+  PaintbrushIcon,
+  LightbulbIcon,
+  SendIcon
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
-// Mock data
-const challenges = [
-  { id: "c1", title: "Défi Innovation Tech", category: "Technologie", status: "Ouvert aux votes", submissions: 25, image: "https://placehold.co/600x400.png", dataAiHint: "technology abstract" },
-  { id: "c2", title: "Concours d'Art Numérique", category: "Art & Culture", status: "Soumissions en cours", submissions: 18, image: "https://placehold.co/600x400.png", dataAiHint: "digital art" },
-  { id: "c3", title: "Projet Impact Social", category: "Social", status: "Évaluation par le jury", submissions: 32, image: "https://placehold.co/600x400.png", dataAiHint: "community people" },
-];
 
 interface LiveBattle {
   id: number;
@@ -34,6 +46,21 @@ const liveBattles: LiveBattle[] = [
    { id: 2, title: "Battle Design: UI/UX Challenge", time: "Demain à 16:00", playerA: "Créatifs Unis", playerB: "Pixel Parfait", image: "https://placehold.co/600x400.png", dataAiHint: "design interface", description: "Voyez s'affronter deux visions du design d'interface. Ergonomie contre esthétisme pur !" },
 ];
 
+const competitionCategories = [
+  { id: "slam", name: "Slam", icon: MicIcon, dataAiHint: "microphone poetry" },
+  { id: "poesie", name: "Poésie", icon: FeatherIcon, dataAiHint: "poetry book" },
+  { id: "danse", name: "Danse", icon: PersonStandingIcon, dataAiHint: "dance silhouette" },
+  { id: "musique", name: "Musique", icon: MusicIcon, dataAiHint: "music notes" },
+  { id: "art_oratoire", name: "Art Oratoire (Débat)", icon: MessageSquareTextIcon, dataAiHint: "public speaking" },
+  { id: "theatre", name: "Théâtre", icon: DramaIcon, dataAiHint: "theater masks" },
+  { id: "fitness_yoga", name: "Fitness & Yoga", icon: HeartPulseIcon, dataAiHint: "yoga pose" },
+  { id: "gymnastique", name: "Gymnastique", icon: ActivityIcon, dataAiHint: "gymnast action" },
+  { id: "cuisine", name: "Cuisine", icon: ChefHatIcon, dataAiHint: "gourmet food" },
+  { id: "modelisme", name: "Modélisme (Mode/Design)", icon: PaletteIcon, dataAiHint: "fashion design" },
+  { id: "peinture", name: "Peinture", icon: PaintbrushIcon, dataAiHint: "artist painting" },
+  { id: "entrepreneuriat", name: "Entrepreneuriat", icon: LightbulbIcon, dataAiHint: "business idea" },
+];
+
 
 export default function CompetitionPage() {
   const [selectedBattle, setSelectedBattle] = useState<LiveBattle | null>(null);
@@ -44,59 +71,46 @@ export default function CompetitionPage() {
         <TrophyIcon className="mx-auto h-16 w-16 text-primary mb-4" />
         <h1 className="text-4xl md:text-5xl font-bold font-headline">La Compétition</h1>
         <p className="text-lg text-muted-foreground mt-2 max-w-2xl mx-auto">
-          Découvrez les défis, participez aux votes, et assistez aux battles en direct !
+          Choisissez une catégorie pour soumettre votre projet, ou assistez aux battles en direct !
         </p>
       </div>
 
       <Tabs defaultValue="challenges" className="w-full">
         <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 mb-8 max-w-lg mx-auto">
-          <TabsTrigger value="challenges"><CheckSquareIcon className="mr-2 h-4 w-4"/>Défis & Soumissions</TabsTrigger>
+          <TabsTrigger value="challenges"><CheckSquareIcon className="mr-2 h-4 w-4"/>Catégories & Soumissions</TabsTrigger>
           <TabsTrigger value="live-battles" onClick={() => setSelectedBattle(null)}><PlayCircleIcon className="mr-2 h-4 w-4"/>Battles en Direct</TabsTrigger>
           <TabsTrigger value="jury-space" className="hidden md:inline-flex"><UsersIcon className="mr-2 h-4 w-4"/>Espace Jury</TabsTrigger>
         </TabsList>
 
         <TabsContent value="challenges">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {challenges.map(challenge => (
-              <Card key={challenge.id} className="shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                <CardHeader>
-                  <div className="relative w-full h-48 mb-4 rounded-t-md overflow-hidden">
-                    <Image src={challenge.image} alt={challenge.title} fill className="object-cover" data-ai-hint={challenge.dataAiHint} />
-                  </div>
-                  <CardTitle className="font-headline">{challenge.title}</CardTitle>
-                  <CardDescription>{challenge.category} - {challenge.submissions} soumissions</CardDescription>
-                </CardHeader>
-                <CardContent className="flex-grow">
-                  <p className="text-sm text-muted-foreground">Statut: <span className="font-semibold text-primary">{challenge.status}</span></p>
-                </CardContent>
-                <CardFooter>
-                  {challenge.status === "Ouvert aux votes" ? (
-                    <Link href={`/competition/${challenge.id}/vote-challenge`} passHref className="w-full">
-                      <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-                        Voter Maintenant
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-semibold font-headline">Choisissez une catégorie pour participer</h2>
+            <p className="text-muted-foreground">Cliquez sur une catégorie pour accéder au formulaire de soumission.</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {competitionCategories.map(category => (
+              <Link key={category.id} href={`/submission?category=${category.id}`} passHref>
+                <Card className="shadow-lg hover:shadow-xl hover:border-primary/50 transition-all duration-300 flex flex-col items-center text-center h-full cursor-pointer group">
+                  <CardHeader className="pb-2">
+                    <category.icon className="h-12 w-12 text-primary mb-3 mx-auto group-hover:scale-110 transition-transform" />
+                    <CardTitle className="font-headline text-lg">{category.name}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex-grow">
+                    <p className="text-xs text-muted-foreground">Soumettre un projet dans la catégorie {category.name.toLowerCase()}.</p>
+                  </CardContent>
+                  <CardFooter className="w-full pt-3">
+                      <Button variant="ghost" className="w-full text-primary group-hover:bg-primary/10">
+                        <SendIcon className="mr-2 h-4 w-4" /> Participer
                       </Button>
-                    </Link>
-                  ) : challenge.status === "Soumissions en cours" ? (
-                    <Link href="/submission" passHref className="w-full">
-                      <Button className="w-full" variant="outline">
-                        Soumettre un projet
-                      </Button>
-                    </Link>
-                  ) : (
-                    <Link href={`/competition/${challenge.id}`} passHref className="w-full">
-                       <Button className="w-full" variant="outline">
-                        Voir les détails
-                      </Button>
-                    </Link>
-                  )}
-                </CardFooter>
-              </Card>
+                  </CardFooter>
+                </Card>
+              </Link>
             ))}
-             {challenges.length === 0 && (
+             {competitionCategories.length === 0 && (
               <div className="text-center py-12 col-span-full">
                 <CheckSquareIcon className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Aucun défi pour le moment.</h3>
-                <p className="text-muted-foreground">Revenez bientôt pour découvrir les défis !</p>
+                <h3 className="text-xl font-semibold mb-2">Aucune catégorie pour le moment.</h3>
+                <p className="text-muted-foreground">Revenez bientôt pour découvrir les catégories de compétition !</p>
               </div>
             )}
           </div>
@@ -175,5 +189,4 @@ export default function CompetitionPage() {
     </div>
   );
 }
-
     

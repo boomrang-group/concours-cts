@@ -20,6 +20,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { PlusCircleIcon, Trash2Icon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 
 const submissionFormSchema = z.object({
   title: z.string().min(5, "Le titre doit contenir au moins 5 caractères."),
@@ -32,7 +34,6 @@ const submissionFormSchema = z.object({
     message: "Veuillez confirmer votre soumission.",
   }),
 
-  // Category-specific fields (optional by default, made required via superRefine)
   songTitle: z.string().optional(),
   musicPlatformLink: z.string().optional().or(z.literal('')).refine(val => val === '' || z.string().url().safeParse(val).success, {
     message: "Veuillez entrer une URL valide ou laisser vide.",
@@ -45,13 +46,11 @@ const submissionFormSchema = z.object({
   writtenPieceText: z.string().optional(),
 
 }).superRefine((data, ctx) => {
-  // Musique
   if (data.category === "musique") {
     if (!data.songTitle || data.songTitle.trim() === "") {
       ctx.addIssue({ path: ["songTitle"], message: "Le titre de la chanson est requis pour la catégorie Musique.", code: z.ZodIssueCode.custom });
     }
   }
-  // Cuisine
   if (data.category === "cuisine") {
     if (!data.dishName || data.dishName.trim() === "") {
       ctx.addIssue({ path: ["dishName"], message: "Le nom du plat est requis pour la catégorie Cuisine.", code: z.ZodIssueCode.custom });
@@ -63,7 +62,6 @@ const submissionFormSchema = z.object({
       ctx.addIssue({ path: ["mainIngredients"], message: "Les ingrédients principaux sont requis pour la catégorie Cuisine.", code: z.ZodIssueCode.custom });
     }
   }
-  // Entrepreneuriat
   if (data.category === "entrepreneuriat") {
     if (!data.executiveSummary || data.executiveSummary.trim() === "") {
       ctx.addIssue({ path: ["executiveSummary"], message: "Le résumé exécutif est requis pour la catégorie Entrepreneuriat.", code: z.ZodIssueCode.custom });
@@ -72,7 +70,6 @@ const submissionFormSchema = z.object({
       ctx.addIssue({ path: ["targetAudience"], message: "Le public cible est requis pour la catégorie Entrepreneuriat.", code: z.ZodIssueCode.custom });
     }
   }
-  // Text-based categories
   const textBasedCategories = ["slam", "poesie", "art_oratoire", "theatre"];
   if (textBasedCategories.includes(data.category)) {
     if (!data.writtenPieceText || data.writtenPieceText.trim() === "") {
@@ -98,11 +95,14 @@ const categories = [
 
 export default function SubmissionForm() {
   const { toast } = useToast();
+  const searchParams = useSearchParams();
+  
   const form = useForm<z.infer<typeof submissionFormSchema>>({
     resolver: zodResolver(submissionFormSchema),
     defaultValues: {
       title: "",
       description: "",
+      category: "", // Initialize category as empty or handle undefined better
       teamMembers: [],
       confirmSubmission: false,
       songTitle: "",
@@ -116,6 +116,13 @@ export default function SubmissionForm() {
     },
   });
 
+  useEffect(() => {
+    const categoryFromUrl = searchParams.get('category');
+    if (categoryFromUrl && categories.some(c => c.id === categoryFromUrl)) {
+      form.setValue('category', categoryFromUrl);
+    }
+  }, [searchParams, form]);
+
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "teamMembers",
@@ -125,17 +132,30 @@ export default function SubmissionForm() {
 
   function onSubmit(values: z.infer<typeof submissionFormSchema>) {
     console.log(values);
-    // Simulate API call
     toast({
       title: "Soumission Réussie!",
       description: `Votre projet "${values.title}" a été soumis avec succès.`,
       variant: "default",
     });
-    form.reset();
+    form.reset({
+      title: "",
+      description: "",
+      category: "",
+      teamMembers: [],
+      confirmSubmission: false,
+      songTitle: "",
+      musicPlatformLink: "",
+      dishName: "",
+      recipeSteps: "",
+      mainIngredients: "",
+      executiveSummary: "",
+      targetAudience: "",
+      writtenPieceText: "",
+      file: undefined
+    });
   }
 
-  // Check if the user is part of a group (mocked)
-  const isGroupAccount = true; // This should come from user's auth context
+  const isGroupAccount = true; 
 
   return (
     <Form {...form}>
@@ -178,7 +198,7 @@ export default function SubmissionForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Catégorie</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Sélectionnez une catégorie" />
@@ -195,7 +215,6 @@ export default function SubmissionForm() {
           )}
         />
 
-        {/* Category Specific Fields Start */}
         {selectedCategory === "musique" && (
           <>
             <FormField
@@ -318,24 +337,23 @@ export default function SubmissionForm() {
           />
         )}
 
-        {/* Category Specific Fields End */}
-
         <FormField
           control={form.control}
           name="file"
-          render={({ field: { onChange, value, ...rest } }) => (
+          render={({ field: { onChange, value, ...rest } }) => ( // `value` is handled by the file input itself
             <FormItem>
               <FormLabel>Fichier principal du projet</FormLabel>
               <FormControl>
                  <Input 
                     type="file" 
-                    accept=".pdf,.doc,.docx,.ppt,.pptx,.mp4,.mp3,.jpg,.jpeg,.png,.wav,.m4a,.mov" 
+                    accept=".pdf,.doc,.docx,.ppt,.pptx,.mp4,.mp3,.jpg,.jpeg,.png,.wav,.m4a,.mov,.avi,.flac,.ogg,.txt,.rtf" 
                     onChange={(e) => onChange(e.target.files)}
                     {...rest}
+                    ref={null} // react-hook-form doesn't need ref for file inputs if onChange is used
                   />
               </FormControl>
               <FormDescription>
-                Formats acceptés: PDF, DOC(X), PPT(X), MP4, MP3, JPG, PNG, WAV, M4A, MOV. Taille max: 5MB.
+                Formats acceptés: PDF, DOC(X), PPT(X), MP4, MP3, JPG, PNG, WAV, M4A, MOV, AVI, FLAC, OGG, TXT, RTF. Taille max: 5MB.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -350,7 +368,7 @@ export default function SubmissionForm() {
                 control={form.control}
                 key={field.id}
                 name={`teamMembers.${index}.email`}
-                render={({ field: memberField }) => ( // Renamed to avoid conflict
+                render={({ field: memberField }) => (
                   <FormItem className="flex items-center space-x-2 mt-2">
                     <FormControl>
                       <Input placeholder="email@coequipier.com" {...memberField} />
@@ -369,7 +387,7 @@ export default function SubmissionForm() {
               size="sm"
               className="mt-2"
               onClick={() => append({ email: "" })}
-              disabled={fields.length >= 4} // Max 5 members total (1 leader + 4 others)
+              disabled={fields.length >= 4} 
             >
               <PlusCircleIcon className="mr-2 h-4 w-4" /> Ajouter un coéquipier
             </Button>
@@ -400,7 +418,6 @@ export default function SubmissionForm() {
           )}
         />
 
-
         <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
           Soumettre mon Projet
         </Button>
@@ -408,4 +425,3 @@ export default function SubmissionForm() {
     </Form>
   );
 }
-
