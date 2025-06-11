@@ -6,13 +6,17 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Link from 'next/link';
 import { Users } from 'lucide-react';
+import { useRouter } from 'next/navigation'; // Import useRouter
 
 export default function JuryLoginPage() {
+  const router = useRouter(); // Initialize router
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // Handle jury login logic
-    alert("Logique de connexion du jury à implémenter. Redirection vers /jury/dashboard par exemple.");
-    // Example: window.location.href = '/jury/dashboard';
+    // For now, simulate success and redirect
+    alert("Connexion du jury réussie (simulation). Redirection vers le tableau de bord du jury.");
+    router.push('/jury/dashboard'); // Redirect to jury dashboard
   };
 
   return (
