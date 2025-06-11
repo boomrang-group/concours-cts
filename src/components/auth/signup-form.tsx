@@ -1,3 +1,4 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,6 +20,8 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation"; // Import useRouter
 
 const formSchema = z.object({
   accountType: z.enum(["individual", "group"], {
@@ -26,12 +29,12 @@ const formSchema = z.object({
   }),
   name: z.string().min(2, "Le nom doit contenir au moins 2 caractères."),
   email: z.string().email("Adresse e-mail invalide."),
-  phone: z.string().min(9, "Numéro de téléphone invalide.").optional(),
+  phone: z.string().min(9, "Numéro de téléphone invalide.").optional().or(z.literal('')),
   password: z.string().min(8, "Le mot de passe doit contenir au moins 8 caractères."),
   confirmPassword: z.string(),
-  groupName: z.string().optional(),
+  groupName: z.string().optional().or(z.literal('')),
   groupMembers: z.preprocess(
-    (val) => (val === "" ? undefined : Number(val)), // Convert empty string to undefined, otherwise to number
+    (val) => (val === "" || val === null || val === undefined ? undefined : Number(val)),
     z.number().min(1, "Le nombre de membres doit être au moins 1.").max(5, "Le nombre de membres ne peut pas dépasser 5.").optional()
   ),
   terms: z.boolean().refine(val => val === true, {
@@ -50,6 +53,9 @@ const formSchema = z.object({
 
 export default function SignupForm() {
   const [accountType, setAccountType] = useState<"individual" | "group">("individual");
+  const [isLoading, setIsLoading] = useState(false); // Add loading state
+  const { toast } = useToast(); // Initialize useToast
+  const router = useRouter(); // Initialize useRouter
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -61,14 +67,28 @@ export default function SignupForm() {
       password: "",
       confirmPassword: "",
       terms: false,
-      groupName: "", // Initialize groupName
-      groupMembers: "" as unknown as number, // Initialize groupMembers as an empty string for the input
+      groupName: "",
+      groupMembers: undefined,
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
     console.log(values);
-    // Handle submission (e.g., API call)
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1500)); 
+    
+    toast({
+      title: "Compte Créé !",
+      description: "Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter.",
+      variant: "default",
+    });
+
+    form.reset(); // Reset form fields
+    setIsLoading(false);
+
+    // Redirect to login page
+    router.push("/auth/login");
   }
 
   return (
@@ -154,7 +174,7 @@ export default function SignupForm() {
                       onChange={e => {
                         const val = e.target.value;
                         if (val === "") {
-                           field.onChange(undefined); // Store undefined for empty
+                           field.onChange(undefined); 
                         } else {
                            const num = parseInt(val, 10);
                            field.onChange(isNaN(num) ? undefined : num);
@@ -247,9 +267,8 @@ export default function SignupForm() {
           )}
         />
 
-
-        <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-          Créer mon compte
+        <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90" disabled={isLoading}>
+          {isLoading ? "Création en cours..." : "Créer mon compte"}
         </Button>
         <p className="text-center text-sm text-muted-foreground">
           Déjà un compte ?{" "}
