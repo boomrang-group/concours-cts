@@ -9,7 +9,6 @@ import LiveBattlePlayer from "@/components/competition/live-battle-player";
 import VotingArea from "@/components/competition/voting-area";
 import { 
   TrophyIcon, 
-  UsersIcon, 
   PlayCircleIcon, 
   CheckSquareIcon, 
   ArrowLeftIcon, 
@@ -25,7 +24,8 @@ import {
   PaletteIcon,
   PaintbrushIcon,
   LightbulbIcon,
-  SendIcon
+  SendIcon,
+  Users // Added for Jury link if needed elsewhere, but not in tabs
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -76,10 +76,9 @@ export default function CompetitionPage() {
       </div>
 
       <Tabs defaultValue="challenges" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 mb-8 max-w-lg mx-auto">
+        <TabsList className="grid w-full grid-cols-2 mb-8 max-w-md mx-auto">
           <TabsTrigger value="challenges"><CheckSquareIcon className="mr-2 h-4 w-4"/>Catégories & Soumissions</TabsTrigger>
           <TabsTrigger value="live-battles" onClick={() => setSelectedBattle(null)}><PlayCircleIcon className="mr-2 h-4 w-4"/>Battles en Direct</TabsTrigger>
-          <TabsTrigger value="jury-space" className="hidden md:inline-flex"><UsersIcon className="mr-2 h-4 w-4"/>Espace Jury</TabsTrigger>
         </TabsList>
 
         <TabsContent value="challenges">
@@ -166,26 +165,19 @@ export default function CompetitionPage() {
           )}
         </TabsContent>
         
-        <TabsContent value="jury-space">
-          <Card className="shadow-lg max-w-lg mx-auto">
-            <CardHeader className="text-center">
-              <UsersIcon className="mx-auto h-12 w-12 text-primary mb-4" />
-              <CardTitle className="font-headline text-2xl">Espace Jury</CardTitle>
-              <CardDescription>Réservé aux membres du jury pour l'évaluation des soumissions.</CardDescription>
-            </CardHeader>
-            <CardContent className="text-center">
-              <p className="mb-4 text-muted-foreground">
-                Si vous êtes membre du jury, veuillez vous connecter pour accéder à votre espace d'évaluation.
-              </p>
-              <Link href="/jury/login">
-                <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-                  Accéder à l'Espace Jury
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-        </TabsContent>
       </Tabs>
+
+      <div className="mt-16 text-center border-t pt-10">
+        <h2 className="text-2xl font-semibold font-headline mb-4">Êtes-vous membre du Jury ?</h2>
+        <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+          Accédez à votre espace dédié pour évaluer les soumissions et contribuer au succès de BantuChamp.
+        </p>
+        <Link href="/jury/login">
+          <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
+            <Users className="mr-2 h-5 w-5" /> Accéder à l'Espace Jury
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 }

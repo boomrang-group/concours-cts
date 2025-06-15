@@ -1,3 +1,4 @@
+
 // src/app/jury/evaluate/[submissionId]/page.tsx
 'use client';
 
@@ -79,6 +80,7 @@ const FileDisplay = ({ fileType, fileUrl, title, dataAiHint }: { fileType: strin
     case 'video':
       return (
         <div className="aspect-video w-full max-w-2xl mx-auto bg-muted rounded-md shadow-md overflow-hidden">
+          {/* Basic video tag, in a real app consider a more robust player */}
           <video src={fileUrl} controls className="w-full h-full object-contain" title={`Vidéo: ${title}`}>
             Votre navigateur ne supporte pas l'élément vidéo.
             <a href={fileUrl} target="_blank" rel="noopener noreferrer">Télécharger la vidéo</a>
@@ -95,6 +97,7 @@ const FileDisplay = ({ fileType, fileUrl, title, dataAiHint }: { fileType: strin
           </Button>
         </div>
       );
+    // Add cases for 'audio' etc. if needed
     default:
       return <p className="text-muted-foreground">Type de fichier non supporté pour l'aperçu direct. <a href={fileUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Télécharger le fichier</a></p>;
   }
@@ -109,9 +112,12 @@ export default function EvaluateSubmissionPage() {
   const submissionId = params.submissionId as string;
   const isViewMode = searchParams.get('view') === 'true';
 
+  // In a real app, you would fetch this data, possibly in a useEffect hook
+  // For now, we directly use mock data.
   const [submission, setSubmission] = useState(mockSubmissionsData[submissionId] || null);
   
   if (!submission) {
+    // Handle case where submission is not found or still loading
     return (
       <div className="container py-8 md:py-12 text-center">
         <p>Chargement de la soumission...</p>
@@ -123,9 +129,10 @@ export default function EvaluateSubmissionPage() {
     );
   }
   
+  // Initialize scores from submission data or default to 0
   const [criteriaScores, setCriteriaScores] = useState<{ [key: string]: number }>(
     submission.criteria.reduce((acc: any, crit: any) => {
-      acc[crit.id] = crit.score || 0;
+      acc[crit.id] = crit.score || 0; // Use existing score or default to 0
       return acc;
     }, {})
   );
@@ -137,6 +144,7 @@ export default function EvaluateSubmissionPage() {
 
   const handleSubmitEvaluation = (e: React.FormEvent) => {
     e.preventDefault();
+    // In a real app, send this data to your backend
     const totalScore = submission.criteria.reduce((sum: number, crit: any) => sum + (criteriaScores[crit.id] || 0), 0);
     const averageScore = totalScore / submission.criteria.length;
     
@@ -152,8 +160,15 @@ export default function EvaluateSubmissionPage() {
       description: `Le projet "${submission.title}" a été évalué avec une note moyenne de ${averageScore.toFixed(2)}/100.`,
       variant: "default",
     });
-    // In a real app, navigate back or to the next submission
-    router.push('/jury/dashboard'); 
+    // Potentially update mock data or refetch if this were a real app
+    // For mock, simulate update
+    mockSubmissionsData[submissionId] = {
+        ...submission,
+        criteria: submission.criteria.map((c:any) => ({...c, score: criteriaScores[c.id]})),
+        comments: comments,
+        // A real app would probably change its status here
+    };
+    router.push('/jury/dashboard'); // Navigate back to dashboard
   };
 
 
@@ -190,7 +205,7 @@ export default function EvaluateSubmissionPage() {
                   </div>
                   <Slider
                     id={criterion.id}
-                    defaultValue={[criteriaScores[criterion.id]]}
+                    defaultValue={[criteriaScores[criterion.id]]} // Use the state for default value
                     max={100}
                     step={1}
                     onValueChange={(value) => handleSliderChange(criterion.id, value)}
@@ -228,4 +243,3 @@ export default function EvaluateSubmissionPage() {
 }
 
     
-
