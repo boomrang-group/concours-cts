@@ -14,7 +14,7 @@ export default function HomePage() {
             Bantudemy – Campus de Talents & de Savoir
           </h1>
           <p className="text-lg md:text-xl lg:text-2xl mb-8 max-w-3xl mx-auto">
-            Rejoignez la compétition en ligne pour étudiants congolais et révélez votre potentiel !
+            Rejoignez la compétition en ligne pour étudiants et révélez votre potentiel !
           </p>
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
             <Link href="/auth/signup">
