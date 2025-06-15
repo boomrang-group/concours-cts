@@ -196,8 +196,8 @@ export default function SignupForm() {
       currency: "MaxiDollar", // Assuming USD
       telephone: values.phone || "", // Pass phone if available
       email: values.email,
-      merchantId: "YOUR_MERCHANT_ID_PLACEHOLDER", // Replace with your actual Merchant ID
-      merchantPassword: "YOUR_MERCHANT_PASSWORD_PLACEHOLDER", // Replace with your actual Merchant Password
+      merchantId: "93b10243a03e4536832aa5c9473fd0ae", // Updated Merchant ID
+      merchantPassword: "fdf00a6ff0c94b048aa3162677b8a0ef", // Updated Merchant Password
       language: "Fr", // Or "En"
       reference: reference,
       acceptUrl: acceptUrl,
