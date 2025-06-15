@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { CheckCircle, Lightbulb, Users, Star, UserPlusIcon, TrophyIcon, AwardIcon } from "lucide-react";
@@ -23,7 +24,7 @@ export default function HomePage() {
               </Button>
             </Link>
             <Link href="/competition">
-              <Button size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10 shadow-lg transition-transform hover:scale-105">
+              <Button size="lg" variant="outline" className="bg-black border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10 shadow-lg transition-transform hover:scale-105">
                 Découvrir la Compétition
               </Button>
             </Link>

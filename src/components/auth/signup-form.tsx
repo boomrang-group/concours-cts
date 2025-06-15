@@ -192,8 +192,8 @@ export default function SignupForm() {
 
     // Prepare MaxiCash payment details
     const paymentDetails = {
-      amount: "2", // $2 Fee
-      currency: "MaxiDollar", // Assuming USD
+      amount: "200", // $2 Fee
+      currency: "USD", // Assuming USD
       telephone: values.phone || "", // Pass phone if available
       email: values.email,
       merchantId: "93b10243a03e4536832aa5c9473fd0ae", // Updated Merchant ID
