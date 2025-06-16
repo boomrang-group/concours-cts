@@ -1,11 +1,17 @@
 import Link from 'next/link';
-import { RocketIcon } from 'lucide-react';
+import Image from 'next/image';
 
 const Logo = () => {
   return (
     <Link href="/" className="flex items-center gap-2 text-primary hover:opacity-80 transition-opacity">
-      <RocketIcon className="h-7 w-7" />
-      <span className="text-2xl font-bold font-headline">BantuChamp</span>
+      <Image 
+        src="/logo-cts.png" 
+        alt="BantuChamp CTS Logo" 
+        width={113} 
+        height={40} 
+        priority 
+        data-ai-hint="company logo"
+      />
     </Link>
   );
 };

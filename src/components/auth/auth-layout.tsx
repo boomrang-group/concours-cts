@@ -14,12 +14,13 @@ const AuthLayout = ({ children, title, description }: AuthLayoutProps) => {
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <Image 
-            src="https://placehold.co/100x100.png" 
-            alt="BantuChamp Logo" 
-            width={80} 
-            height={80} 
-            className="mx-auto mb-4 rounded-full shadow-md" 
-            data-ai-hint="abstract logo"
+            src="/logo-cts.png" 
+            alt="BantuChamp CTS Logo" 
+            width={170} // Adjusted width for auth page, maintaining aspect ratio (approx 113/40 * 1.5)
+            height={60}  // Adjusted height for auth page
+            className="mx-auto mb-6 shadow-sm" 
+            data-ai-hint="company logo"
+            priority
           />
           <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 font-headline">
             {title}
