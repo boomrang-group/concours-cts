@@ -2,8 +2,16 @@ import SubmissionForm from '@/components/submission/submission-form';
 import InteractiveCalendar from '@/components/submission/interactive-calendar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { FileTextIcon, CalendarDaysIcon } from 'lucide-react';
+import { Suspense } from 'react';
 
 export default function SubmissionPage() {
+  return (
+    <Suspense fallback={<div>Chargement...</div>}>
+      <SubmissionContent />
+    </Suspense>
+  )
+}
+function SubmissionContent() {
   return (
     <div className="container py-8 md:py-12">
       <h1 className="text-3xl md:text-4xl font-bold font-headline mb-8 text-center">Soumettre votre Projet</h1>
