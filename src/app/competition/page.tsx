@@ -12,21 +12,18 @@ import {
   PlayCircleIcon, 
   CheckSquareIcon, 
   ArrowLeftIcon, 
-  MicIcon,
-  FeatherIcon,
-  PersonStandingIcon,
   MusicIcon,
-  MessageSquareTextIcon,
-  DramaIcon,
-  HeartPulseIcon,
-  ActivityIcon,
-  ChefHatIcon,
-  PaletteIcon,
-  PaintbrushIcon,
-  LightbulbIcon,
-  SendIcon,
-  Users,
-  ArrowRightIcon 
+  ArrowRightIcon,
+  LogInIcon,
+  EyeIcon,
+  ShirtIcon, // For Esthétique et mode
+  PaintbrushIcon, // For Peinture
+  ChefHatIcon, // For Cuisine
+  FeatherIcon, // For Poesie
+  MessageSquareTextIcon, // For Art oratoire
+  DramaIcon, // For Théâtre
+  PersonStandingIcon, // For Danse
+  Users
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -49,18 +46,14 @@ const liveBattles: LiveBattle[] = [
 ];
 
 const competitionCategories = [
-  { id: "slam", name: "Slam", icon: MicIcon, dataAiHint: "microphone poetry" },
-  { id: "poesie", name: "Poésie", icon: FeatherIcon, dataAiHint: "poetry book" },
-  { id: "danse", name: "Danse", icon: PersonStandingIcon, dataAiHint: "dance silhouette" },
-  { id: "musique", name: "Musique", icon: MusicIcon, dataAiHint: "music notes" },
-  { id: "art_oratoire", name: "Art Oratoire (Débat)", icon: MessageSquareTextIcon, dataAiHint: "public speaking" },
-  { id: "theatre", name: "Théâtre", icon: DramaIcon, dataAiHint: "theater masks" },
-  { id: "fitness_yoga", name: "Fitness & Yoga", icon: HeartPulseIcon, dataAiHint: "yoga pose" },
-  { id: "gymnastique", name: "Gymnastique", icon: ActivityIcon, dataAiHint: "gymnast action" },
-  { id: "cuisine", name: "Cuisine", icon: ChefHatIcon, dataAiHint: "gourmet food" },
-  { id: "modelisme", name: "Modélisme (Mode/Design)", icon: PaletteIcon, dataAiHint: "fashion design" },
+  { id: "esthetique_mode", name: "Esthétique et Mode", icon: ShirtIcon, dataAiHint: "fashion runway" },
   { id: "peinture", name: "Peinture", icon: PaintbrushIcon, dataAiHint: "artist painting" },
-  { id: "entrepreneuriat", name: "Entrepreneuriat", icon: LightbulbIcon, dataAiHint: "business idea" },
+  { id: "cuisine", name: "Cuisine", icon: ChefHatIcon, dataAiHint: "gourmet food" },
+  { id: "poesie", name: "Poésie", icon: FeatherIcon, dataAiHint: "poetry book" },
+  { id: "art_oratoire", name: "Art Oratoire", icon: MessageSquareTextIcon, dataAiHint: "public speaking" },
+  { id: "theatre", name: "Théâtre", icon: DramaIcon, dataAiHint: "theater masks" },
+  { id: "musique", name: "Musique", icon: MusicIcon, dataAiHint: "music notes" },
+  { id: "danse", name: "Danse", icon: PersonStandingIcon, dataAiHint: "dance silhouette" },
 ];
 
 
@@ -110,27 +103,32 @@ export default function CompetitionPage() {
           </Card>
 
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-semibold font-headline">Choisissez une autre catégorie pour participer</h2>
-            <p className="text-muted-foreground">Cliquez sur une catégorie pour accéder au formulaire de soumission.</p>
+            <h2 className="text-2xl font-semibold font-headline">Choisissez une catégorie pour participer ou voter</h2>
+            <p className="text-muted-foreground">Explorez les différentes catégories de la compétition.</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {competitionCategories.map(category => (
-              <Link key={category.id} href={`/submission?category=${category.id}`} passHref>
-                <Card className="shadow-lg hover:shadow-xl hover:border-primary/50 transition-all duration-300 flex flex-col items-center text-center h-full cursor-pointer group">
-                  <CardHeader className="pb-2">
-                    <category.icon className="h-12 w-12 text-primary mb-3 mx-auto group-hover:scale-110 transition-transform" />
-                    <CardTitle className="font-headline text-lg">{category.name}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="flex-grow">
-                    <p className="text-xs text-muted-foreground">Soumettre un projet dans la catégorie {category.name.toLowerCase()}.</p>
-                  </CardContent>
-                  <CardFooter className="w-full pt-3">
-                      <Button variant="ghost" className="w-full text-primary group-hover:bg-primary/10">
-                        <SendIcon className="mr-2 h-4 w-4" /> Participer
+              <Card key={category.id} className="shadow-lg hover:shadow-xl hover:border-primary/50 transition-all duration-300 flex flex-col items-center text-center h-full group">
+                <CardHeader className="pb-2">
+                  <category.icon className="h-16 w-16 text-primary mb-4 mx-auto group-hover:scale-110 transition-transform" />
+                  <CardTitle className="font-headline text-xl">{category.name}</CardTitle>
+                </CardHeader>
+                <CardContent className="flex-grow">
+                  {/* Optional: Add a short description for each category if needed later */}
+                </CardContent>
+                <CardFooter className="w-full pt-3 flex flex-col sm:flex-row gap-2">
+                    <Link href="/auth/login" passHref className="w-full">
+                      <Button variant="default" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                        <LogInIcon className="mr-2 h-4 w-4" /> Soumettre
                       </Button>
-                  </CardFooter>
-                </Card>
-              </Link>
+                    </Link>
+                    <Link href={`/competition/${category.id}/vote-challenge`} passHref className="w-full">
+                       <Button variant="outline" className="w-full text-primary border-primary hover:bg-primary/10">
+                        <EyeIcon className="mr-2 h-4 w-4" /> Voir &amp; Voter
+                      </Button>
+                    </Link>
+                </CardFooter>
+              </Card>
             ))}
              {competitionCategories.length === 0 && (
               <div className="text-center py-12 col-span-full">
@@ -208,4 +206,6 @@ export default function CompetitionPage() {
     </div>
   );
 }
+    
+
     
