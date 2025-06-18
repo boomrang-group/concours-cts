@@ -1,8 +1,13 @@
+
+'use client';
+
 import SubmissionForm from '@/components/submission/submission-form';
 import InteractiveCalendar from '@/components/submission/interactive-calendar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileTextIcon, CalendarDaysIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { FileTextIcon, CalendarDaysIcon, ArrowLeftIcon } from 'lucide-react';
 import { Suspense } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function SubmissionPage() {
   return (
@@ -12,8 +17,12 @@ export default function SubmissionPage() {
   )
 }
 function SubmissionContent() {
+  const router = useRouter();
   return (
     <div className="container py-8 md:py-12">
+      <Button variant="outline" onClick={() => router.back()} className="mb-6">
+        <ArrowLeftIcon className="mr-2 h-4 w-4" /> Retour
+      </Button>
       <h1 className="text-3xl md:text-4xl font-bold font-headline mb-8 text-center">Soumettre votre Projet</h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -49,3 +58,4 @@ function SubmissionContent() {
     </div>
   );
 }
+
