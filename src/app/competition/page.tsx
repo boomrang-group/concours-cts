@@ -117,12 +117,12 @@ export default function CompetitionPage() {
                   {/* Optional: Add a short description for each category if needed later */}
                 </CardContent>
                 <CardFooter className="w-full pt-3 flex flex-col sm:flex-row gap-2">
-                    <Link href="/auth/login" passHref className="w-full">
+                    <Link href="/auth/login" passHref className="w-full sm:flex-1">
                       <Button variant="default" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
                         <LogInIcon className="mr-2 h-4 w-4" /> Soumettre
                       </Button>
                     </Link>
-                    <Link href={`/competition/${category.id}/vote-challenge`} passHref className="w-full">
+                    <Link href={`/competition/${category.id}/vote-challenge`} passHref className="w-full sm:flex-1">
                        <Button variant="outline" className="w-full text-primary border-primary hover:bg-primary/10">
                         <EyeIcon className="mr-2 h-4 w-4" /> Voir &amp; Voter
                       </Button>
