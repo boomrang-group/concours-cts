@@ -17,11 +17,11 @@ body {
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
 
-    --primary: 196 76% 65%; /* Sky Blue #63CAE8 */
-    --primary-foreground: 0 0% 100%; /* White text on Sky Blue */
+    --primary: 303 57% 37%; /* New Primary #932A8F */
+    --primary-foreground: 0 0% 100%; /* White text on New Primary */
 
-    --secondary: 0 0% 96.1%; /* Light Grayish */
-    --secondary-foreground: 0 0% 9%;
+    --secondary: 199 74% 52%; /* New Secondary #2BAAE0 */
+    --secondary-foreground: 0 0% 9%; /* Dark text on New Secondary */
 
     --muted: 0 0% 96.1%;
     --muted-foreground: 0 0% 45.1%;
@@ -34,7 +34,7 @@ body {
 
     --border: 0 0% 89.8%; /* Light gray border */
     --input: 0 0% 89.8%; /* Light gray input background */
-    --ring: 196 76% 55%; /* Slightly darker sky blue for focus rings */
+    --ring: 303 57% 32%; /* Slightly darker new primary for focus rings */
 
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
@@ -45,12 +45,12 @@ body {
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 196 76% 65%; 
+    --sidebar-primary: 303 57% 37%; /* New Primary for sidebar */
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 0 0% 82.7%;
     --sidebar-accent-foreground: 0 0% 3.9%;
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 196 76% 55%;
+    --sidebar-ring: 303 57% 32%; /* New Ring for sidebar */
   }
 
   .dark {
@@ -63,11 +63,11 @@ body {
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 196 76% 65%; 
+    --primary: 303 57% 37%; /* New Primary for dark mode */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 199 74% 52%; /* New Secondary for dark mode */
+    --secondary-foreground: 0 0% 98%; /* Light text on New Secondary */
 
     --muted: 0 0% 14.9%;
     --muted-foreground: 0 0% 63.9%;
@@ -80,7 +80,7 @@ body {
 
     --border: 0 0% 14.9%;
     --input: 0 0% 14.9%;
-    --ring: 196 76% 55%; 
+    --ring: 303 57% 32%;  /* New Ring for dark mode */
 
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
@@ -90,12 +90,12 @@ body {
 
     --sidebar-background: 0 0% 3.9%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 196 76% 65%;
+    --sidebar-primary: 303 57% 37%; /* New Primary for sidebar dark mode */
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 0 0% 14.9%;
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 0 0% 14.9%;
-    --sidebar-ring: 196 76% 55%;
+    --sidebar-ring: 303 57% 32%; /* New Ring for sidebar dark mode */
   }
 }
 
