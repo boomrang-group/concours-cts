@@ -49,7 +49,48 @@ const mockChallengeData: { [key: string]: any } = {
     deadline: "2024-08-30",
     sponsorLogos: [] 
   },
-  // Add more mock challenges if needed
+  'music-journey': {
+    id: "music-journey",
+    title: "BantuChamp Music Journey",
+    category: "Musique",
+    status: "Semaine 1 - Soumissions & Votes Ouverts",
+    submissionsCount: 0, 
+    description: `
+Préparez-vous pour un voyage musical épique sur 4 semaines !
+
+**Semaine 1 : Lancement et Premières Notes**
+- **Type :** Soumission de Vidéo
+- **Période :** Ouvert aux soumissions et aux votes.
+- **Votes :** 75% vote populaire, 25% vote du jury.
+- **Critères d'évaluation :** Originalité, Qualité technique, Interprétation, Potentiel.
+- **Qualification :** Les participants atteignant plus de 50% de score combiné accèdent à la Semaine 2.
+
+**Semaine 2 : L'Épreuve du Rythme**
+- **Type :** Soumission de Vidéo (peut être une nouvelle soumission ou amélioration)
+- **Période :** (Dates à annoncer)
+- **Votes :** 70% vote populaire, 30% vote du jury.
+- **Qualification :** Les participants atteignant plus de 50% de score combiné accèdent à la Semaine 3.
+
+**Semaine 3 : La Montée en Puissance**
+- **Type :** Soumission de Vidéo (peut être une nouvelle soumission ou amélioration)
+- **Période :** (Dates à annoncer)
+- **Votes :** 60% vote populaire, 40% vote du jury.
+- **Qualification :** Les participants atteignant plus de 50% de score combiné accèdent à la Finale.
+
+**Semaine 4 : La Finale en Direct !**
+- **Type :** Battle en Direct
+- **Période :** (Date à annoncer)
+- **Votes :** Vote populaire en direct.
+- Le grand gagnant de la catégorie Musique sera couronné !
+
+Soumettez votre meilleure performance vidéo pour la phase en cours et laissez le public et le jury découvrir votre talent !
+    `.trim(),
+    image: "https://placehold.co/800x400.png",
+    dataAiHint: "music stage concert",
+    criteria: ["Originalité de la composition/reprise", "Qualité technique vocale/instrumentale", "Présence scénique et Interprétation", "Potentiel artistique et Charisme", "Qualité de la production vidéo"],
+    deadline: "Variable (voir phase actuelle)", 
+    sponsorLogos: ["https://placehold.co/100x50.png"] 
+  },
 };
 
 
@@ -58,7 +99,6 @@ export default function ChallengeDetailsPage() {
   const router = useRouter();
   const challengeId = params.challengeId as string;
 
-  // In a real app, you would fetch challenge details based on challengeId
   const challenge = mockChallengeData[challengeId]; 
 
   if (!challenge) {
@@ -103,7 +143,7 @@ export default function ChallengeDetailsPage() {
                 <CardTitle className="text-lg font-headline">Informations Clés</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2 text-sm">
-                <p><span className="font-semibold">Statut:</span> <span className={`font-medium ${challenge.status === "Ouvert aux votes" ? "text-green-600" : challenge.status === "Soumissions en cours" ? "text-blue-600" : "text-orange-600"}`}>{challenge.status}</span></p>
+                <p><span className="font-semibold">Statut:</span> <span className={`font-medium ${challenge.status.includes("Ouvert") ? "text-green-600" : challenge.status.includes("Soumissions en cours") ? "text-blue-600" : "text-orange-600"}`}>{challenge.status}</span></p>
                 <p><span className="font-semibold">Soumissions:</span> {challenge.submissionsCount}</p>
                 <p><span className="font-semibold">Date Limite:</span> {challenge.deadline}</p>
               </CardContent>
@@ -123,15 +163,15 @@ export default function ChallengeDetailsPage() {
             </Card>
           </div>
 
-          {challenge.status === "Soumissions en cours" && (
+          {challenge.status.includes("Soumissions") && (
             <div className="text-center pt-4">
-              <Button size="lg" onClick={() => router.push('/submission')} className="bg-primary text-primary-foreground hover:bg-primary/90">
+              <Button size="lg" onClick={() => router.push(`/submission?category=${challenge.id === 'music-journey' ? 'musique' : challenge.category.toLowerCase().replace(/\s+/g, '_')}&challengeId=${challenge.id}`)} className="bg-primary text-primary-foreground hover:bg-primary/90">
                 Soumettre votre projet pour ce défi
               </Button>
             </div>
           )}
 
-          {challenge.status === "Ouvert aux votes" && (
+          {challenge.status.includes("Vote") && (
              <div className="text-center pt-4">
                 <Button size="lg" onClick={() => router.push(`/competition/${challenge.id}/vote-challenge`)} className="bg-primary text-primary-foreground hover:bg-primary/90">
                     Participer au Vote
@@ -155,3 +195,4 @@ export default function ChallengeDetailsPage() {
     </div>
   );
 }
+

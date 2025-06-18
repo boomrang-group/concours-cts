@@ -25,7 +25,8 @@ import {
   PaintbrushIcon,
   LightbulbIcon,
   SendIcon,
-  Users // Added for Jury link if needed elsewhere, but not in tabs
+  Users,
+  ArrowRightIcon 
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -44,6 +45,7 @@ interface LiveBattle {
 const liveBattles: LiveBattle[] = [
    { id: 1, title: "Duel des Développeurs: App vs App", time: "Aujourd'hui à 18:00", playerA: "Équipe Alpha", playerB: "Équipe Gamma", image: "https://placehold.co/600x400.png", dataAiHint: "coding screen", description: "Un affrontement épique entre deux applications révolutionnaires. Qui remportera les faveurs du public ?" },
    { id: 2, title: "Battle Design: UI/UX Challenge", time: "Demain à 16:00", playerA: "Créatifs Unis", playerB: "Pixel Parfait", image: "https://placehold.co/600x400.png", dataAiHint: "design interface", description: "Voyez s'affronter deux visions du design d'interface. Ergonomie contre esthétisme pur !" },
+   { id: 3, title: "Finale Musique: Battle des Meilleurs Talents", time: "Samedi prochain à 20:00", playerA: "Finaliste A (Annonce à venir)", playerB: "Finaliste B (Annonce à venir)", image: "https://placehold.co/600x400.png", dataAiHint: "music concert", description: "La grande finale du BantuChamp Music Journey ! Ne manquez pas le couronnement du champion musical." },
 ];
 
 const competitionCategories = [
@@ -82,8 +84,33 @@ export default function CompetitionPage() {
         </TabsList>
 
         <TabsContent value="challenges">
+          <Card className="mb-8 shadow-lg border-2 border-primary bg-secondary/10">
+            <CardHeader>
+              <CardTitle className="text-xl md:text-2xl font-headline text-primary flex items-center">
+                <MusicIcon className="mr-3 h-7 w-7" />
+                Événement Spécial : BantuChamp Music Journey !
+              </CardTitle>
+              <CardDescription className="text-base">
+                Un défi musical unique sur 4 semaines, culminant en une finale live ! Découvrez toutes les étapes et participez.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground mb-4">
+                Chaque semaine apporte de nouveaux défis, des votes ajustés et une chance de progresser.
+                Cliquez ci-dessous pour voir le détail complet du parcours et comment soumettre pour la phase actuelle.
+              </p>
+            </CardContent>
+            <CardFooter>
+              <Link href="/competition/music-journey" passHref className="w-full">
+                <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 text-base py-3">
+                  Voir les Détails du Music Journey <ArrowRightIcon className="ml-2 h-5 w-5"/>
+                </Button>
+              </Link>
+            </CardFooter>
+          </Card>
+
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-semibold font-headline">Choisissez une catégorie pour participer</h2>
+            <h2 className="text-2xl font-semibold font-headline">Choisissez une autre catégorie pour participer</h2>
             <p className="text-muted-foreground">Cliquez sur une catégorie pour accéder au formulaire de soumission.</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
