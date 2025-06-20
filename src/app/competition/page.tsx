@@ -39,14 +39,14 @@ const liveBattles: LiveBattle[] = [
 ];
 
 const competitionCategories = [
-  { id: "esthetique_mode", name: "Esthétique et Mode", imageUrl: "/icons/categories/esthetique_mode.png", dataAiHint: "fashion runway" },
-  { id: "peinture", name: "Peinture", imageUrl: "/icons/categories/peinture.png", dataAiHint: "artist painting" },
-  { id: "cuisine", name: "Cuisine", imageUrl: "/icons/categories/cuisine.png", dataAiHint: "gourmet food" },
-  { id: "poesie", name: "Poésie", imageUrl: "/icons/categories/poesie.png", dataAiHint: "poetry book" },
-  { id: "art_oratoire", name: "Art Oratoire", imageUrl: "/icons/categories/art_oratoire.png", dataAiHint: "public speaking" },
-  { id: "theatre", name: "Théâtre", imageUrl: "/icons/categories/theatre.png", dataAiHint: "theater stage" },
-  { id: "musique", name: "Musique", imageUrl: "/icons/categories/musique.png", dataAiHint: "music notes" },
-  { id: "danse", name: "Danse", imageUrl: "/icons/categories/danse.png", dataAiHint: "dance silhouette" },
+  { id: "esthetique_mode", name: "Esthétique et Mode", imageUrl: "/icons/categories/esthe.jpg", dataAiHint: "fashion runway" },
+  { id: "peinture", name: "Peinture", imageUrl: "/icons/categories/peinture.jpg", dataAiHint: "artist painting" },
+  { id: "cuisine", name: "Cuisine", imageUrl: "/icons/categories/cuisine.jpg", dataAiHint: "gourmet food" },
+  { id: "poesie", name: "Poésie", imageUrl: "/icons/categories/poesie.jpg", dataAiHint: "poetry book" },
+  { id: "art_oratoire", name: "Art Oratoire", imageUrl: "/icons/categories/oratoire.jpg", dataAiHint: "public speaking" },
+  { id: "theatre", name: "Théâtre", imageUrl: "/icons/categories/theatre.jpg", dataAiHint: "theater stage" },
+  { id: "musique", name: "Musique", imageUrl: "/icons/categories/bantu-music.jpg", dataAiHint: "music notes" },
+  { id: "danse", name: "Danse", imageUrl: "/icons/categories/danse.jpg", dataAiHint: "dance silhouette" },
 ];
 
 
@@ -102,17 +102,19 @@ export default function CompetitionPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {competitionCategories.map(category => (
               <Card key={category.id} className="shadow-lg hover:shadow-xl hover:border-primary/50 transition-all duration-300 flex flex-col items-center text-center h-full group">
-                <CardHeader className="pb-2">
-                  <div className="relative h-16 w-16 mb-4 mx-auto group-hover:scale-110 transition-transform">
+                <div className="relative w-full h-40 overflow-hidden rounded-t-md">
+
+
                     <Image 
                       src={category.imageUrl} 
-                      alt={category.name} 
+                      alt={category.name}
                       fill
                       className="object-contain"
                       data-ai-hint={category.dataAiHint}
                     />
                   </div>
-                  <CardTitle className="font-headline text-xl">{category.name}</CardTitle>
+ <CardHeader>
+ <CardTitle className="font-headline text-xl">{category.name}</CardTitle>
                 </CardHeader>
                 <CardContent className="flex-grow">
                   {/* Optional: Add a short description for each category if needed later */}
