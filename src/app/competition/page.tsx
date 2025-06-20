@@ -12,17 +12,10 @@ import {
   PlayCircleIcon, 
   CheckSquareIcon, 
   ArrowLeftIcon, 
-  MusicIcon,
+  MusicIcon as SpecialEventMusicIcon, // Renamed to avoid conflict if 'MusicIcon' is removed below
   ArrowRightIcon,
   LogInIcon,
   EyeIcon,
-  ShirtIcon, // For Esthétique et mode
-  PaintbrushIcon, // For Peinture
-  ChefHatIcon, // For Cuisine
-  FeatherIcon, // For Poesie
-  MessageSquareTextIcon, // For Art oratoire
-  DramaIcon, // For Théâtre
-  PersonStandingIcon, // For Danse
   Users
 } from "lucide-react";
 import Image from "next/image";
@@ -46,14 +39,14 @@ const liveBattles: LiveBattle[] = [
 ];
 
 const competitionCategories = [
-  { id: "esthetique_mode", name: "Esthétique et Mode", icon: ShirtIcon, dataAiHint: "fashion runway" },
-  { id: "peinture", name: "Peinture", icon: PaintbrushIcon, dataAiHint: "artist painting" },
-  { id: "cuisine", name: "Cuisine", icon: ChefHatIcon, dataAiHint: "gourmet food" },
-  { id: "poesie", name: "Poésie", icon: FeatherIcon, dataAiHint: "poetry book" },
-  { id: "art_oratoire", name: "Art Oratoire", icon: MessageSquareTextIcon, dataAiHint: "public speaking" },
-  { id: "theatre", name: "Théâtre", icon: DramaIcon, dataAiHint: "theater masks" },
-  { id: "musique", name: "Musique", icon: MusicIcon, dataAiHint: "music notes" },
-  { id: "danse", name: "Danse", icon: PersonStandingIcon, dataAiHint: "dance silhouette" },
+  { id: "esthetique_mode", name: "Esthétique et Mode", imageUrl: "/icons/categories/esthetique_mode.png", dataAiHint: "fashion runway" },
+  { id: "peinture", name: "Peinture", imageUrl: "/icons/categories/peinture.png", dataAiHint: "artist painting" },
+  { id: "cuisine", name: "Cuisine", imageUrl: "/icons/categories/cuisine.png", dataAiHint: "gourmet food" },
+  { id: "poesie", name: "Poésie", imageUrl: "/icons/categories/poesie.png", dataAiHint: "poetry book" },
+  { id: "art_oratoire", name: "Art Oratoire", imageUrl: "/icons/categories/art_oratoire.png", dataAiHint: "public speaking" },
+  { id: "theatre", name: "Théâtre", imageUrl: "/icons/categories/theatre.png", dataAiHint: "theater stage" },
+  { id: "musique", name: "Musique", imageUrl: "/icons/categories/musique.png", dataAiHint: "music notes" },
+  { id: "danse", name: "Danse", imageUrl: "/icons/categories/danse.png", dataAiHint: "dance silhouette" },
 ];
 
 
@@ -80,7 +73,7 @@ export default function CompetitionPage() {
           <Card className="mb-8 shadow-lg border-2 border-primary bg-secondary/10">
             <CardHeader>
               <CardTitle className="text-xl md:text-2xl font-headline text-primary flex items-center">
-                <MusicIcon className="mr-3 h-7 w-7" />
+                <SpecialEventMusicIcon className="mr-3 h-7 w-7" />
                 Événement Spécial : BantuChamp Music Journey !
               </CardTitle>
               <CardDescription className="text-base">
@@ -110,7 +103,15 @@ export default function CompetitionPage() {
             {competitionCategories.map(category => (
               <Card key={category.id} className="shadow-lg hover:shadow-xl hover:border-primary/50 transition-all duration-300 flex flex-col items-center text-center h-full group">
                 <CardHeader className="pb-2">
-                  <category.icon className="h-16 w-16 text-primary mb-4 mx-auto group-hover:scale-110 transition-transform" />
+                  <div className="relative h-16 w-16 mb-4 mx-auto group-hover:scale-110 transition-transform">
+                    <Image 
+                      src={category.imageUrl} 
+                      alt={category.name} 
+                      fill
+                      className="object-contain"
+                      data-ai-hint={category.dataAiHint}
+                    />
+                  </div>
                   <CardTitle className="font-headline text-xl">{category.name}</CardTitle>
                 </CardHeader>
                 <CardContent className="flex-grow">
@@ -124,7 +125,7 @@ export default function CompetitionPage() {
                     </Link>
                     <Link href={`/competition/${category.id}/vote-challenge`} passHref className="w-full">
                        <Button variant="outline" className="w-full text-primary border-primary hover:bg-primary/10">
-                        <EyeIcon className="mr-2 h-4 w-4" /> Voir &amp; Voter
+                        <EyeIcon className="mr-2 h-4 w-4" /> Voir & Voter
                       </Button>
                     </Link>
                 </CardFooter>
