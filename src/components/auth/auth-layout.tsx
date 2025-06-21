@@ -17,7 +17,7 @@ const AuthLayout = ({ children, title, description }: AuthLayoutProps) => {
             src="/logo-cts.png" 
             alt="BantuChamp CTS Logo" 
             width={170} // Adjusted width for auth page, maintaining aspect ratio (approx 113/40 * 1.5)
-            height={60}  // Adjusted height for auth page
+            height={60} // Adjusted height for auth page
             className="mx-auto mb-6 shadow-sm" 
             data-ai-hint="company logo"
             priority

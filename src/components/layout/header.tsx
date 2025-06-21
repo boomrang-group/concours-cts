@@ -35,13 +35,13 @@ const NavLink = ({ href, label, icon: Icon, onClick }: { href: string; label: st
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Mock login state
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false)
 
   // Placeholder for actual auth check
   useEffect(() => {
     // Simulate checking auth status, e.g., from localStorage or an auth context
     // For demonstration, let's toggle it to true after a delay to see the change
-    // const token = localStorage.getItem('userToken');
+    const token = localStorage.getItem('userToken');
     // setIsLoggedIn(!!token);
 
     // To test the logged-in state visually without full auth:
@@ -51,7 +51,7 @@ const Header = () => {
   const handleLogout = () => {
     // Clear token, redirect, etc.
     setIsLoggedIn(false);
-    // localStorage.removeItem('userToken');
+    localStorage.removeItem('userToken');
     // router.push('/'); // or login page
   };
 
@@ -60,13 +60,13 @@ const Header = () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
-        <Logo />
+        <Logo/>
         <nav className="hidden md:flex items-center space-x-2 lg:space-x-4">
           {navLinks.map((link) => (
             <Link key={link.href} href={link.href} passHref>
-               <Button variant="ghost" className={cn("text-foreground/70 hover:text-primary", usePathname() === link.href && "text-primary font-semibold")}>
+              <Button variant="ghost" className={cn("text-foreground/70 hover:text-primary", usePathname() === link.href && "text-primary font-semibold")}>
                 {link.label}
-              </Button>
+                </Button>
             </Link>
           ))}
         </nav>
@@ -105,14 +105,14 @@ const Header = () => {
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
-                <MenuIcon className="h-6 w-6" />
+                <MenuIcon className="h-6 w-6"/>
                 <span className="sr-only">Ouvrir le menu</span>
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] sm:w-[340px] p-0">
               <div className="flex flex-col h-full">
                 <div className="flex items-center justify-between p-4 border-b">
-                  <Logo />
+                  <Logo/>
                   <SheetClose asChild>
                      <Button variant="ghost" size="icon">
                         <XIcon className="h-6 w-6" />
