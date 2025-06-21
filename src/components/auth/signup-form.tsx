@@ -178,46 +178,78 @@ export default function SignupForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    console.log("Form values for potential pre-payment save:", values);
 
-    // Generate a unique reference for the transaction
-    const reference = `BANTU-${Date.now()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-    
-    // Define URLs - ensure these are absolute for MaxiCash, window.location.origin handles this.
-    const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-    const acceptUrl = `${baseUrl}/auth/payment-success?ref=${reference}`;
-    const cancelUrl = `${baseUrl}/auth/payment-cancel?ref=${reference}`;
-    const declineUrl = `${baseUrl}/auth/payment-decline?ref=${reference}`;
-    const notifyUrl = `${baseUrl}/api/payment/maxicash-notify`; // Ensure this API route exists on your backend
-
-    // Prepare MaxiCash payment details
-    const paymentDetails = {
-      amount: "200", // $2 Fee
-      currency: "USD", // Assuming USD
-      telephone: values.phone || "", // Pass phone if available
-      email: values.email,
-      merchantId: "93b10243a03e4536832aa5c9473fd0ae", // Updated Merchant ID
-      merchantPassword: "fdf00a6ff0c94b048aa3162677b8a0ef", // Updated Merchant Password
-      language: "Fr", // Or "En"
-      reference: reference,
-      acceptUrl: acceptUrl,
-      cancelUrl: cancelUrl,
-      declineUrl: declineUrl,
-      notifyUrl: notifyUrl,
-    };
-
-    // HERE: You would typically save user data to your backend in a 'pending payment' state.
-    // For this example, we'll proceed directly to payment.
-
+    // Step 1: Attempt to register the user with your backend API
     try {
-      submitMaxiCashForm(paymentDetails);
-      // User will be redirected to MaxiCash. setIsLoading(false) and form.reset() 
-      // might not be reached or relevant if navigation is successful.
-    } catch (error) {
-      console.error("Payment submission error:", error);
+      const apiResponse = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: values.name,
+          email: values.email,
+          password: values.password,
+          // Include other relevant fields if your API expects them
+          // For example, accountType, groupName, etc.
+          // For now, we're keeping it simple as per the backend implementation
+        }),
+      });
+
+      const apiData = await apiResponse.json();
+
+      if (!apiResponse.ok) {
+        toast({
+          title: "Erreur d'inscription",
+          description: apiData.message || "Une erreur s'est produite lors de l'inscription. Veuillez réessayer.",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return; // Stop if API registration fails
+      }
+
+      // If API registration is successful, proceed to payment
       toast({
-        title: "Erreur de Paiement",
-        description: "Impossible de rediriger vers la page de paiement. Veuillez réessayer.",
+        title: "Inscription initiale réussie",
+        description: "Redirection vers le paiement...",
+      });
+
+      // Generate a unique reference for the transaction
+      const reference = `BANTU-${Date.now()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+
+      // Define URLs - ensure these are absolute for MaxiCash, window.location.origin handles this.
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+      const acceptUrl = `${baseUrl}/auth/payment-success?ref=${reference}&userId=${apiData.userId}`; // Pass userId
+      const cancelUrl = `${baseUrl}/auth/payment-cancel?ref=${reference}&userId=${apiData.userId}`;
+      const declineUrl = `${baseUrl}/auth/payment-decline?ref=${reference}&userId=${apiData.userId}`;
+      // Ensure this API route exists on your backend and can handle the userId
+      const notifyUrl = `${baseUrl}/api/payment/maxicash-notify?userId=${apiData.userId}`;
+
+      // Prepare MaxiCash payment details
+      const paymentDetails = {
+        amount: "200", // $2 Fee
+        currency: "USD", // Assuming USD
+        telephone: values.phone || "", // Pass phone if available
+        email: values.email, // User's email
+        merchantId: "93b10243a03e4536832aa5c9473fd0ae",
+        merchantPassword: "fdf00a6ff0c94b048aa3162677b8a0ef",
+        language: "Fr", // Or "En"
+        reference: reference, // Unique reference for this transaction
+        acceptUrl: acceptUrl,
+        cancelUrl: cancelUrl,
+        declineUrl: declineUrl,
+        notifyUrl: notifyUrl, // Your backend notification URL
+      };
+
+      submitMaxiCashForm(paymentDetails);
+      // User will be redirected. setIsLoading(false) might not be reached.
+      // form.reset(); // Reset form if needed, but redirection likely occurs first
+
+    } catch (error) {
+      console.error("Signup or Payment submission error:", error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur s'est produite. Veuillez réessayer.",
         variant: "destructive",
       });
       setIsLoading(false);

@@ -42,25 +42,54 @@ export default function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    console.log(values);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500)); 
-    
-    // Mock successful login for now
-    // In a real app, you would set an auth token here
-    // if (typeof window !== "undefined") {
-    //   localStorage.setItem('userToken', 'fake-token');
-    // }
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: values.email,
+          password: values.password,
+        }),
+      });
 
-    toast({
-      title: "Connexion Réussie !",
-      description: "Vous allez être redirigé vers votre tableau de bord.",
-      variant: "default",
-    });
+      const data = await response.json();
 
-    form.reset(); 
-    setIsLoading(false);
-    router.push("/dashboard"); 
+      if (response.ok) {
+        toast({
+          title: "Connexion Réussie !",
+          description: data.message || "Vous allez être redirigé vers votre tableau de bord.",
+          variant: "default",
+        });
+        if (data.token) {
+          // Store the token. For 'Remember Me', localStorage is appropriate.
+          // Otherwise, sessionStorage could be used for a session-only token.
+          if (values.rememberMe) {
+            localStorage.setItem("authToken", data.token);
+          } else {
+            sessionStorage.setItem("authToken", data.token);
+          }
+        }
+        form.reset();
+        router.push("/dashboard");
+      } else {
+        toast({
+          title: "Échec de la connexion",
+          description: data.message || "Vérifiez vos identifiants et réessayez.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      toast({
+        title: "Erreur de Connexion",
+        description: "Une erreur s'est produite lors de la connexion. Veuillez réessayer.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
