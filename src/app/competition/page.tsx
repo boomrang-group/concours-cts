@@ -12,7 +12,7 @@ import {
   PlayCircleIcon, 
   CheckSquareIcon, 
   ArrowLeftIcon, 
-  MusicIcon as SpecialEventMusicIcon, // Renamed to avoid conflict if 'MusicIcon' is removed below
+  MusicIcon as SpecialEventMusicIcon,
   ArrowRightIcon,
   LogInIcon,
   EyeIcon,
@@ -103,33 +103,31 @@ export default function CompetitionPage() {
             {competitionCategories.map(category => (
               <Card key={category.id} className="shadow-lg hover:shadow-xl hover:border-primary/50 transition-all duration-300 flex flex-col items-center text-center h-full group">
                 <div className="relative w-full h-40 overflow-hidden rounded-t-md">
-
-
-                    <Image 
-                      src={category.imageUrl} 
-                      alt={category.name}
-                      fill
-                      className="object-contain"
-                      data-ai-hint={category.dataAiHint}
-                    />
-                  </div>
- <CardHeader>
- <CardTitle className="font-headline text-xl">{category.name}</CardTitle>
+                  <Image 
+                    src={category.imageUrl} 
+                    alt={category.name}
+                    fill
+                    className="object-contain"
+                    data-ai-hint={category.dataAiHint}
+                  />
+                </div>
+                <CardHeader>
+                  <CardTitle className="font-headline text-xl">{category.name}</CardTitle>
                 </CardHeader>
                 <CardContent className="flex-grow">
                   {/* Optional: Add a short description for each category if needed later */}
                 </CardContent>
                 <CardFooter className="w-full pt-3 flex flex-col gap-2">
-                    <Link href="/auth/login" passHref className="w-full">
-                      <Button variant="default" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-                        <LogInIcon className="mr-2 h-4 w-4" /> Soumettre
-                      </Button>
-                    </Link>
-                    <Link href={`/competition/${category.id}/vote-challenge`} passHref className="w-full">
-                       <Button variant="outline" className="w-full text-primary border-primary hover:bg-primary/10">
-                        <EyeIcon className="mr-2 h-4 w-4" /> Voir & Voter
-                      </Button>
-                    </Link>
+                  <Link href="/auth/login" passHref className="w-full">
+                    <Button variant="default" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                      <LogInIcon className="mr-2 h-4 w-4" /> Soumettre
+                    </Button>
+                  </Link>
+                  <Link href={`/competition/${category.id}/vote-challenge`} passHref className="w-full">
+                     <Button variant="outline" className="w-full text-primary border-primary hover:bg-primary/10">
+                      <EyeIcon className="mr-2 h-4 w-4" /> Voir & Voter
+                    </Button>
+                  </Link>
                 </CardFooter>
               </Card>
             ))}
