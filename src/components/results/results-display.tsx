@@ -7,39 +7,39 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { 
-  DownloadIcon, 
-  EyeIcon, 
-  TrophyIcon, 
-  StarIcon, 
-  AwardIcon,
-  MicIcon,
-  FeatherIcon,
-  PersonStandingIcon,
-  MusicIcon,
-  MessageSquareTextIcon,
-  DramaIcon,
-  HeartPulseIcon,
-  ActivityIcon,
-  ChefHatIcon,
-  PaletteIcon,
-  PaintbrushIcon,
-  LightbulbIcon
+  Download, 
+  Eye, 
+  Trophy, 
+  Star, 
+  Award,
+  Mic,
+  Feather,
+  PersonStanding,
+  Music,
+  MessageSquareText,
+  Drama,
+  HeartPulse,
+  Activity,
+  ChefHat,
+  Palette,
+  Paintbrush,
+  Lightbulb
 } from "lucide-react";
 import Image from "next/image";
 
 const categories = [
-  { id: "slam", name: "Slam", icon: <MicIcon className="mr-2 h-4 w-4"/> },
-  { id: "poesie", name: "Poésie", icon: <FeatherIcon className="mr-2 h-4 w-4"/> },
-  { id: "danse", name: "Danse", icon: <PersonStandingIcon className="mr-2 h-4 w-4"/> },
-  { id: "musique", name: "Musique", icon: <MusicIcon className="mr-2 h-4 w-4"/> },
-  { id: "art_oratoire", name: "Art Oratoire", icon: <MessageSquareTextIcon className="mr-2 h-4 w-4"/> },
-  { id: "theatre", name: "Théâtre", icon: <DramaIcon className="mr-2 h-4 w-4"/> },
-  { id: "fitness_yoga", name: "Fitness & Yoga", icon: <HeartPulseIcon className="mr-2 h-4 w-4"/> },
-  { id: "gymnastique", name: "Gymnastique", icon: <ActivityIcon className="mr-2 h-4 w-4"/> },
-  { id: "cuisine", name: "Cuisine", icon: <ChefHatIcon className="mr-2 h-4 w-4"/> },
-  { id: "modelisme", name: "Modélisme", icon: <PaletteIcon className="mr-2 h-4 w-4"/> },
-  { id: "peinture", name: "Peinture", icon: <PaintbrushIcon className="mr-2 h-4 w-4"/> },
-  { id: "entrepreneuriat", name: "Entrepreneuriat", icon: <LightbulbIcon className="mr-2 h-4 w-4"/> },
+  { id: "slam", name: "Slam", icon: <Mic className="mr-2 h-4 w-4"/> },
+  { id: "poesie", name: "Poésie", icon: <Feather className="mr-2 h-4 w-4"/> },
+  { id: "danse", name: "Danse", icon: <PersonStanding className="mr-2 h-4 w-4"/> },
+  { id: "musique", name: "Musique", icon: <Music className="mr-2 h-4 w-4"/> },
+  { id: "art_oratoire", name: "Art Oratoire", icon: <MessageSquareText className="mr-2 h-4 w-4"/> },
+  { id: "theatre", name: "Théâtre", icon: <Drama className="mr-2 h-4 w-4"/> },
+  { id: "fitness_yoga", name: "Fitness & Yoga", icon: <HeartPulse className="mr-2 h-4 w-4"/> },
+  { id: "gymnastique", name: "Gymnastique", icon: <Activity className="mr-2 h-4 w-4"/> },
+  { id: "cuisine", name: "Cuisine", icon: <ChefHat className="mr-2 h-4 w-4"/> },
+  { id: "modelisme", name: "Modélisme", icon: <Palette className="mr-2 h-4 w-4"/> },
+  { id: "peinture", name: "Peinture", icon: <Paintbrush className="mr-2 h-4 w-4"/> },
+  { id: "entrepreneuriat", name: "Entrepreneuriat", icon: <Lightbulb className="mr-2 h-4 w-4"/> },
 ];
 
 const rankingsData: { [key: string]: any[] } = {
@@ -104,9 +104,9 @@ export default function ResultsDisplay() {
                       {rankingsData[cat.id].map((item) => (
                         <TableRow key={item.rank} className="hover:bg-muted/50">
                           <TableCell className="font-bold text-lg">
-                            {item.rank === 1 && <TrophyIcon className="h-6 w-6 text-yellow-500 inline-block mr-1" />}
-                            {item.rank === 2 && <AwardIcon className="h-6 w-6 text-gray-400 inline-block mr-1" />}
-                            {item.rank === 3 && <StarIcon className="h-6 w-6 text-orange-400 inline-block mr-1" />}
+                            {item.rank === 1 && <Trophy className="h-6 w-6 text-yellow-500 inline-block mr-1" />}
+                            {item.rank === 2 && <Award className="h-6 w-6 text-gray-400 inline-block mr-1" />}
+                            {item.rank === 3 && <Star className="h-6 w-6 text-orange-400 inline-block mr-1" />}
                             {item.rank > 3 && item.rank}
                           </TableCell>
                           <TableCell>
@@ -124,11 +124,11 @@ export default function ResultsDisplay() {
                           <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">{item.prize}</TableCell>
                           <TableCell className="text-right space-x-1">
                             <Button variant="ghost" size="icon" title="Voir le projet">
-                              <EyeIcon className="h-4 w-4" />
+                              <Eye className="h-4 w-4" />
                             </Button>
                             {item.rank <=3 && (
                             <Button variant="ghost" size="icon" title="Télécharger le certificat">
-                              <DownloadIcon className="h-4 w-4" />
+                              <Download className="h-4 w-4" />
                             </Button>
                             )}
                           </TableCell>
@@ -147,4 +147,3 @@ export default function ResultsDisplay() {
     </Card>
   );
 }
-

@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeftIcon, CheckCircleIcon, FileTextIcon, ImageIcon, VideoIcon } from "lucide-react";
+import { ArrowLeft, CheckCircle, FileText, Image as ImageIcon, Video } from "lucide-react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -90,7 +90,7 @@ const FileDisplay = ({ fileType, fileUrl, title, dataAiHint }: { fileType: strin
     case 'document':
        return (
         <div className="aspect-video bg-muted rounded-md flex flex-col items-center justify-center text-muted-foreground p-4">
-          <FileTextIcon className="h-16 w-16 mb-2" />
+          <FileText className="h-16 w-16 mb-2" />
           <p>Document: "{title}"</p>
            <Button variant="outline" size="sm" className="mt-2" asChild>
             <a href={fileUrl} target="_blank" rel="noopener noreferrer">Ouvrir le document</a>
@@ -123,7 +123,7 @@ export default function EvaluateSubmissionPage() {
         <p>Chargement de la soumission...</p>
         <p className="text-sm text-muted-foreground mt-2">Si le chargement persiste, la soumission n'existe peut-être pas.</p>
         <Button onClick={() => router.back()} variant="outline" className="mt-4">
-            <ArrowLeftIcon className="mr-2 h-4 w-4" /> Retour
+            <ArrowLeft className="mr-2 h-4 w-4" /> Retour
         </Button>
       </div>
     );
@@ -175,7 +175,7 @@ export default function EvaluateSubmissionPage() {
   return (
     <div className="container py-8 md:py-12">
       <Button variant="outline" onClick={() => router.back()} className="mb-6">
-        <ArrowLeftIcon className="mr-2 h-4 w-4" /> Retour au tableau de bord
+        <ArrowLeft className="mr-2 h-4 w-4" /> Retour au tableau de bord
       </Button>
 
       <Card className="shadow-xl">
@@ -231,7 +231,7 @@ export default function EvaluateSubmissionPage() {
             
             {!isViewMode && (
               <Button type="submit" size="lg" className="w-full md:w-auto bg-primary text-primary-foreground hover:bg-primary/90">
-                <CheckCircleIcon className="mr-2 h-5 w-5" />
+                <CheckCircle className="mr-2 h-5 w-5" />
                 Soumettre l'Évaluation
               </Button>
             )}

@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { PlusCircleIcon, Trash2Icon } from "lucide-react";
+import { PlusCircle, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
@@ -374,7 +374,7 @@ export default function SubmissionForm() {
                       <Input placeholder="email@coequipier.com" {...memberField} />
                     </FormControl>
                     <Button type="button" variant="destructive" size="icon" onClick={() => remove(index)}>
-                      <Trash2Icon className="h-4 w-4" />
+                      <Trash2 className="h-4 w-4" />
                     </Button>
                     <FormMessage />
                   </FormItem>
@@ -389,7 +389,7 @@ export default function SubmissionForm() {
               onClick={() => append({ email: "" })}
               disabled={fields.length >= 4} 
             >
-              <PlusCircleIcon className="mr-2 h-4 w-4" /> Ajouter un coéquipier
+              <PlusCircle className="mr-2 h-4 w-4" /> Ajouter un coéquipier
             </Button>
              <FormDescription className="mt-1">
                 Ajoutez les adresses e-mail de vos coéquipiers (max 4 en plus du chef d'équipe).

@@ -8,15 +8,15 @@ import { signOut } from 'firebase/auth';
 import Logo from './logo';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
-import { MenuIcon, HomeIcon, UserPlusIcon, TrophyIcon, AwardIcon, UsersIcon, LogInIcon, LayoutDashboardIcon, LogOutIcon, XIcon } from 'lucide-react';
+import { Menu, Home, UserPlus, Trophy, Award, Users, LogIn, LayoutDashboard, LogOut, X } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 const navLinks = [
-  { href: '/', label: 'Accueil', icon: HomeIcon },
-  { href: '/competition', label: 'Compétition', icon: TrophyIcon },
-  { href: '/results', label: 'Résultats', icon: AwardIcon },
-  { href: '/partners', label: 'Partenaires', icon: UsersIcon },
+  { href: '/', label: 'Accueil', icon: Home },
+  { href: '/competition', label: 'Compétition', icon: Trophy },
+  { href: '/results', label: 'Résultats', icon: Award },
+  { href: '/partners', label: 'Partenaires', icon: Users },
 ];
 
 const NavLink = ({ href, label, icon: Icon, onClick }: { href: string; label: string; icon: React.ElementType; onClick?: () => void }) => {
@@ -72,12 +72,12 @@ const Header = () => {
             <>
               <Link href="/dashboard" passHref>
                 <Button variant="outline" className="text-primary border-primary hover:bg-primary/10">
-                  <LayoutDashboardIcon className="mr-2 h-4 w-4" />
+                  <LayoutDashboard className="mr-2 h-4 w-4" />
                   Tableau de bord
                 </Button>
               </Link>
               <Button variant="ghost" onClick={handleLogout} className="hover:text-destructive">
-                <LogOutIcon className="mr-2 h-4 w-4" />
+                <LogOut className="mr-2 h-4 w-4" />
                 Déconnexion
               </Button>
             </>
@@ -85,13 +85,13 @@ const Header = () => {
             <>
               <Link href="/auth/login" passHref>
                 <Button variant="ghost" className="hover:text-primary">
-                  <LogInIcon className="mr-2 h-4 w-4" />
+                  <LogIn className="mr-2 h-4 w-4" />
                   Connexion
                 </Button>
               </Link>
               <Link href="/auth/signup" passHref>
                 <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-                  <UserPlusIcon className="mr-2 h-4 w-4" />
+                  <UserPlus className="mr-2 h-4 w-4" />
                   Inscription
                 </Button>
               </Link>
@@ -102,7 +102,7 @@ const Header = () => {
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
-                <MenuIcon className="h-6 w-6"/>
+                <Menu className="h-6 w-6"/>
                 <span className="sr-only">Ouvrir le menu</span>
               </Button>
             </SheetTrigger>
@@ -112,7 +112,7 @@ const Header = () => {
                   <Logo/>
                   <SheetClose asChild>
                      <Button variant="ghost" size="icon">
-                        <XIcon className="h-6 w-6" />
+                        <X className="h-6 w-6" />
                         <span className="sr-only">Fermer le menu</span>
                       </Button>
                   </SheetClose>
@@ -124,16 +124,16 @@ const Header = () => {
                    <hr className="my-4" />
                   {isLoggedIn ? (
                     <>
-                      <NavLink href="/dashboard" label="Tableau de bord" icon={LayoutDashboardIcon} onClick={closeSheet} />
+                      <NavLink href="/dashboard" label="Tableau de bord" icon={LayoutDashboard} onClick={closeSheet} />
                       <Button variant="ghost" onClick={() => { handleLogout(); closeSheet(); }} className="justify-start w-full text-base hover:text-destructive">
-                        <LogOutIcon className="mr-2 h-5 w-5" />
+                        <LogOut className="mr-2 h-5 w-5" />
                         Déconnexion
                       </Button>
                     </>
                   ) : (
                     <>
-                      <NavLink href="/auth/login" label="Connexion" icon={LogInIcon} onClick={closeSheet}/>
-                      <NavLink href="/auth/signup" label="Inscription" icon={UserPlusIcon} onClick={closeSheet}/>
+                      <NavLink href="/auth/login" label="Connexion" icon={LogIn} onClick={closeSheet}/>
+                      <NavLink href="/auth/signup" label="Inscription" icon={UserPlus} onClick={closeSheet}/>
                     </>
                   )}
                 </nav>

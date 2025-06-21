@@ -3,7 +3,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ListChecksIcon, FileSearchIcon, LogOutIcon } from "lucide-react";
+import { ListChecks, FileSearch, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -31,7 +31,7 @@ export default function JuryDashboardPage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold font-headline mb-4 md:mb-0">Tableau de Bord du Jury</h1>
         <Button onClick={handleLogout} variant="outline">
-          <LogOutIcon className="mr-2 h-5 w-5" />
+          <LogOut className="mr-2 h-5 w-5" />
           Déconnexion
         </Button>
       </div>
@@ -40,7 +40,7 @@ export default function JuryDashboardPage() {
         {/* Pending Submissions Section */}
         <Card className="shadow-lg">
           <CardHeader>
-            <CardTitle className="flex items-center text-xl font-headline"><ListChecksIcon className="mr-2 h-6 w-6 text-primary" /> Soumissions en Attente</CardTitle>
+            <CardTitle className="flex items-center text-xl font-headline"><ListChecks className="mr-2 h-6 w-6 text-primary" /> Soumissions en Attente</CardTitle>
             <CardDescription>Projets nécessitant votre évaluation.</CardDescription>
           </CardHeader>
           <CardContent>
@@ -71,7 +71,7 @@ export default function JuryDashboardPage() {
         {/* Evaluated Submissions Section */}
         <Card className="shadow-lg">
           <CardHeader>
-            <CardTitle className="flex items-center text-xl font-headline"><FileSearchIcon className="mr-2 h-6 w-6 text-green-600" /> Soumissions Évaluées</CardTitle>
+            <CardTitle className="flex items-center text-xl font-headline"><FileSearch className="mr-2 h-6 w-6 text-green-600" /> Soumissions Évaluées</CardTitle>
             <CardDescription>Historique de vos évaluations.</CardDescription>
           </CardHeader>
           <CardContent>

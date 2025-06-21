@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { UploadCloudIcon, BadgeIcon, HistoryIcon, PlusCircleIcon } from "lucide-react";
+import { UploadCloud, Badge as BadgeIcon, History, PlusCircle } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -29,7 +29,7 @@ export default function DashboardPage() {
         <h1 className="text-3xl md:text-4xl font-bold font-headline mb-4 md:mb-0">Mon Tableau de Bord</h1>
         <Link href="/submission">
           <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-            <PlusCircleIcon className="mr-2 h-5 w-5" />
+            <PlusCircle className="mr-2 h-5 w-5" />
             Nouvelle Soumission
           </Button>
         </Link>
@@ -39,7 +39,7 @@ export default function DashboardPage() {
         {/* Submissions Section */}
         <Card className="lg:col-span-2 shadow-lg">
           <CardHeader>
-            <CardTitle className="flex items-center text-xl font-headline"><UploadCloudIcon className="mr-2 h-6 w-6 text-primary" /> Mes Soumissions</CardTitle>
+            <CardTitle className="flex items-center text-xl font-headline"><UploadCloud className="mr-2 h-6 w-6 text-primary" /> Mes Soumissions</CardTitle>
             <CardDescription>Suivez l'état de vos projets soumis.</CardDescription>
           </CardHeader>
           <CardContent>
@@ -93,7 +93,7 @@ export default function DashboardPage() {
         {/* Competition History Section */}
         <Card className="lg:col-span-3 shadow-lg">
           <CardHeader>
-            <CardTitle className="flex items-center text-xl font-headline"><HistoryIcon className="mr-2 h-6 w-6 text-primary" /> Historique de la Compétition</CardTitle>
+            <CardTitle className="flex items-center text-xl font-headline"><History className="mr-2 h-6 w-6 text-primary" /> Historique de la Compétition</CardTitle>
             <CardDescription>Suivez votre parcours dans la compétition.</CardDescription>
           </CardHeader>
           <CardContent>

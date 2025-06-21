@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect, type FC } from 'react';
-import { TimerIcon, InfoIcon } from 'lucide-react';
+import { Timer, Info } from 'lucide-react';
 
 interface Countdown {
   days: number;
@@ -55,7 +55,7 @@ const NotificationBar: FC<NotificationBarProps> = ({ targetDate, message }) => {
     return (
       <div className="fixed top-0 left-0 right-0 z-[100] bg-primary text-primary-foreground p-2 text-center text-sm shadow-md">
         <div className="container mx-auto flex items-center justify-center gap-2 flex-wrap">
-            <TimerIcon className="inline-block h-4 w-4 mr-1" />
+            <Timer className="inline-block h-4 w-4 mr-1" />
             <span>{message} Chargement du compte à rebours...</span>
         </div>
       </div>
@@ -66,7 +66,7 @@ const NotificationBar: FC<NotificationBarProps> = ({ targetDate, message }) => {
     return (
       <div className="fixed top-0 left-0 right-0 z-[100] bg-primary/90 text-primary-foreground p-2 text-center text-sm shadow-md">
         <div className="container mx-auto flex items-center justify-center gap-2 flex-wrap">
-            <InfoIcon className="inline-block h-4 w-4 mr-1" />
+            <Info className="inline-block h-4 w-4 mr-1" />
             <span>Les inscriptions sont maintenant terminées !</span>
         </div>
       </div>
@@ -76,7 +76,7 @@ const NotificationBar: FC<NotificationBarProps> = ({ targetDate, message }) => {
   return (
     <div className="fixed top-0 left-0 right-0 z-[100] bg-primary text-primary-foreground p-2 text-center text-sm shadow-md">
       <div className="container mx-auto flex items-center justify-center gap-2 flex-wrap">
-        <TimerIcon className="inline-block h-4 w-4 mr-1" />
+        <Timer className="inline-block h-4 w-4 mr-1" />
         <span>{message}</span>
         <span className="font-semibold">
           {String(timeLeft.days).padStart(2, '0')}j : {String(timeLeft.hours).padStart(2, '0')}h : {String(timeLeft.minutes).padStart(2, '0')}m : {String(timeLeft.seconds).padStart(2, '0')}s

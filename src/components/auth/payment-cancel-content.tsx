@@ -2,7 +2,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { InfoIcon } from 'lucide-react';
+import { Info } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
@@ -12,7 +12,7 @@ export default function PaymentCancelContent() {
 
   return (
     <div className="space-y-6 text-center">
-      <InfoIcon className="mx-auto h-16 w-16 text-yellow-500" />
+      <Info className="mx-auto h-16 w-16 text-yellow-500" />
       <p className="text-muted-foreground">
         Vous avez choisi d&apos;annuler le paiement. Votre inscription n&apos;est pas encore finalisée.
       </p>

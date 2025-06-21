@@ -2,7 +2,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { XCircleIcon } from 'lucide-react';
+import { XCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
@@ -12,7 +12,7 @@ export default function PaymentDeclineContent() {
 
   return (
     <div className="space-y-6 text-center">
-      <XCircleIcon className="mx-auto h-16 w-16 text-destructive" />
+      <XCircle className="mx-auto h-16 w-16 text-destructive" />
  <p className="text-muted-foreground">
  Votre paiement pour l'inscription à BantuChamp n'a pas abouti.
  </p>

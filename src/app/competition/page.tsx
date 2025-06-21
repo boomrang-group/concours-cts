@@ -8,14 +8,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import LiveBattlePlayer from "@/components/competition/live-battle-player";
 import VotingArea from "@/components/competition/voting-area";
 import { 
-  TrophyIcon, 
-  PlayCircleIcon, 
-  CheckSquareIcon, 
-  ArrowLeftIcon, 
-  MusicIcon as SpecialEventMusicIcon,
-  ArrowRightIcon,
-  LogInIcon,
-  EyeIcon,
+  Trophy, 
+  PlayCircle, 
+  CheckSquare, 
+  ArrowLeft, 
+  Music,
+  ArrowRight,
+  LogIn,
+  Eye,
   Users
 } from "lucide-react";
 import Image from "next/image";
@@ -56,7 +56,7 @@ export default function CompetitionPage() {
   return (
     <div className="container py-8 md:py-12">
       <div className="text-center mb-12">
-        <TrophyIcon className="mx-auto h-16 w-16 text-primary mb-4" />
+        <Trophy className="mx-auto h-16 w-16 text-primary mb-4" />
         <h1 className="text-4xl md:text-5xl font-bold font-headline">La Compétition</h1>
         <p className="text-lg text-muted-foreground mt-2 max-w-2xl mx-auto">
           Choisissez une catégorie pour soumettre votre projet, ou assistez aux battles en direct !
@@ -65,15 +65,15 @@ export default function CompetitionPage() {
 
       <Tabs defaultValue="challenges" className="w-full">
         <TabsList className="grid w-full grid-cols-2 mb-8 max-w-md mx-auto">
-          <TabsTrigger value="challenges"><CheckSquareIcon className="mr-2 h-4 w-4"/>Catégories & Soumissions</TabsTrigger>
-          <TabsTrigger value="live-battles" onClick={() => setSelectedBattle(null)}><PlayCircleIcon className="mr-2 h-4 w-4"/>Battles en Direct</TabsTrigger>
+          <TabsTrigger value="challenges"><CheckSquare className="mr-2 h-4 w-4"/>Catégories & Soumissions</TabsTrigger>
+          <TabsTrigger value="live-battles" onClick={() => setSelectedBattle(null)}><PlayCircle className="mr-2 h-4 w-4"/>Battles en Direct</TabsTrigger>
         </TabsList>
 
         <TabsContent value="challenges">
           <Card className="mb-8 shadow-lg border-2 border-primary bg-secondary/10">
             <CardHeader>
               <CardTitle className="text-xl md:text-2xl font-headline text-primary flex items-center">
-                <SpecialEventMusicIcon className="mr-3 h-7 w-7" />
+                <Music className="mr-3 h-7 w-7" />
                 Événement Spécial : BantuChamp Music Journey !
               </CardTitle>
               <CardDescription className="text-base">
@@ -89,7 +89,7 @@ export default function CompetitionPage() {
             <CardFooter>
               <Link href="/competition/music-journey" passHref className="w-full">
                 <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 text-base py-3">
-                  Voir les Détails du Music Journey <ArrowRightIcon className="ml-2 h-5 w-5"/>
+                  Voir les Détails du Music Journey <ArrowRight className="ml-2 h-5 w-5"/>
                 </Button>
               </Link>
             </CardFooter>
@@ -120,12 +120,12 @@ export default function CompetitionPage() {
                 <CardFooter className="w-full pt-3 flex flex-col gap-2">
                   <Link href="/auth/login" passHref className="w-full">
                     <Button variant="default" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-                      <LogInIcon className="mr-2 h-4 w-4" /> Soumettre
+                      <LogIn className="mr-2 h-4 w-4" /> Soumettre
                     </Button>
                   </Link>
                   <Link href={`/competition/${category.id}/vote-challenge`} passHref className="w-full">
                      <Button variant="outline" className="w-full text-primary border-primary hover:bg-primary/10">
-                      <EyeIcon className="mr-2 h-4 w-4" /> Voir & Voter
+                      <Eye className="mr-2 h-4 w-4" /> Voir & Voter
                     </Button>
                   </Link>
                 </CardFooter>
@@ -133,7 +133,7 @@ export default function CompetitionPage() {
             ))}
              {competitionCategories.length === 0 && (
               <div className="text-center py-12 col-span-full">
-                <CheckSquareIcon className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+                <CheckSquare className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
                 <h3 className="text-xl font-semibold mb-2">Aucune catégorie pour le moment.</h3>
                 <p className="text-muted-foreground">Revenez bientôt pour découvrir les catégories de compétition !</p>
               </div>
@@ -146,7 +146,7 @@ export default function CompetitionPage() {
             <Card className="shadow-xl mb-8">
               <CardHeader>
                 <Button variant="outline" onClick={() => setSelectedBattle(null)} className="mb-4 self-start">
-                  <ArrowLeftIcon className="mr-2 h-4 w-4" /> Retour à la liste des battles
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Retour à la liste des battles
                 </Button>
                 <CardTitle className="font-headline text-2xl">{selectedBattle.title}</CardTitle>
                 <CardDescription>{selectedBattle.time} - {selectedBattle.playerA} vs {selectedBattle.playerB}</CardDescription>
@@ -174,7 +174,7 @@ export default function CompetitionPage() {
                                 <p className="text-xs text-muted-foreground mb-3">{battle.description}</p>
                             </div>
                             <Button onClick={() => setSelectedBattle(battle)} className="w-full md:w-auto self-end bg-primary text-primary-foreground hover:bg-primary/90">
-                                <PlayCircleIcon className="mr-2 h-4 w-4" /> Regarder et Voter
+                                <PlayCircle className="mr-2 h-4 w-4" /> Regarder et Voter
                             </Button>
                         </div>
                     </div>
@@ -183,7 +183,7 @@ export default function CompetitionPage() {
               </div>
             ) : (
             <div className="text-center py-12">
-              <PlayCircleIcon className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+              <PlayCircle className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
               <h3 className="text-xl font-semibold mb-2">Aucune battle en direct pour le moment.</h3>
               <p className="text-muted-foreground">Revenez bientôt pour assister aux prochains duels !</p>
             </div>

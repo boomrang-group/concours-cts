@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Calendar } from "@/components/ui/calendar";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { InfoIcon } from 'lucide-react';
+import { Info } from 'lucide-react';
 
 // Mock event data
 const competitionEvents = [
@@ -53,7 +53,7 @@ export default function InteractiveCalendar() {
       />
       {selectedEvent && (
         <Alert className="bg-primary/10 border-primary/30 text-primary">
-          <InfoIcon className="h-5 w-5 text-primary" />
+          <Info className="h-5 w-5 text-primary" />
           <AlertTitle className="font-semibold text-primary">{selectedEvent.title}</AlertTitle>
           <AlertDescription className="text-primary/80">
             {selectedEvent.description}
@@ -62,7 +62,7 @@ export default function InteractiveCalendar() {
       )}
       {!selectedEvent && selectedDate && (
          <Alert variant="default">
-          <InfoIcon className="h-5 w-5" />
+          <Info className="h-5 w-5" />
           <AlertTitle>Information</AlertTitle>
           <AlertDescription>
             Aucun événement spécial prévu pour cette date. Vérifiez les dates en surbrillance.

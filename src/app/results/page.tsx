@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ResultsDisplay from "@/components/results/results-display";
-import { AwardIcon, UsersIcon, BarChart3Icon } from "lucide-react";
+import { Award, Users, BarChart3 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -9,7 +9,7 @@ export default function ResultsPage() {
   return (
     <div className="container py-8 md:py-12">
       <div className="text-center mb-12">
-        <AwardIcon className="mx-auto h-16 w-16 text-primary mb-4" />
+        <Award className="mx-auto h-16 w-16 text-primary mb-4" />
         <h1 className="text-4xl md:text-5xl font-bold font-headline">Résultats de la Compétition</h1>
         <p className="text-lg text-muted-foreground mt-2 max-w-2xl mx-auto">
           Découvrez les classements, les gagnants et les récompenses.
@@ -19,7 +19,7 @@ export default function ResultsPage() {
       {/* Overall Stats Placeholder */}
       <section className="mb-12">
         <h2 className="text-2xl font-semibold mb-6 text-center font-headline flex items-center justify-center">
-            <BarChart3Icon className="mr-3 h-7 w-7 text-primary"/>Statistiques Clés
+            <BarChart3 className="mr-3 h-7 w-7 text-primary"/>Statistiques Clés
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card className="text-center shadow-lg">
@@ -66,7 +66,7 @@ export default function ResultsPage() {
         </p>
         <Link href="/results/winners">
           <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
-            <UsersIcon className="mr-2 h-5 w-5" /> Voir les Profils des Gagnants
+            <Users className="mr-2 h-5 w-5" /> Voir les Profils des Gagnants
           </Button>
         </Link>
       </section>

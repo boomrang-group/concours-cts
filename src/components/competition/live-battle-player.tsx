@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
-import { PlayIcon, Volume2Icon, ExpandIcon, PauseIcon } from 'lucide-react';
+import { Play, Volume2, Expand, Pause } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from "@/components/ui/progress";
 import { useState, useEffect } from 'react';
@@ -40,7 +40,7 @@ export default function LiveBattlePlayer({ videoSrc, videoTitle, dataAiHint }: L
           <Image src={videoSrc} alt={videoTitle} fill className="object-cover" data-ai-hint={dataAiHint} />
           <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors flex items-center justify-center">
             <Button variant="ghost" size="icon" className="text-white h-16 w-16 hover:bg-white/20" onClick={() => setIsPlaying(!isPlaying)}>
-              {isPlaying ? <PauseIcon className="h-10 w-10" /> : <PlayIcon className="h-10 w-10" />}
+              {isPlaying ? <Pause className="h-10 w-10" /> : <Play className="h-10 w-10" />}
             </Button>
           </div>
           
@@ -50,15 +50,15 @@ export default function LiveBattlePlayer({ videoSrc, videoTitle, dataAiHint }: L
             <div className="flex items-center justify-between text-white">
               <div className="flex items-center gap-2">
                 <Button variant="ghost" size="icon" className="text-white h-8 w-8 hover:bg-white/20" onClick={() => setIsPlaying(!isPlaying)}>
-                   {isPlaying ? <PauseIcon className="h-5 w-5" /> : <PlayIcon className="h-5 w-5" />}
+                   {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
                 </Button>
                 <Button variant="ghost" size="icon" className="text-white h-8 w-8 hover:bg-white/20">
-                  <Volume2Icon className="h-5 w-5" />
+                  <Volume2 className="h-5 w-5" />
                 </Button>
                  <span className="text-xs">{`${Math.floor(progress*0.6)}:00 / 60:00`}</span>
               </div>
               <Button variant="ghost" size="icon" className="text-white h-8 w-8 hover:bg-white/20">
-                <ExpandIcon className="h-5 w-5" />
+                <Expand className="h-5 w-5" />
               </Button>
             </div>
           </div>

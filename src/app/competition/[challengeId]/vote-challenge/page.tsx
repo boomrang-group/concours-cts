@@ -4,7 +4,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useParams, useRouter } from "next/navigation";
-import { ThumbsUpIcon, ArrowLeftIcon } from "lucide-react";
+import { ThumbsUp, ArrowLeft } from "lucide-react";
 import Image from "next/image";
 
 // Mock data for challenge details - in a real app, fetch this based on challengeId
@@ -43,7 +43,7 @@ export default function VoteChallengePage() {
   return (
     <div className="container py-8 md:py-12">
       <Button variant="outline" onClick={() => router.back()} className="mb-6">
-        <ArrowLeftIcon className="mr-2 h-4 w-4" /> Retour aux défis
+        <ArrowLeft className="mr-2 h-4 w-4" /> Retour aux défis
       </Button>
       <Card className="shadow-xl">
         <CardHeader className="text-center">
@@ -63,7 +63,7 @@ export default function VoteChallengePage() {
                   <h3 className="text-xl font-semibold font-headline">{submission.name}</h3>
                   <p className="text-sm text-muted-foreground">Votes actuels: {submission.votes}</p>
                   <Button onClick={() => handleVote(submission.id)} className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90">
-                    <ThumbsUpIcon className="mr-2 h-4 w-4" /> Voter pour ce projet
+                    <ThumbsUp className="mr-2 h-4 w-4" /> Voter pour ce projet
                   </Button>
                 </div>
               </div>

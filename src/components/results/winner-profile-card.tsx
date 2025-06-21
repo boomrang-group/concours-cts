@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { AwardIcon, VideoIcon, ImageIcon, FileTextIcon, ExternalLinkIcon } from 'lucide-react';
+import { Award, Video, Image as ImageIcon, FileText, ExternalLink } from 'lucide-react';
 
 interface Media {
   type: "video" | "image" | "document";
@@ -26,9 +26,9 @@ interface WinnerProfileCardProps {
 }
 
 const MediaIcon = ({ type }: { type: Media['type'] }) => {
-  if (type === 'video') return <VideoIcon className="h-5 w-5 mr-2" />;
+  if (type === 'video') return <Video className="h-5 w-5 mr-2" />;
   if (type === 'image') return <ImageIcon className="h-5 w-5 mr-2" />;
-  if (type === 'document') return <FileTextIcon className="h-5 w-5 mr-2" />;
+  if (type === 'document') return <FileText className="h-5 w-5 mr-2" />;
   return null;
 };
 
@@ -45,7 +45,7 @@ export default function WinnerProfileCard({ winner }: WinnerProfileCardProps) {
             className="rounded-full border-4 border-primary shadow-md"
             data-ai-hint={winner.dataAiHint}
           />
-          <AwardIcon className="absolute bottom-0 right-0 h-8 w-8 text-yellow-500 bg-background rounded-full p-1 shadow-md" />
+          <Award className="absolute bottom-0 right-0 h-8 w-8 text-yellow-500 bg-background rounded-full p-1 shadow-md" />
         </div>
         <CardTitle className="font-headline text-xl">{winner.name}</CardTitle>
         <CardDescription className="text-primary font-medium">{winner.category}</CardDescription>
@@ -61,7 +61,7 @@ export default function WinnerProfileCard({ winner }: WinnerProfileCardProps) {
               <div className="relative w-full h-40 rounded-md overflow-hidden bg-muted">
                 <Image src={winner.media.url} alt={winner.media.title} fill className="object-cover" data-ai-hint={winner.media.dataAiHint}/>
                 <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                   <ExternalLinkIcon className="h-8 w-8 text-white"/>
+                   <ExternalLink className="h-8 w-8 text-white"/>
                 </div>
               </div>
               <p className="text-sm mt-2 text-primary font-medium flex items-center justify-center">

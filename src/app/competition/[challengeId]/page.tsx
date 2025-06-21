@@ -5,7 +5,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeftIcon, InfoIcon, ImageIcon, FileTextIcon, VideoIcon } from "lucide-react";
+import { ArrowLeft, Info, Image as ImageIcon, FileText, Video } from "lucide-react";
 import Image from "next/image";
 
 // Mock data for challenge details - in a real app, fetch this based on challengeId
@@ -104,13 +104,13 @@ export default function ChallengeDetailsPage() {
   if (!challenge) {
     return (
       <div className="container py-8 md:py-12 text-center">
-        <InfoIcon className="mx-auto h-12 w-12 text-destructive mb-4" />
+        <Info className="mx-auto h-12 w-12 text-destructive mb-4" />
         <h2 className="text-2xl font-semibold mb-2">Défi non trouvé</h2>
         <p className="text-muted-foreground mb-6">
           Le défi que vous recherchez n'existe pas ou a été déplacé.
         </p>
         <Button variant="outline" onClick={() => router.push('/competition')}>
-          <ArrowLeftIcon className="mr-2 h-4 w-4" /> Retour à la liste des défis
+          <ArrowLeft className="mr-2 h-4 w-4" /> Retour à la liste des défis
         </Button>
       </div>
     );
@@ -119,7 +119,7 @@ export default function ChallengeDetailsPage() {
   return (
     <div className="container py-8 md:py-12">
       <Button variant="outline" onClick={() => router.back()} className="mb-6">
-        <ArrowLeftIcon className="mr-2 h-4 w-4" /> Retour
+        <ArrowLeft className="mr-2 h-4 w-4" /> Retour
       </Button>
       <Card className="shadow-xl overflow-hidden">
         <div className="relative w-full h-64 md:h-80">
@@ -195,4 +195,5 @@ export default function ChallengeDetailsPage() {
     </div>
   );
 }
+
 

@@ -2,7 +2,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { CheckCircleIcon, ExternalLinkIcon } from 'lucide-react';
+import { CheckCircle, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
@@ -24,7 +24,7 @@ export default function PaymentSuccessContent() {
 
   return (
     <div className="space-y-6 text-center">
-      <CheckCircleIcon className="mx-auto h-16 w-16 text-green-500" />
+      <CheckCircle className="mx-auto h-16 w-16 text-green-500" />
       {/* The title "Paiement Réussi !" can be part of AuthLayout or here if more specific */}
       {/* <h2 className="text-2xl font-bold">Paiement Réussi !</h2> */}
       <p className="text-muted-foreground">
@@ -50,7 +50,7 @@ export default function PaymentSuccessContent() {
       <div className="flex flex-col sm:flex-row gap-4 mt-4">
         <a href="https://quiz.bantudemy.com" target="_blank" rel="noopener noreferrer" className="w-full">
           <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-            <ExternalLinkIcon className="mr-2 h-4 w-4" />
+            <ExternalLink className="mr-2 h-4 w-4" />
             Participer aux Quizz Quotidiens
           </Button>
         </a>

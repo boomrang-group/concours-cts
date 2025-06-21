@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { CheckCircle, Lightbulb, Users, Star, UserPlusIcon, TrophyIcon, AwardIcon } from "lucide-react";
+import { CheckCircle, Lightbulb, Users, Star, UserPlus, Trophy, Award } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -86,10 +86,10 @@ export default function HomePage() {
           <h2 className="text-3xl font-bold text-center mb-12 font-headline">Comment ça Marche ?</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
             {[
-              { icon: UserPlusIcon, title: "Inscription Facile", description: "Créez votre compte en solo ou en équipe." },
+              { icon: UserPlus, title: "Inscription Facile", description: "Créez votre compte en solo ou en équipe." },
               { icon: CheckCircle, title: "Soumission de Projet", description: "Partagez vos idées via vidéo, audio, image ou document." },
-              { icon: TrophyIcon, title: "Phases de Compétition", description: "Participez aux éliminatoires et aux votes du public." },
-              { icon: AwardIcon, title: "Résultats & Récompenses", description: "Découvrez les gagnants et célébrez lors de la cérémonie finale." },
+              { icon: Trophy, title: "Phases de Compétition", description: "Participez aux éliminatoires et aux votes du public." },
+              { icon: Award, title: "Résultats & Récompenses", description: "Découvrez les gagnants et célébrez lors de la cérémonie finale." },
             ].map((step, index) => (
               <div key={index} className="flex flex-col items-center p-6 bg-background rounded-lg shadow-md">
                 <step.icon className="h-12 w-12 text-primary mb-4" />

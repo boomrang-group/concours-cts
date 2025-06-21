@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ThumbsUpIcon } from 'lucide-react';
+import { ThumbsUp } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 
@@ -97,7 +97,7 @@ export default function VotingArea({ battleId }: VotingAreaProps) {
                 variant={selectedOption === option.id ? "default" : "outline"}
                 className="w-full mt-2 transition-all duration-300 ease-in-out"
               >
-                <ThumbsUpIcon className="mr-2 h-4 w-4" />
+                <ThumbsUp className="mr-2 h-4 w-4" />
                 Voter pour {option.name}
               </Button>
             </div>
