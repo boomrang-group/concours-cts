@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useAuth } from '@/context/auth-context';
-import { auth } from '@/lib/firebase';
+import { auth, isFirebaseInitialized } from '@/lib/firebase';
 import { signOut } from 'firebase/auth';
 import Logo from './logo';
 import { Button } from '@/components/ui/button';
@@ -43,8 +43,9 @@ const Header = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false)
 
   const handleLogout = async () => {
+    if (!isFirebaseInitialized) return; // Silently fail if firebase is not configured
     try {
-      await signOut(auth);
+      await signOut(auth!);
       router.push('/');
     } catch (error) {
       console.error("Logout error:", error);

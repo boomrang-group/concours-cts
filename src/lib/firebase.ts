@@ -1,7 +1,7 @@
 'use client';
 
-import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { initializeApp, getApps, getApp, type FirebaseApp } from 'firebase/app';
+import { getAuth, type Auth } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -13,17 +13,18 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
-// Provide a clear error message if essential Firebase config is missing.
-// This helps the user debug the "invalid-api-key" error which is often
-// caused by missing environment variables.
-if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
-  throw new Error(
-    "Firebase configuration is missing or incomplete. Please create a `.env.local` file in your project's root and add your Firebase project credentials. You can use the `.env` file as a template."
+let app: FirebaseApp | undefined;
+let auth: Auth | undefined;
+const isFirebaseInitialized = !!firebaseConfig.apiKey && !!firebaseConfig.projectId;
+
+if (isFirebaseInitialized) {
+  app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+  auth = getAuth(app);
+} else {
+  // This warning will be visible in the developer console.
+  console.warn(
+    "Firebase configuration is missing or incomplete. Authentication will not work. Please create a `.env.local` file in your project's root and add your Firebase project credentials. You can use the `.env` file as a template."
   );
 }
 
-// Initialize Firebase
-const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-export { app, auth };
+export { app, auth, isFirebaseInitialized };

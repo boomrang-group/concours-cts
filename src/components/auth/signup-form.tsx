@@ -23,7 +23,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation"; 
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { auth, isFirebaseInitialized } from "@/lib/firebase";
 
 const memberDetailSchema = z.object({
   name: z.string().min(2, { message: "Le nom du membre doit contenir au moins 2 caractères." }),
@@ -128,10 +128,19 @@ export default function SignupForm() {
 
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!isFirebaseInitialized) {
+      toast({
+        title: "Configuration Firebase manquante",
+        description: "L'authentification ne peut pas fonctionner. Veuillez configurer vos clés API Firebase dans un fichier .env.local.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
     try {
       // Create user with Firebase Auth
-      await createUserWithEmailAndPassword(auth, values.email, values.password);
+      await createUserWithEmailAndPassword(auth!, values.email, values.password);
       
       // The next step would be to save user profile information (like name, accountType, etc.) to Firestore.
 

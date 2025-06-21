@@ -11,7 +11,7 @@ import * as z from 'zod';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { sendPasswordResetEmail } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { auth, isFirebaseInitialized } from '@/lib/firebase';
 import {
   Form,
   FormControl,
@@ -36,9 +36,18 @@ export default function ForgotPasswordPage() {
   });
 
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (!isFirebaseInitialized) {
+      toast({
+        title: "Configuration Firebase manquante",
+        description: "La réinitialisation de mot de passe ne peut pas fonctionner. Veuillez configurer vos clés API Firebase.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
     try {
-      await sendPasswordResetEmail(auth, values.email);
+      await sendPasswordResetEmail(auth!, values.email);
       toast({
         title: "E-mail envoyé !",
         description: "Vérifiez votre boîte de réception pour le lien de réinitialisation du mot de passe.",
