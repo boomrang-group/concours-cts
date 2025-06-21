@@ -1,12 +1,15 @@
 "use client";
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useAuth } from '@/context/auth-context';
+import { auth } from '@/lib/firebase';
+import { signOut } from 'firebase/auth';
 import Logo from './logo';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 import { MenuIcon, HomeIcon, UserPlusIcon, TrophyIcon, AwardIcon, UsersIcon, LogInIcon, LayoutDashboardIcon, LogOutIcon, XIcon } from 'lucide-react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 const navLinks = [
@@ -34,25 +37,18 @@ const NavLink = ({ href, label, icon: Icon, onClick }: { href: string; label: st
 };
 
 const Header = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Mock login state
+  const { user } = useAuth();
+  const isLoggedIn = !!user;
+  const router = useRouter();
   const [isSheetOpen, setIsSheetOpen] = useState(false)
 
-  // Placeholder for actual auth check
-  useEffect(() => {
-    // Simulate checking auth status, e.g., from localStorage or an auth context
-    // For demonstration, let's toggle it to true after a delay to see the change
-    const token = localStorage.getItem('userToken');
-    // setIsLoggedIn(!!token);
-
-    // To test the logged-in state visually without full auth:
-    // setTimeout(() => setIsLoggedIn(true), 3000);
-  }, []);
-
-  const handleLogout = () => {
-    // Clear token, redirect, etc.
-    setIsLoggedIn(false);
-    localStorage.removeItem('userToken');
-    // router.push('/'); // or login page
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      router.push('/');
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
   const closeSheet = () => setIsSheetOpen(false);

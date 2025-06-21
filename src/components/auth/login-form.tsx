@@ -19,6 +19,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 const formSchema = z.object({
   email: z.string().email("Adresse e-mail invalide."),
@@ -42,25 +44,28 @@ export default function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    console.log(values);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500)); 
-    
-    // Mock successful login for now
-    // In a real app, you would set an auth token here
-    // if (typeof window !== "undefined") {
-    //   localStorage.setItem('userToken', 'fake-token');
-    // }
-
-    toast({
-      title: "Connexion Réussie !",
-      description: "Vous allez être redirigé vers votre tableau de bord.",
-      variant: "default",
-    });
-
-    form.reset(); 
-    setIsLoading(false);
-    router.push("/dashboard"); 
+    try {
+      await signInWithEmailAndPassword(auth, values.email, values.password);
+      toast({
+        title: "Connexion Réussie !",
+        description: "Vous allez être redirigé vers votre tableau de bord.",
+        variant: "default",
+      });
+      router.push("/dashboard");
+    } catch (error: any) {
+      console.error("Login error:", error);
+      let errorMessage = "Une erreur est survenue lors de la connexion.";
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+        errorMessage = "Adresse e-mail ou mot de passe incorrect.";
+      }
+      toast({
+        title: "Erreur de connexion",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (

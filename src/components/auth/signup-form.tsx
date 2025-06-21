@@ -21,8 +21,9 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
-// useRouter is not used here anymore after payment integration, can be removed if not needed elsewhere.
-// import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation"; 
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 const memberDetailSchema = z.object({
   name: z.string().min(2, { message: "Le nom du membre doit contenir au moins 2 caractères." }),
@@ -81,61 +82,11 @@ const formSchema = z.object({
   }
 });
 
-// Helper function to submit the MaxiCash form
-const submitMaxiCashForm = (details: {
-  amount: string;
-  currency: string;
-  telephone: string;
-  email: string;
-  merchantId: string;
-  merchantPassword: string;
-  language: string;
-  reference: string;
-  acceptUrl: string;
-  cancelUrl: string;
-  declineUrl: string;
-  notifyUrl: string;
-}) => {
-  const form = document.createElement('form');
-  form.method = 'POST';
-  form.action = 'https://api.maxicashapp.com/PayEntryPost';
-  form.style.display = 'none'; // Hide the form
-
-  const fields: { [key: string]: string } = {
-    PayType: 'MaxiCash',
-    Amount: details.amount,
-    Currency: details.currency,
-    Telephone: details.telephone,
-    Email: details.email,
-    MerchantID: details.merchantId,
-    MerchantPassword: details.merchantPassword,
-    Language: details.language,
-    Reference: details.reference,
-    accepturl: details.acceptUrl,
-    cancelurl: details.cancelUrl,
-    declineurl: details.declineUrl,
-    notifyurl: details.notifyUrl,
-  };
-
-  for (const key in fields) {
-    const hiddenField = document.createElement('input');
-    hiddenField.type = 'hidden';
-    hiddenField.name = key;
-    hiddenField.value = fields[key];
-    form.appendChild(hiddenField);
-  }
-
-  document.body.appendChild(form);
-  form.submit();
-  // No need to remove the form immediately as submit will navigate away.
-  // If it didn't navigate, then: document.body.removeChild(form);
-};
-
 
 export default function SignupForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  // const router = useRouter(); // Not used for redirection now
+  const router = useRouter(); 
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -178,48 +129,31 @@ export default function SignupForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    console.log("Form values for potential pre-payment save:", values);
-
-    // Generate a unique reference for the transaction
-    const reference = `BANTU-${Date.now()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-    
-    // Define URLs - ensure these are absolute for MaxiCash, window.location.origin handles this.
-    const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-    const acceptUrl = `${baseUrl}/auth/payment-success?ref=${reference}`;
-    const cancelUrl = `${baseUrl}/auth/payment-cancel?ref=${reference}`;
-    const declineUrl = `${baseUrl}/auth/payment-decline?ref=${reference}`;
-    const notifyUrl = `${baseUrl}/api/payment/maxicash-notify`; // Ensure this API route exists on your backend
-
-    // Prepare MaxiCash payment details
-    const paymentDetails = {
-      amount: "200", // $2 Fee
-      currency: "USD", // Assuming USD
-      telephone: values.phone || "", // Pass phone if available
-      email: values.email,
-      merchantId: "93b10243a03e4536832aa5c9473fd0ae", // Updated Merchant ID
-      merchantPassword: "fdf00a6ff0c94b048aa3162677b8a0ef", // Updated Merchant Password
-      language: "Fr", // Or "En"
-      reference: reference,
-      acceptUrl: acceptUrl,
-      cancelUrl: cancelUrl,
-      declineUrl: declineUrl,
-      notifyUrl: notifyUrl,
-    };
-
-    // HERE: You would typically save user data to your backend in a 'pending payment' state.
-    // For this example, we'll proceed directly to payment.
-
     try {
-      submitMaxiCashForm(paymentDetails);
-      // User will be redirected to MaxiCash. setIsLoading(false) and form.reset() 
-      // might not be reached or relevant if navigation is successful.
-    } catch (error) {
-      console.error("Payment submission error:", error);
+      // Create user with Firebase Auth
+      await createUserWithEmailAndPassword(auth, values.email, values.password);
+      
+      // The next step would be to save user profile information (like name, accountType, etc.) to Firestore.
+
       toast({
-        title: "Erreur de Paiement",
-        description: "Impossible de rediriger vers la page de paiement. Veuillez réessayer.",
+        title: "Inscription Réussie !",
+        description: "Votre compte a été créé. Vous allez être redirigé.",
+        variant: "default",
+      });
+
+      router.push("/dashboard");
+    } catch (error: any) {
+      console.error("Signup error:", error);
+      let errorMessage = "Une erreur est survenue lors de l'inscription.";
+      if (error.code === 'auth/email-already-in-use') {
+        errorMessage = "Cette adresse e-mail est déjà utilisée.";
+      }
+      toast({
+        title: "Erreur d'inscription",
+        description: errorMessage,
         variant: "destructive",
       });
+    } finally {
       setIsLoading(false);
     }
   }
@@ -384,7 +318,7 @@ export default function SignupForm() {
               <FormControl>
                 <Input type="tel" placeholder="Ex: +243812345678" {...field} value={field.value ?? ""} />
               </FormControl>
-              <FormDescription>Pour vérification SMS, notifications WhatsApp et paiement.</FormDescription>
+              <FormDescription>Pour vérification SMS et notifications WhatsApp.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -440,7 +374,7 @@ export default function SignupForm() {
         />
 
         <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90" disabled={isLoading}>
-          {isLoading ? "Traitement en cours..." : "Continuer vers le Paiement ($2)"}
+          {isLoading ? "Création du compte..." : "S'inscrire"}
         </Button>
         <p className="text-center text-sm text-muted-foreground">
           Déjà un compte ?{" "}
