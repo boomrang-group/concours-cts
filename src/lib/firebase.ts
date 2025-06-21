@@ -15,13 +15,19 @@ const firebaseConfig = {
 
 let app: FirebaseApp | undefined;
 let auth: Auth | undefined;
-const isFirebaseInitialized = !!firebaseConfig.apiKey && !!firebaseConfig.projectId;
+let isFirebaseInitialized = !!firebaseConfig.apiKey && !!firebaseConfig.projectId;
 
 if (isFirebaseInitialized) {
-  app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-  auth = getAuth(app);
+  try {
+    app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+    auth = getAuth(app);
+  } catch (error) {
+    console.error("Firebase initialization failed:", error);
+    // If initialization fails, we must set the flag to false.
+    isFirebaseInitialized = false;
+  }
 } else {
-  // This warning will be visible in the developer console.
+  // This warning will be visible in the developer console for client components.
   console.warn(
     "Firebase configuration is missing or incomplete. Authentication will not work. Please create a `.env.local` file in your project's root and add your Firebase project credentials. You can use the `.env` file as a template."
   );
