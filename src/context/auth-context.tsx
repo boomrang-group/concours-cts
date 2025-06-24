@@ -29,6 +29,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setLoading(false);
         });
         return () => unsubscribe();
+      } else {
+        setLoading(false);
       }
     } else {
       // If Firebase is not configured, we're not loading a user.

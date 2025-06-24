@@ -16,32 +16,41 @@ const firebaseConfig = {
 let app: FirebaseApp | null = null;
 let auth: Auth | null = null;
 
+// This function initializes and returns the Firebase app instance.
 function initializeFirebase() {
-    const isConfigValid = !!firebaseConfig.apiKey && !!firebaseConfig.projectId;
-    if (isConfigValid && !app) { // check !app to run only once
-        try {
-            app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-            auth = getAuth(app);
-        } catch(e) {
-            console.error("Firebase initialization error", e);
-            app = null;
-            auth = null;
-        }
-    } else if (!isConfigValid) {
-        console.warn("Firebase configuration is missing or incomplete. Authentication will not work. Please add your Firebase project credentials to a `.env.local` file.");
+  if (getApps().length > 0) {
+    app = getApp();
+  } else {
+    // Check if the configuration is valid before initializing
+    const isConfigValid = firebaseConfig.apiKey && firebaseConfig.projectId;
+    if (isConfigValid) {
+      try {
+        app = initializeApp(firebaseConfig);
+      } catch (e) {
+        console.error("Firebase initialization error", e);
+        app = null;
+      }
+    } else {
+      // This warning will appear in the browser console if .env.local is not set up
+      console.warn("Firebase configuration is missing or incomplete. Authentication will not work.");
+      app = null;
     }
+  }
+
+  if (app && !auth) {
+    auth = getAuth(app);
+  }
 }
 
+// Call initialization logic on module load.
+initializeFirebase();
+
 export function getFirebaseAuth() {
-    if (!auth) {
-        initializeFirebase();
-    }
-    return auth;
+  // If initialization failed, this will be null.
+  return auth;
 }
 
 export function isFirebaseInitialized() {
-    if (!app) {
-        initializeFirebase();
-    }
-    return app !== null;
+    // This now simply checks if the auth object was successfully created.
+    return auth !== null;
 }

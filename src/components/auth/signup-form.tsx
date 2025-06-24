@@ -140,9 +140,18 @@ export default function SignupForm() {
     }
 
     try {
-      // Create user with Firebase Auth
       const auth = getFirebaseAuth();
-      await createUserWithEmailAndPassword(auth!, values.email, values.password);
+      if (!auth) {
+        toast({
+            title: "Erreur d'initialisation",
+            description: "Impossible d'initialiser Firebase. Vérifiez la console pour les erreurs.",
+            variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      await createUserWithEmailAndPassword(auth, values.email, values.password);
       
       // The next step would be to save user profile information (like name, accountType, etc.) to Firestore.
 

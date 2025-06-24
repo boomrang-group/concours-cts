@@ -48,7 +48,16 @@ export default function ForgotPasswordPage() {
     setIsLoading(true);
     try {
       const auth = getFirebaseAuth();
-      await sendPasswordResetEmail(auth!, values.email);
+      if (!auth) {
+        toast({
+            title: "Erreur d'initialisation",
+            description: "Impossible d'initialiser Firebase. Vérifiez la console pour les erreurs.",
+            variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+      await sendPasswordResetEmail(auth, values.email);
       toast({
         title: "E-mail envoyé !",
         description: "Vérifiez votre boîte de réception pour le lien de réinitialisation du mot de passe.",

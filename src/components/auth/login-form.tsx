@@ -56,7 +56,16 @@ export default function LoginForm() {
 
     try {
       const auth = getFirebaseAuth();
-      await signInWithEmailAndPassword(auth!, values.email, values.password);
+      if (!auth) {
+        toast({
+            title: "Erreur d'initialisation",
+            description: "Impossible d'initialiser Firebase. Vérifiez la console pour les erreurs.",
+            variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+      await signInWithEmailAndPassword(auth, values.email, values.password);
       toast({
         title: "Connexion Réussie !",
         description: "Vous allez être redirigé vers votre tableau de bord.",
