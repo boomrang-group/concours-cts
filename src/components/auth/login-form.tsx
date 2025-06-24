@@ -43,16 +43,17 @@ export default function LoginForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
     if (!isFirebaseInitialized) {
       toast({
         title: "Configuration Firebase manquante",
-        description: "L'authentification ne peut pas fonctionner. Veuillez configurer vos clés API Firebase dans un fichier .env.local.",
+        description: "L'authentification ne peut pas fonctionner. Veuillez configurer vos clés API Firebase.",
         variant: "destructive",
       });
+      setIsLoading(false);
       return;
     }
 
-    setIsLoading(true);
     try {
       await signInWithEmailAndPassword(auth!, values.email, values.password);
       toast({
@@ -63,7 +64,7 @@ export default function LoginForm() {
       router.push("/dashboard");
     } catch (error: any) {
       console.error("Login error:", error);
-      let errorMessage = "Une erreur est survenue lors de la connexion.";
+      let errorMessage = "Les identifiants sont incorrects.";
       if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
         errorMessage = "Adresse e-mail ou mot de passe incorrect.";
       }

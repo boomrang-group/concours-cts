@@ -128,16 +128,17 @@ export default function SignupForm() {
 
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
     if (!isFirebaseInitialized) {
       toast({
         title: "Configuration Firebase manquante",
-        description: "L'authentification ne peut pas fonctionner. Veuillez configurer vos clés API Firebase dans un fichier .env.local.",
+        description: "L'authentification ne peut pas fonctionner. Veuillez configurer vos clés API Firebase.",
         variant: "destructive",
       });
+      setIsLoading(false);
       return;
     }
 
-    setIsLoading(true);
     try {
       // Create user with Firebase Auth
       await createUserWithEmailAndPassword(auth!, values.email, values.password);
@@ -395,3 +396,5 @@ export default function SignupForm() {
     </Form>
   );
 }
+
+    
