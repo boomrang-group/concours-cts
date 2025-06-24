@@ -157,6 +157,8 @@ export default function SignupForm() {
       let errorMessage = "Une erreur est survenue lors de l'inscription.";
       if (error.code === 'auth/email-already-in-use') {
         errorMessage = "Cette adresse e-mail est déjà utilisée.";
+      } else if (error.code === 'auth/configuration-not-found') {
+        errorMessage = "La configuration de Firebase est introuvable ou invalide. Vérifiez vos clés API dans le fichier .env.local.";
       }
       toast({
         title: "Erreur d'inscription",
@@ -396,5 +398,3 @@ export default function SignupForm() {
     </Form>
   );
 }
-
-    

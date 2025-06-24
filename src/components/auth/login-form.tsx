@@ -67,6 +67,8 @@ export default function LoginForm() {
       let errorMessage = "Les identifiants sont incorrects.";
       if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
         errorMessage = "Adresse e-mail ou mot de passe incorrect.";
+      } else if (error.code === 'auth/configuration-not-found') {
+        errorMessage = "La configuration de Firebase est introuvable ou invalide. Vérifiez vos clés API dans le fichier .env.local.";
       }
       toast({
         title: "Erreur de connexion",
