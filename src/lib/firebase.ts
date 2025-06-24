@@ -13,24 +13,35 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
-let app: FirebaseApp | undefined;
-let auth: Auth | undefined;
-let isFirebaseInitialized = !!firebaseConfig.apiKey && !!firebaseConfig.projectId;
+let app: FirebaseApp | null = null;
+let auth: Auth | null = null;
 
-if (isFirebaseInitialized) {
-  try {
-    app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-    auth = getAuth(app);
-  } catch (error) {
-    console.error("Firebase initialization failed:", error);
-    // If initialization fails, we must set the flag to false.
-    isFirebaseInitialized = false;
-  }
-} else {
-  // This warning will be visible in the developer console for client components.
-  console.warn(
-    "Firebase configuration is missing or incomplete. Authentication will not work. Please create a `.env.local` file in your project's root and add your Firebase project credentials. You can use the `.env` file as a template."
-  );
+function initializeFirebase() {
+    const isConfigValid = !!firebaseConfig.apiKey && !!firebaseConfig.projectId;
+    if (isConfigValid && !app) { // check !app to run only once
+        try {
+            app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+            auth = getAuth(app);
+        } catch(e) {
+            console.error("Firebase initialization error", e);
+            app = null;
+            auth = null;
+        }
+    } else if (!isConfigValid) {
+        console.warn("Firebase configuration is missing or incomplete. Authentication will not work. Please add your Firebase project credentials to a `.env.local` file.");
+    }
 }
 
-export { app, auth, isFirebaseInitialized };
+export function getFirebaseAuth() {
+    if (!auth) {
+        initializeFirebase();
+    }
+    return auth;
+}
+
+export function isFirebaseInitialized() {
+    if (!app) {
+        initializeFirebase();
+    }
+    return app !== null;
+}
