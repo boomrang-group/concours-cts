@@ -20,7 +20,7 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { getFirebaseAuth, isFirebaseInitialized } from "@/lib/firebase";
+import { getFirebaseServices, isFirebaseConfigured } from "@/lib/firebase";
 
 const formSchema = z.object({
   email: z.string().email("Adresse e-mail invalide."),
@@ -44,7 +44,7 @@ export default function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    if (!isFirebaseInitialized()) {
+    if (!isFirebaseConfigured()) {
       toast({
         title: "Configuration Firebase manquante",
         description: "L'authentification ne peut pas fonctionner. Veuillez configurer vos clés API Firebase.",
@@ -55,7 +55,7 @@ export default function LoginForm() {
     }
 
     try {
-      const auth = getFirebaseAuth();
+      const { auth } = getFirebaseServices();
       if (!auth) {
         toast({
             title: "Erreur d'initialisation",

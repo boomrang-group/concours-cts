@@ -23,7 +23,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation"; 
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { getFirebaseAuth, isFirebaseInitialized } from "@/lib/firebase";
+import { getFirebaseServices, isFirebaseConfigured } from "@/lib/firebase";
+import { doc, setDoc } from 'firebase/firestore';
 
 const memberDetailSchema = z.object({
   name: z.string().min(2, { message: "Le nom du membre doit contenir au moins 2 caractères." }),
@@ -129,7 +130,7 @@ export default function SignupForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    if (!isFirebaseInitialized()) {
+    if (!isFirebaseConfigured()) {
       toast({
         title: "Configuration Firebase manquante",
         description: "L'authentification ne peut pas fonctionner. Veuillez configurer vos clés API Firebase.",
@@ -138,22 +139,42 @@ export default function SignupForm() {
       setIsLoading(false);
       return;
     }
+    
+    const { auth, firestore } = getFirebaseServices();
+    if (!auth || !firestore) {
+      toast({
+        title: "Erreur d'initialisation de Firebase",
+        description: "Impossible d'initialiser les services Firebase. Vérifiez la console pour les erreurs.",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
+    }
 
     try {
-      const auth = getFirebaseAuth();
-      if (!auth) {
-        toast({
-            title: "Erreur d'initialisation",
-            description: "Impossible d'initialiser Firebase. Vérifiez la console pour les erreurs.",
-            variant: "destructive",
-        });
-        setIsLoading(false);
-        return;
+      // Create user with Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+      const user = userCredential.user;
+      
+      // Save user profile information to Firestore
+      const userProfileData: { [key: string]: any } = {
+        uid: user.uid,
+        name: values.name,
+        email: values.email,
+        phone: values.phone || '',
+        accountType: values.accountType,
+        createdAt: new Date().toISOString(),
+      };
+
+      if (values.accountType === 'group') {
+        userProfileData.groupName = values.groupName || '';
+        userProfileData.groupMembersCount = values.groupMembers || 1;
+        const mainMember = { name: values.name, email: values.email, isTeamLead: true };
+        const otherMembers = values.memberDetails?.map(m => ({ ...m, isTeamLead: false })) || [];
+        userProfileData.members = [mainMember, ...otherMembers];
       }
 
-      await createUserWithEmailAndPassword(auth, values.email, values.password);
-      
-      // The next step would be to save user profile information (like name, accountType, etc.) to Firestore.
+      await setDoc(doc(firestore, "users", user.uid), userProfileData);
 
       toast({
         title: "Inscription Réussie !",
@@ -167,6 +188,8 @@ export default function SignupForm() {
       let errorMessage = "Une erreur est survenue lors de l'inscription.";
       if (error.code === 'auth/email-already-in-use') {
         errorMessage = "Cette adresse e-mail est déjà utilisée.";
+      } else if (error.code === 'auth/weak-password') {
+          errorMessage = "Le mot de passe est trop faible. Il doit comporter au moins 6 caractères.";
       } else if (error.code === 'auth/configuration-not-found') {
         errorMessage = "La configuration de Firebase est introuvable ou invalide. Vérifiez vos clés API dans le fichier .env.local.";
       }

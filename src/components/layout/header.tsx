@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useAuth } from '@/context/auth-context';
-import { getFirebaseAuth, isFirebaseInitialized } from '@/lib/firebase';
+import { getFirebaseServices } from '@/lib/firebase';
 import { signOut } from 'firebase/auth';
 import Logo from './logo';
 import { Button } from '@/components/ui/button';
@@ -43,13 +43,11 @@ const Header = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false)
 
   const handleLogout = async () => {
-    if (!isFirebaseInitialized()) return; // Silently fail if firebase is not configured
+    const { auth } = getFirebaseServices();
+    if(!auth) return; // Silently fail if firebase is not configured
     try {
-      const auth = getFirebaseAuth();
-      if(auth) {
-        await signOut(auth);
-        router.push('/');
-      }
+      await signOut(auth);
+      router.push('/');
     } catch (error) {
       console.error("Logout error:", error);
     }

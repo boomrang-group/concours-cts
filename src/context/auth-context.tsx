@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { getFirebaseAuth, isFirebaseInitialized } from '@/lib/firebase';
+import { getFirebaseServices } from '@/lib/firebase';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface AuthContextType {
@@ -20,20 +20,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Only set up the listener if Firebase is initialized
-    if (isFirebaseInitialized()) {
-      const auth = getFirebaseAuth();
-      if (auth) {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-          setUser(user);
-          setLoading(false);
-        });
-        return () => unsubscribe();
-      } else {
+    const { auth } = getFirebaseServices();
+    if (auth) {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        setUser(user);
         setLoading(false);
-      }
+      });
+      return () => unsubscribe();
     } else {
-      // If Firebase is not configured, we're not loading a user.
+      // If Firebase auth is not available (e.g. missing config)
       setLoading(false);
     }
   }, []);
