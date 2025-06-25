@@ -151,47 +151,31 @@ export default function SignupForm() {
       return;
     }
 
+    // Collect user data to pass to payment page
+    const userDataToPass = {
+      email: values.email,
+      phone: values.phone || '', // Ensure phone is an empty string if optional and not provided
+      // You can add other relevant data from 'values' here if needed on the payment page
+      // For example: name: values.name, accountType: values.accountType,
+    };
+
     try {
-      // Create user with Firebase Auth
-      const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
-      const user = userCredential.user;
-      
-      // Save user profile information to Firestore
-      const userProfileData: { [key: string]: any } = {
-        uid: user.uid,
-        name: values.name,
-        email: values.email,
-        phone: values.phone || '',
-        accountType: values.accountType,
-        createdAt: new Date().toISOString(),
-      };
-
-      if (values.accountType === 'group') {
-        userProfileData.groupName = values.groupName || '';
-        userProfileData.groupMembersCount = values.groupMembers || 1;
-        const mainMember = { name: values.name, email: values.email, isTeamLead: true };
-        const otherMembers = values.memberDetails?.map(m => ({ ...m, isTeamLead: false })) || [];
-        userProfileData.members = [mainMember, ...otherMembers];
-      }
-
-      await setDoc(doc(firestore, "users", user.uid), userProfileData);
-
+      // Instead of creating the user, redirect to the payment page
       toast({
         title: "Inscription Réussie !",
-        description: "Votre compte a été créé. Vous allez être redirigé.",
+        description: "Veuillez procéder au paiement pour finaliser votre inscription.",
         variant: "default",
       });
 
-      router.push("/dashboard");
+      // Redirect to payment page with user data as query parameters
+      const queryParams = new URLSearchParams(userDataToPass).toString();
+      router.push(`/auth/payment?${queryParams}`);
+
     } catch (error: any) {
       console.error("Signup error:", error);
       let errorMessage = "Une erreur est survenue lors de l'inscription.";
       if (error.code === 'auth/email-already-in-use') {
         errorMessage = "Cette adresse e-mail est déjà utilisée.";
-      } else if (error.code === 'auth/weak-password') {
-          errorMessage = "Le mot de passe est trop faible. Il doit comporter au moins 6 caractères.";
-      } else if (error.code === 'auth/configuration-not-found') {
-        errorMessage = "La configuration de Firebase est introuvable ou invalide. Vérifiez vos clés API dans le fichier .env.local.";
       }
       toast({
         title: "Erreur d'inscription",
