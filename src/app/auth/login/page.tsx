@@ -5,7 +5,7 @@ export default function LoginPage() {
   return (
     <AuthLayout 
       title="Connectez-vous à votre compte"
-      description="Accédez à votre tableau de bord et continuez l'aventure BantuChamp."
+      description="Accédez à votre tableau de bord et continuez l'aventure Campus de Talents & de Savoir."
     >
       <LoginForm />
     </AuthLayout>

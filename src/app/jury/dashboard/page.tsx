@@ -107,7 +107,7 @@ export default function JuryDashboardPage() {
             <CardContent>
                 <p className="text-muted-foreground">
                     Merci pour votre contribution en tant que membre du jury. Veuillez évaluer chaque projet objectivement en fonction des critères établis.
-                    Vos évaluations sont cruciales pour le succès de BantuChamp.
+                    Vos évaluations sont cruciales pour le succès de Campus de Talents & de Savoir.
                 </p>
                 <Button variant="link" className="mt-2 text-primary">Consulter les critères détaillés</Button>
             </CardContent>

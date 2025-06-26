@@ -6,7 +6,7 @@ const Logo = () => {
     <Link href="/" className="flex items-center gap-2 text-primary hover:opacity-80 transition-opacity">
       <Image 
         src="https://placehold.co/113x40.png"
-        alt="BantuChamp CTS Logo" 
+        alt="Campus de Talents & de Savoir CTS Logo" 
         width={113} 
         height={40} 
         priority 

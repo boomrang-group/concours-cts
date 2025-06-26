@@ -35,7 +35,7 @@ interface LiveBattle {
 const liveBattles: LiveBattle[] = [
    { id: 1, title: "Duel des Développeurs: App vs App", time: "Aujourd'hui à 18:00", playerA: "Équipe Alpha", playerB: "Équipe Gamma", image: "https://placehold.co/600x400.png", dataAiHint: "coding screen", description: "Un affrontement épique entre deux applications révolutionnaires. Qui remportera les faveurs du public ?" },
    { id: 2, title: "Battle Design: UI/UX Challenge", time: "Demain à 16:00", playerA: "Créatifs Unis", playerB: "Pixel Parfait", image: "https://placehold.co/600x400.png", dataAiHint: "design interface", description: "Voyez s'affronter deux visions du design d'interface. Ergonomie contre esthétisme pur !" },
-   { id: 3, title: "Finale Musique: Battle des Meilleurs Talents", time: "Samedi prochain à 20:00", playerA: "Finaliste A (Annonce à venir)", playerB: "Finaliste B (Annonce à venir)", image: "https://placehold.co/600x400.png", dataAiHint: "music concert", description: "La grande finale du BantuChamp Music Journey ! Ne manquez pas le couronnement du champion musical." },
+   { id: 3, title: "Finale Musique: Battle des Meilleurs Talents", time: "Samedi prochain à 20:00", playerA: "Finaliste A (Annonce à venir)", playerB: "Finaliste B (Annonce à venir)", image: "https://placehold.co/600x400.png", dataAiHint: "music concert", description: "La grande finale du Campus de Talents & de Savoir Music Journey ! Ne manquez pas le couronnement du champion musical." },
 ];
 
 const competitionCategories = [
@@ -74,7 +74,7 @@ export default function CompetitionPage() {
             <CardHeader>
               <CardTitle className="text-xl md:text-2xl font-headline text-primary flex items-center">
                 <Music className="mr-3 h-7 w-7" />
-                Événement Spécial : BantuChamp Music Journey !
+                Événement Spécial : Campus de Talents & de Savoir Music Journey !
               </CardTitle>
               <CardDescription className="text-base">
                 Un défi musical unique sur 4 semaines, culminant en une finale live ! Découvrez toutes les étapes et participez.
@@ -196,7 +196,7 @@ export default function CompetitionPage() {
       <div className="mt-16 text-center border-t pt-10">
         <h2 className="text-2xl font-semibold font-headline mb-4">Êtes-vous membre du Jury ?</h2>
         <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-          Accédez à votre espace dédié pour évaluer les soumissions et contribuer au succès de BantuChamp.
+          Accédez à votre espace dédié pour évaluer les soumissions et contribuer au succès de Campus de Talents & de Savoir.
         </p>
         <Link href="/jury/login">
           <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
@@ -207,6 +207,3 @@ export default function CompetitionPage() {
     </div>
   );
 }
-    
-
-    

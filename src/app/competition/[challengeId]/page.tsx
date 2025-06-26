@@ -51,7 +51,7 @@ const mockChallengeData: { [key: string]: any } = {
   },
   'music-journey': {
     id: "music-journey",
-    title: "BantuChamp Music Journey",
+    title: "Campus de Talents & de Savoir Music Journey",
     category: "Musique",
     status: "Semaine 1 - Soumissions & Votes Ouverts",
     submissionsCount: 0, 
@@ -195,5 +195,3 @@ export default function ChallengeDetailsPage() {
     </div>
   );
 }
-
-

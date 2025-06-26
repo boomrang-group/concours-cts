@@ -5,7 +5,7 @@ import MainLayout from '@/components/layout/main-layout';
 import { AuthProvider } from '@/context/auth-context';
 
 export const metadata: Metadata = {
-  title: 'BantuChamp',
+  title: 'Campus de Talents & de Savoir',
   description: 'Bantudemy – Campus de Talents & de Savoir',
 };
 
