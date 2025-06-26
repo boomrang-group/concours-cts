@@ -20,7 +20,7 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { getFirebaseServices, isFirebaseConfigured } from "@/lib/firebase";
+import { getFirebaseServices } from "@/lib/firebase";
 
 const formSchema = z.object({
   email: z.string().email("Adresse e-mail invalide."),
@@ -44,10 +44,13 @@ export default function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    if (!isFirebaseConfigured()) {
+    
+    const { auth } = getFirebaseServices();
+    
+    if (!auth) {
       toast({
         title: "Configuration Firebase manquante",
-        description: "L'authentification ne peut pas fonctionner. Veuillez configurer vos clés API Firebase.",
+        description: "Veuillez vérifier vos clés API dans le fichier .env.local et redémarrer le serveur.",
         variant: "destructive",
       });
       setIsLoading(false);
@@ -55,16 +58,6 @@ export default function LoginForm() {
     }
 
     try {
-      const { auth } = getFirebaseServices();
-      if (!auth) {
-        toast({
-            title: "Erreur d'initialisation",
-            description: "Impossible d'initialiser Firebase. Vérifiez la console pour les erreurs.",
-            variant: "destructive",
-        });
-        setIsLoading(false);
-        return;
-      }
       await signInWithEmailAndPassword(auth, values.email, values.password);
       toast({
         title: "Connexion Réussie !",
@@ -74,11 +67,11 @@ export default function LoginForm() {
       router.push("/dashboard");
     } catch (error: any) {
       console.error("Login error:", error);
-      let errorMessage = "Les identifiants sont incorrects.";
+      let errorMessage = "Une erreur est survenue. Veuillez réessayer.";
       if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
         errorMessage = "Adresse e-mail ou mot de passe incorrect.";
       } else if (error.code === 'auth/configuration-not-found') {
-        errorMessage = "La configuration de Firebase est introuvable ou invalide. Vérifiez vos clés API dans le fichier .env.local.";
+        errorMessage = "La configuration de Firebase est introuvable. Vérifiez vos clés API dans le fichier .env.local.";
       }
       toast({
         title: "Erreur de connexion",

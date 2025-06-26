@@ -20,26 +20,27 @@ let auth: Auth | null = null;
 let firestore: Firestore | null = null;
 
 function initializeFirebaseServices() {
-  if (!app) { // Only initialize if the app hasn't been initialized
+  if (typeof window !== 'undefined' && !app) { // Only initialize on client and if not already initialized
     if (getApps().length > 0) {
       app = getApp();
     } else {
-      const isConfigValid = firebaseConfig.apiKey && firebaseConfig.projectId;
-      if (isConfigValid) {
+      // Check if config keys are present
+      if (firebaseConfig.apiKey && firebaseConfig.projectId) {
         try {
           app = initializeApp(firebaseConfig);
         } catch (e) {
           console.error("Firebase initialization error:", e);
-          // Return null services if initialization fails
+          // In case of error, ensure services remain null
           return { app: null, auth: null, firestore: null };
         }
       } else {
-        console.warn("Firebase configuration is missing or incomplete. Features depending on Firebase will not work.");
+        console.warn("Firebase configuration is missing or incomplete. Please check your .env.local file. Features depending on Firebase will not work.");
+        // Config is invalid, return null services
         return { app: null, auth: null, firestore: null };
       }
     }
     
-    // Initialize services after app is confirmed to exist
+    // If app was successfully initialized, get the other services
     auth = getAuth(app);
     firestore = getFirestore(app);
   }
@@ -53,8 +54,7 @@ export function getFirebaseServices() {
     return initializeFirebaseServices();
 }
 
-// A utility function to check if firebase is ready
+// A utility function to check if firebase is ready from the outside
 export function isFirebaseConfigured() {
-    const isConfigValid = firebaseConfig.apiKey && firebaseConfig.projectId;
-    return isConfigValid;
+    return !!(firebaseConfig.apiKey && firebaseConfig.projectId);
 }

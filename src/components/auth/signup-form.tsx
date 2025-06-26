@@ -23,7 +23,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation"; 
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { getFirebaseServices, isFirebaseConfigured } from "@/lib/firebase";
+import { getFirebaseServices } from "@/lib/firebase";
 import { doc, setDoc } from 'firebase/firestore';
 
 const memberDetailSchema = z.object({
@@ -130,45 +130,49 @@ export default function SignupForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    if (!isFirebaseConfigured()) {
-      toast({
-        title: "Configuration Firebase manquante",
-        description: "L'authentification ne peut pas fonctionner. Veuillez configurer vos clés API Firebase.",
-        variant: "destructive",
-      });
-      setIsLoading(false);
-      return;
-    }
     
     const { auth, firestore } = getFirebaseServices();
+    
     if (!auth || !firestore) {
       toast({
-        title: "Erreur d'initialisation de Firebase",
-        description: "Impossible d'initialiser les services Firebase. Vérifiez la console pour les erreurs.",
+        title: "Configuration Firebase manquante",
+        description: "Veuillez vérifier vos clés API dans le fichier .env.local et redémarrer le serveur.",
         variant: "destructive",
       });
       setIsLoading(false);
       return;
     }
 
-    // Collect user data to pass to payment page
-    const userDataToPass = {
-      email: values.email,
-      phone: values.phone || '', // Ensure phone is an empty string if optional and not provided
-      // You can add other relevant data from 'values' here if needed on the payment page
-      // For example: name: values.name, accountType: values.accountType,
-    };
-
     try {
-      // Instead of creating the user, redirect to the payment page
+      // Create user with Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+      const user = userCredential.user;
+
+      // Save user profile information to Firestore
+      const userProfile = {
+        uid: user.uid,
+        accountType: values.accountType,
+        name: values.name,
+        email: values.email,
+        phone: values.phone || null,
+        groupName: values.groupName || null,
+        groupMembers: values.accountType === 'group' ? values.memberDetails?.concat({name: values.name, email: values.email}) : null,
+        createdAt: new Date(),
+      };
+
+      await setDoc(doc(firestore, "users", user.uid), userProfile);
+      
+      // Redirect to payment page with user data as query parameters
+      const queryParams = new URLSearchParams({
+        email: values.email,
+        phone: values.phone || '',
+      }).toString();
+      
       toast({
-        title: "Inscription Réussie !",
+        title: "Inscription presque terminée !",
         description: "Veuillez procéder au paiement pour finaliser votre inscription.",
         variant: "default",
       });
-
-      // Redirect to payment page with user data as query parameters
-      const queryParams = new URLSearchParams(userDataToPass).toString();
       router.push(`/auth/payment?${queryParams}`);
 
     } catch (error: any) {
@@ -176,6 +180,8 @@ export default function SignupForm() {
       let errorMessage = "Une erreur est survenue lors de l'inscription.";
       if (error.code === 'auth/email-already-in-use') {
         errorMessage = "Cette adresse e-mail est déjà utilisée.";
+      } else if (error.code === 'auth/configuration-not-found') {
+        errorMessage = "La configuration de Firebase est introuvable. Vérifiez vos clés API et redémarrez le serveur.";
       }
       toast({
         title: "Erreur d'inscription",
@@ -403,7 +409,7 @@ export default function SignupForm() {
         />
 
         <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90" disabled={isLoading}>
-          {isLoading ? "Création du compte..." : "S'inscrire"}
+          {isLoading ? "Création du compte..." : "Continuer vers le paiement"}
         </Button>
         <p className="text-center text-sm text-muted-foreground">
           Déjà un compte ?{" "}
