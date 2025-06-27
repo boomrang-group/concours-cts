@@ -5,7 +5,7 @@ const Logo = () => {
   return (
     <Link href="/" className="flex items-center gap-2 text-primary hover:opacity-80 transition-opacity">
       <Image 
-        src="https://placehold.co/113x40.png"
+        src="/logo-cts.png"
         alt="Campus de Talents & de Savoir CTS Logo" 
         width={113} 
         height={40} 

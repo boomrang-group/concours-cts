@@ -14,7 +14,7 @@ const AuthLayout = ({ children, title, description }: AuthLayoutProps) => {
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <Image 
-            src="https://placehold.co/170x60.png" 
+            src="/logo-cts.png" 
             alt="Campus de Talents & de Savoir CTS Logo" 
             width={170} // Adjusted width for auth page, maintaining aspect ratio (approx 113/40 * 1.5)
             height={60} // Adjusted height for auth page
