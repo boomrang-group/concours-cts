@@ -22,9 +22,6 @@ import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation"; 
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { getFirebaseServices } from "@/lib/firebase";
-import { doc, setDoc } from 'firebase/firestore';
 
 const categories = [
     { id: "esthetique_mode", name: "Esthétique et Mode" },
@@ -145,42 +142,12 @@ export default function SignupForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    
-    const { auth, firestore } = getFirebaseServices();
-    
-    if (!auth || !firestore) {
-      toast({
-        title: "Configuration Firebase manquante",
-        description: "Veuillez vérifier vos clés API dans le fichier .env.local et redémarrer le serveur.",
-        variant: "destructive",
-      });
-      setIsLoading(false);
-      return;
-    }
 
     try {
-      // Create user with Firebase Auth
-      const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
-      const user = userCredential.user;
+      sessionStorage.setItem('pendingRegistration', JSON.stringify(values));
 
-      // Save user profile information to Firestore
-      const userProfile = {
-        uid: user.uid,
-        accountType: values.accountType,
-        name: values.name,
-        email: values.email,
-        phone: values.phone || null,
-        groupName: values.groupName || null,
-        groupMembers: values.accountType === 'group' ? values.memberDetails?.concat({name: values.name, email: values.email}) : null,
-        categories: values.categories,
-        createdAt: new Date(),
-      };
-
-      await setDoc(doc(firestore, "users", user.uid), userProfile);
-      
       const membersCount = values.accountType === 'group' ? (values.groupMembers || 1) : 1;
 
-      // Redirect to payment page with user data as query parameters
       const queryParams = new URLSearchParams({
         email: values.email,
         phone: values.phone || '',
@@ -192,22 +159,16 @@ export default function SignupForm() {
         description: "Veuillez procéder au paiement pour finaliser votre inscription.",
         variant: "default",
       });
+
       router.push(`/auth/payment?${queryParams}`);
 
-    } catch (error: any) {
-      console.error("Signup error:", error);
-      let errorMessage = "Une erreur est survenue lors de l'inscription.";
-      if (error.code === 'auth/email-already-in-use') {
-        errorMessage = "Cette adresse e-mail est déjà utilisée.";
-      } else if (error.code === 'auth/configuration-not-found') {
-        errorMessage = "La configuration de Firebase est introuvable. Vérifiez vos clés API et redémarrez le serveur.";
-      }
+    } catch (error) {
+      console.error("Redirection to payment error:", error);
       toast({
-        title: "Erreur d'inscription",
-        description: errorMessage,
+        title: "Erreur",
+        description: "Impossible de procéder au paiement. Veuillez réessayer.",
         variant: "destructive",
       });
-    } finally {
       setIsLoading(false);
     }
   }
@@ -480,7 +441,7 @@ export default function SignupForm() {
         />
 
         <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90" disabled={isLoading}>
-          {isLoading ? "Création du compte..." : "Continuer vers le paiement"}
+          {isLoading ? "Redirection vers le paiement..." : "Continuer vers le paiement"}
         </Button>
         <p className="text-center text-sm text-muted-foreground">
           Déjà un compte ?{" "}
