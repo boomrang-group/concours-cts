@@ -26,6 +26,21 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { getFirebaseServices } from "@/lib/firebase";
 import { doc, setDoc } from 'firebase/firestore';
 
+const categories = [
+  { id: "slam", name: "Slam" },
+  { id: "poesie", name: "Poésie" },
+  { id: "danse", name: "Danse" },
+  { id: "musique", name: "Musique" },
+  { id: "art_oratoire", name: "Art Oratoire (Débat)" },
+  { id: "theatre", name: "Théâtre" },
+  { id: "fitness_yoga", name: "Fitness et Yoga" },
+  { id: "gymnastique", name: "Gymnastique" },
+  { id: "cuisine", name: "Cuisine" },
+  { id: "modelisme", name: "Modélisme (Mode/Design)" },
+  { id: "peinture", name: "Peinture" },
+  { id: "entrepreneuriat", name: "Entrepreneuriat" },
+];
+
 const memberDetailSchema = z.object({
   name: z.string().min(2, { message: "Le nom du membre doit contenir au moins 2 caractères." }),
   email: z.string().email({ message: "L'adresse e-mail du membre est invalide." }),
@@ -46,6 +61,9 @@ const formSchema = z.object({
     z.number().min(1, "Le groupe doit avoir au moins 1 membre.").max(5, "Le nombre de membres ne peut pas dépasser 5.").optional()
   ),
   memberDetails: z.array(memberDetailSchema).optional(),
+  categories: z.array(z.string()).refine((value) => value.length > 0, {
+    message: "Veuillez sélectionner au moins une catégorie d'intérêt.",
+  }),
   terms: z.boolean().refine(val => val === true, {
     message: "Vous devez accepter les termes et conditions.",
   }),
@@ -98,6 +116,7 @@ export default function SignupForm() {
       phone: "",
       password: "",
       confirmPassword: "",
+      categories: [],
       terms: false,
       groupName: "",
       groupMembers: undefined,
@@ -157,6 +176,7 @@ export default function SignupForm() {
         phone: values.phone || null,
         groupName: values.groupName || null,
         groupMembers: values.accountType === 'group' ? values.memberDetails?.concat({name: values.name, email: values.email}) : null,
+        categories: values.categories,
         createdAt: new Date(),
       };
 
@@ -382,6 +402,58 @@ export default function SignupForm() {
               <FormControl>
                 <Input type="password" placeholder="********" {...field} />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="categories"
+          render={() => (
+            <FormItem>
+              <div className="mb-4">
+                <FormLabel>Catégories d'Intérêt</FormLabel>
+                <FormDescription>
+                  Sélectionnez les domaines qui vous intéressent (au moins un).
+                </FormDescription>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                {categories.map((item) => (
+                  <FormField
+                    key={item.id}
+                    control={form.control}
+                    name="categories"
+                    render={({ field }) => {
+                      return (
+                        <FormItem
+                          key={item.id}
+                          className="flex flex-row items-start space-x-3 space-y-0"
+                        >
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value?.includes(item.id)}
+                              onCheckedChange={(checked) => {
+                                const currentValue = field.value || [];
+                                return checked
+                                  ? field.onChange([...currentValue, item.id])
+                                  : field.onChange(
+                                      currentValue.filter(
+                                        (value) => value !== item.id
+                                      )
+                                    );
+                              }}
+                            />
+                          </FormControl>
+                          <FormLabel className="font-normal">
+                            {item.name}
+                          </FormLabel>
+                        </FormItem>
+                      );
+                    }}
+                  />
+                ))}
+              </div>
               <FormMessage />
             </FormItem>
           )}
