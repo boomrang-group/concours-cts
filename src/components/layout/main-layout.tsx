@@ -8,7 +8,7 @@ interface MainLayoutProps {
 }
 
 const MainLayout = ({ children }: MainLayoutProps) => {
-  const registrationDeadline = new Date("2025-07-17T23:59:59");
+  const registrationDeadline = new Date("2025-07-30T23:59:59");
 
   return (
     <>
