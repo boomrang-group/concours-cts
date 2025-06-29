@@ -41,8 +41,6 @@ const submissionFormSchema = z.object({
   dishName: z.string().optional(),
   recipeSteps: z.string().optional(),
   mainIngredients: z.string().optional(),
-  executiveSummary: z.string().optional(),
-  targetAudience: z.string().optional(),
   writtenPieceText: z.string().optional(),
 
 }).superRefine((data, ctx) => {
@@ -62,15 +60,7 @@ const submissionFormSchema = z.object({
       ctx.addIssue({ path: ["mainIngredients"], message: "Les ingrédients principaux sont requis pour la catégorie Cuisine.", code: z.ZodIssueCode.custom });
     }
   }
-  if (data.category === "entrepreneuriat") {
-    if (!data.executiveSummary || data.executiveSummary.trim() === "") {
-      ctx.addIssue({ path: ["executiveSummary"], message: "Le résumé exécutif est requis pour la catégorie Entrepreneuriat.", code: z.ZodIssueCode.custom });
-    }
-    if (!data.targetAudience || data.targetAudience.trim() === "") {
-      ctx.addIssue({ path: ["targetAudience"], message: "Le public cible est requis pour la catégorie Entrepreneuriat.", code: z.ZodIssueCode.custom });
-    }
-  }
-  const textBasedCategories = ["slam", "poesie", "art_oratoire", "theatre"];
+  const textBasedCategories = ["poesie", "art_oratoire", "theatre"];
   if (textBasedCategories.includes(data.category)) {
     if (!data.writtenPieceText || data.writtenPieceText.trim() === "") {
       ctx.addIssue({ path: ["writtenPieceText"], message: "Le texte de l'œuvre est requis pour cette catégorie.", code: z.ZodIssueCode.custom });
@@ -79,18 +69,14 @@ const submissionFormSchema = z.object({
 });
 
 const categories = [
-  { id: "slam", name: "Slam" },
-  { id: "poesie", name: "Poésie" },
-  { id: "danse", name: "Danse" },
-  { id: "musique", name: "Musique" },
-  { id: "art_oratoire", name: "Art Oratoire (Débat)" },
-  { id: "theatre", name: "Théâtre" },
-  { id: "fitness_yoga", name: "Fitness et Yoga" },
-  { id: "gymnastique", name: "Gymnastique" },
-  { id: "cuisine", name: "Cuisine" },
-  { id: "modelisme", name: "Modélisme (Mode/Design)" },
-  { id: "peinture", name: "Peinture" },
-  { id: "entrepreneuriat", name: "Entrepreneuriat" },
+    { id: "esthetique_mode", name: "Esthétique et Mode" },
+    { id: "peinture", name: "Peinture" },
+    { id: "cuisine", name: "Cuisine" },
+    { id: "poesie", name: "Poésie" },
+    { id: "art_oratoire", name: "Art Oratoire" },
+    { id: "theatre", name: "Théâtre" },
+    { id: "musique", name: "Musique" },
+    { id: "danse", name: "Danse" },
 ];
 
 export default function SubmissionForm() {
@@ -110,8 +96,6 @@ export default function SubmissionForm() {
       dishName: "",
       recipeSteps: "",
       mainIngredients: "",
-      executiveSummary: "",
-      targetAudience: "",
       writtenPieceText: "",
     },
   });
@@ -148,8 +132,6 @@ export default function SubmissionForm() {
       dishName: "",
       recipeSteps: "",
       mainIngredients: "",
-      executiveSummary: "",
-      targetAudience: "",
       writtenPieceText: "",
       file: undefined
     });
@@ -290,44 +272,13 @@ export default function SubmissionForm() {
           </>
         )}
         
-        {selectedCategory === "entrepreneuriat" && (
-          <>
-            <FormField
-              control={form.control}
-              name="executiveSummary"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Résumé Exécutif du Projet</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="Décrivez brièvement votre projet entrepreneurial, sa mission, sa vision..." {...field} rows={5} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="targetAudience"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Public Cible</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Ex: Les étudiants universitaires, les PME locales..." {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </>
-        )}
-
-        {["slam", "poesie", "art_oratoire", "theatre"].includes(selectedCategory || "") && (
+        {["poesie", "art_oratoire", "theatre"].includes(selectedCategory || "") && (
            <FormField
             control={form.control}
             name="writtenPieceText"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Texte de l'œuvre (Slam, Poème, Discours, Script)</FormLabel>
+                <FormLabel>Texte de l'œuvre (Poème, Discours, Script)</FormLabel>
                 <FormControl>
                   <Textarea placeholder="Écrivez ou collez votre texte ici..." {...field} rows={10} />
                 </FormControl>

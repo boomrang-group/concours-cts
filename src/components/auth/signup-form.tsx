@@ -27,18 +27,14 @@ import { getFirebaseServices } from "@/lib/firebase";
 import { doc, setDoc } from 'firebase/firestore';
 
 const categories = [
-  { id: "slam", name: "Slam" },
-  { id: "poesie", name: "Poésie" },
-  { id: "danse", name: "Danse" },
-  { id: "musique", name: "Musique" },
-  { id: "art_oratoire", name: "Art Oratoire (Débat)" },
-  { id: "theatre", name: "Théâtre" },
-  { id: "fitness_yoga", name: "Fitness et Yoga" },
-  { id: "gymnastique", name: "Gymnastique" },
-  { id: "cuisine", name: "Cuisine" },
-  { id: "modelisme", name: "Modélisme (Mode/Design)" },
-  { id: "peinture", name: "Peinture" },
-  { id: "entrepreneuriat", name: "Entrepreneuriat" },
+    { id: "esthetique_mode", name: "Esthétique et Mode" },
+    { id: "peinture", name: "Peinture" },
+    { id: "cuisine", name: "Cuisine" },
+    { id: "poesie", name: "Poésie" },
+    { id: "art_oratoire", name: "Art Oratoire" },
+    { id: "theatre", name: "Théâtre" },
+    { id: "musique", name: "Musique" },
+    { id: "danse", name: "Danse" },
 ];
 
 const memberDetailSchema = z.object({

@@ -12,42 +12,29 @@ import {
   Trophy, 
   Star, 
   Award,
-  Mic,
   Feather,
   PersonStanding,
   Music,
   MessageSquare,
   Drama,
-  HeartPulse,
-  Activity,
   ChefHat,
   Palette,
-  Paintbrush,
-  Lightbulb
+  Paintbrush
 } from "lucide-react";
 import Image from "next/image";
 
 const categories = [
-  { id: "slam", name: "Slam", icon: <Mic className="mr-2 h-4 w-4"/> },
+  { id: "esthetique_mode", name: "Esthétique et Mode", icon: <Palette className="mr-2 h-4 w-4"/> },
+  { id: "peinture", name: "Peinture", icon: <Paintbrush className="mr-2 h-4 w-4"/> },
+  { id: "cuisine", name: "Cuisine", icon: <ChefHat className="mr-2 h-4 w-4"/> },
   { id: "poesie", name: "Poésie", icon: <Feather className="mr-2 h-4 w-4"/> },
-  { id: "danse", name: "Danse", icon: <PersonStanding className="mr-2 h-4 w-4"/> },
-  { id: "musique", name: "Musique", icon: <Music className="mr-2 h-4 w-4"/> },
   { id: "art_oratoire", name: "Art Oratoire", icon: <MessageSquare className="mr-2 h-4 w-4"/> },
   { id: "theatre", name: "Théâtre", icon: <Drama className="mr-2 h-4 w-4"/> },
-  { id: "fitness_yoga", name: "Fitness & Yoga", icon: <HeartPulse className="mr-2 h-4 w-4"/> },
-  { id: "gymnastique", name: "Gymnastique", icon: <Activity className="mr-2 h-4 w-4"/> },
-  { id: "cuisine", name: "Cuisine", icon: <ChefHat className="mr-2 h-4 w-4"/> },
-  { id: "modelisme", name: "Modélisme", icon: <Palette className="mr-2 h-4 w-4"/> },
-  { id: "peinture", name: "Peinture", icon: <Paintbrush className="mr-2 h-4 w-4"/> },
-  { id: "entrepreneuriat", name: "Entrepreneuriat", icon: <Lightbulb className="mr-2 h-4 w-4"/> },
+  { id: "musique", name: "Musique", icon: <Music className="mr-2 h-4 w-4"/> },
+  { id: "danse", name: "Danse", icon: <PersonStanding className="mr-2 h-4 w-4"/> },
 ];
 
 const rankingsData: { [key: string]: any[] } = {
-  entrepreneuriat: [
-    { rank: 1, name: "Projet 'StartUp Vision'", team: "Les Futurs CEO", score: 95.5, prize: "Incubation + 5000 USD", avatar: "https://placehold.co/40x40.png", dataAiHint: "business team" },
-    { rank: 2, name: "App 'Service Connect'", team: "Digital Innovators", score: 92.1, prize: "Mentorate + 2000 USD", avatar: "https://placehold.co/40x40.png", dataAiHint: "app interface" },
-    { rank: 3, name: "Plateforme 'EcoSolutions'", team: "Green Techies", score: 89.7, prize: "Matériel Tech", avatar: "https://placehold.co/40x40.png", dataAiHint: "eco friendly" },
-  ],
   musique: [
     { rank: 1, name: "Composition 'Harmonie Nouvelle'", team: "Mélodie Pure", score: 96.2, prize: "Enregistrement Studio", avatar: "https://placehold.co/40x40.png", dataAiHint: "musician" },
     { rank: 2, name: "Chanson 'Voix du Congo'", team: "Rythmes d'Afrique", score: 91.5, prize: "Equipement Musical", avatar: "https://placehold.co/40x40.png", dataAiHint: "singer" },
@@ -61,10 +48,6 @@ const rankingsData: { [key: string]: any[] } = {
   cuisine: [
     { rank: 1, name: "Plat Signature 'Saveurs du Fleuve'", team: "Toque Créative", score: 95.0, prize: "Stage Culinaire", avatar: "https://placehold.co/40x40.png", dataAiHint: "gourmet dish" },
   ],
-  slam: [
-    { rank: 1, name: "Texte 'Paroles Vivantes'", team: "Le Verbe Haut", score: 92.5, prize: "Publication Recueil", avatar: "https://placehold.co/40x40.png", dataAiHint: "microphone stage" },
-  ],
-   // Add more mock data for other new categories as needed
 };
 
 export default function ResultsDisplay() {
@@ -77,8 +60,8 @@ export default function ResultsDisplay() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="entrepreneuriat" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1 mb-6">
+        <Tabs defaultValue="musique" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-1 mb-6">
             {categories.map(cat => (
               <TabsTrigger key={cat.id} value={cat.id} className="flex items-center text-xs sm:text-sm py-1.5 px-2">
                 {cat.icon}{cat.name}
