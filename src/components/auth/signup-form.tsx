@@ -178,10 +178,13 @@ export default function SignupForm() {
 
       await setDoc(doc(firestore, "users", user.uid), userProfile);
       
+      const membersCount = values.accountType === 'group' ? (values.groupMembers || 1) : 1;
+
       // Redirect to payment page with user data as query parameters
       const queryParams = new URLSearchParams({
         email: values.email,
         phone: values.phone || '',
+        members: membersCount.toString(),
       }).toString();
       
       toast({

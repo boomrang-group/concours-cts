@@ -10,25 +10,25 @@ import { useEffect } from 'react';
 export default function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const reference = searchParams.get('ref');
+  const amountInCents = parseInt(searchParams.get('amount') || '200', 10);
+  const amountInUSD = amountInCents / 100;
 
   useEffect(() => {
     if (reference) {
       // You might want to log this or send it to an analytics service
-      console.log(`Payment success with reference: ${reference}`);
+      console.log(`Payment success with reference: ${reference} for amount ${amountInUSD}`);
     }
     // Potentially, if user data was saved in a 'pending payment' state before redirecting to MaxiCash,
     // and if your notifyurl hasn't confirmed the user creation yet,
     // this might be a place to trigger a check or finalization if strictly necessary on client-side,
     // though backend handling via notifyurl is more robust.
-  }, [reference]);
+  }, [reference, amountInUSD]);
 
   return (
     <div className="space-y-6 text-center">
       <CheckCircle className="mx-auto h-16 w-16 text-green-500" />
-      {/* The title "Paiement Réussi !" can be part of AuthLayout or here if more specific */}
-      {/* <h2 className="text-2xl font-bold">Paiement Réussi !</h2> */}
       <p className="text-muted-foreground">
-        Merci pour votre inscription ! Votre paiement de $2 a été confirmé.
+        Merci pour votre inscription ! Votre paiement de <strong>${amountInUSD}</strong> a été confirmé.
       </p>
       {reference && (
         <p className="text-xs text-muted-foreground">
