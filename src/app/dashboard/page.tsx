@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { UploadCloud, Badge as BadgeIcon, History, PlusCircle } from "lucide-react";
+import { UploadCloud, Badge as BadgeIcon, History, PlusCircle, Eye, ThumbsUp, FileCheck } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -33,6 +33,39 @@ export default function DashboardPage() {
             Nouvelle Soumission
           </Button>
         </Link>
+      </div>
+
+      <div className="grid gap-6 mb-8 md:grid-cols-3">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Vues de Profil</CardTitle>
+            <Eye className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">1,250</div>
+            <p className="text-xs text-muted-foreground">+20.1% depuis le mois dernier</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Vues des Projets</CardTitle>
+            <FileCheck className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">580</div>
+            <p className="text-xs text-muted-foreground">+15% depuis la semaine dernière</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Votes Reçus</CardTitle>
+            <ThumbsUp className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">342</div>
+            <p className="text-xs text-muted-foreground">sur toutes les soumissions</p>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
