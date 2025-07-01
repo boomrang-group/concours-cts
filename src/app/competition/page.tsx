@@ -76,31 +76,6 @@ export default function CompetitionPage() {
         </TabsList>
 
         <TabsContent value="challenges">
-          <Card className="mb-8 shadow-lg border-2 border-primary bg-secondary/10">
-            <CardHeader>
-              <CardTitle className="text-xl md:text-2xl font-headline text-primary flex items-center">
-                <Music className="mr-3 h-7 w-7" />
-                Événement Spécial : Campus de Talents & de Savoir Music Journey !
-              </CardTitle>
-              <CardDescription className="text-base">
-                Un défi musical unique sur 4 semaines, culminant en une finale live ! Découvrez toutes les étapes et participez.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground mb-4">
-                Chaque semaine apporte de nouveaux défis, des votes ajustés et une chance de progresser.
-                Cliquez ci-dessous pour voir le détail complet du parcours et comment soumettre pour la phase actuelle.
-              </p>
-            </CardContent>
-            <CardFooter>
-              <Link href="/competition/music-journey" passHref className="w-full">
-                <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 text-base py-3">
-                  Voir les Détails du Music Journey <ArrowRight className="ml-2 h-5 w-5"/>
-                </Button>
-              </Link>
-            </CardFooter>
-          </Card>
-
           <div className="text-center mb-8">
             <h2 className="text-2xl font-semibold font-headline">Choisissez une catégorie pour participer ou voter</h2>
             <p className="text-muted-foreground">Explorez les différentes catégories de la compétition.</p>

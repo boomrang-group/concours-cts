@@ -48,26 +48,7 @@ const mockChallengeData: { [key: string]: any } = {
     criteria: ["Pertinence sociale", "Viabilité du projet", "Impact mesurable", "Innovation sociale"],
     deadline: "À déterminer",
     sponsorLogos: [] 
-  },
-  'music-journey': {
-    id: "music-journey",
-    title: "Campus de Talents & de Savoir Music Journey",
-    category: "Musique",
-    status: "À venir",
-    submissionsCount: 0, 
-    description: `
-Préparez-vous pour un voyage musical épique sur 4 semaines !
-
-La compétition musicale n'a pas encore commencé. Revenez bientôt pour découvrir le détail des 4 semaines de compétition, des critères d'évaluation et comment vous pourrez soumettre votre performance.
-
-Le grand gagnant de la catégorie Musique sera couronné à l'issue d'une grande finale en direct !
-    `.trim(),
-    image: "https://placehold.co/800x400.png",
-    dataAiHint: "music stage concert",
-    criteria: ["Originalité de la composition/reprise", "Qualité technique vocale/instrumentale", "Présence scénique et Interprétation", "Potentiel artistique et Charisme", "Qualité de la production vidéo"],
-    deadline: "À déterminer", 
-    sponsorLogos: ["https://placehold.co/100x50.png"] 
-  },
+  }
 };
 
 
