@@ -1,39 +1,36 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { UploadCloud, Badge as BadgeIcon, History, PlusCircle, Eye, ThumbsUp, FileCheck } from "lucide-react";
+import { UploadCloud, Badge as BadgeIcon, History, PlusCircle, Eye, ThumbsUp, FileCheck, Info } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-// Mock data - replace with actual data fetching
-const userSubmissions = [
-  { id: 1, title: "Projet Alpha", category: "Innovation Tech", status: "Soumis", date: "2024-07-15" },
-  { id: 2, title: "Solution Écologique Beta", category: "Développement Durable", status: "En cours d'évaluation", date: "2024-07-20" },
-];
+// Mock data - reset for pre-competition state
+const userSubmissions: any[] = [];
 
-const userBadges = [
-  { id: 1, name: "Participant Actif", icon: "https://placehold.co/64x64.png", description: "Pour avoir soumis un projet.", dataAiHint: "award badge" },
-  { id: 2, name: "Innovateur Confirmé", icon: "https://placehold.co/64x64.png", description: "Projet sélectionné pour la phase suivante.", dataAiHint: "star badge" },
-];
+const userBadges: any[] = [];
 
-const competitionHistory = [
-  { id: 1, event: "Inscription à la compétition", date: "2024-07-10" },
-  { id: 2, event: "Soumission du Projet Alpha", date: "2024-07-15" },
-  { id: 3, event: "Début de la phase de vote public", date: "2024-08-01" },
-];
+const competitionHistory: any[] = [];
 
 export default function DashboardPage() {
   return (
     <div className="container py-8 md:py-12">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold font-headline mb-4 md:mb-0">Mon Tableau de Bord</h1>
-        <Link href="/submission">
-          <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-            <PlusCircle className="mr-2 h-5 w-5" />
-            Nouvelle Soumission
-          </Button>
-        </Link>
+        <Button disabled className="bg-primary/50 cursor-not-allowed">
+          <PlusCircle className="mr-2 h-5 w-5" />
+          Nouvelle Soumission
+        </Button>
       </div>
+
+      <Alert className="mb-8 border-primary/50 bg-primary/10 text-primary">
+          <Info className="h-5 w-5 text-primary" />
+          <AlertTitle className="font-semibold">La compétition approche !</AlertTitle>
+          <AlertDescription>
+            Les soumissions de projets ouvriront le 1er août. Préparez-vous !
+          </AlertDescription>
+      </Alert>
 
       <div className="grid gap-6 mb-8 md:grid-cols-3">
         <Card>
@@ -42,8 +39,8 @@ export default function DashboardPage() {
             <Eye className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">1,250</div>
-            <p className="text-xs text-muted-foreground">+20.1% depuis le mois dernier</p>
+            <div className="text-2xl font-bold">0</div>
+            <p className="text-xs text-muted-foreground">Les statistiques apparaîtront ici.</p>
           </CardContent>
         </Card>
         <Card>
@@ -52,8 +49,8 @@ export default function DashboardPage() {
             <FileCheck className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">580</div>
-            <p className="text-xs text-muted-foreground">+15% depuis la semaine dernière</p>
+            <div className="text-2xl font-bold">0</div>
+            <p className="text-xs text-muted-foreground">Les statistiques apparaîtront ici.</p>
           </CardContent>
         </Card>
         <Card>
@@ -62,8 +59,8 @@ export default function DashboardPage() {
             <ThumbsUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">342</div>
-            <p className="text-xs text-muted-foreground">sur toutes les soumissions</p>
+            <div className="text-2xl font-bold">0</div>
+            <p className="text-xs text-muted-foreground">Les statistiques apparaîtront ici.</p>
           </CardContent>
         </Card>
       </div>
@@ -95,7 +92,7 @@ export default function DashboardPage() {
                 ))}
               </ul>
             ) : (
-              <p className="text-muted-foreground">Vous n'avez pas encore soumis de projet.</p>
+              <p className="text-muted-foreground">Vous n'avez pas encore soumis de projet. Revenez après le 1er août !</p>
             )}
           </CardContent>
         </Card>
@@ -118,7 +115,7 @@ export default function DashboardPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-muted-foreground">Aucun badge gagné pour le moment.</p>
+              <p className="text-muted-foreground">Aucun badge gagné pour le moment. Participez pour en gagner !</p>
             )}
           </CardContent>
         </Card>
@@ -140,7 +137,7 @@ export default function DashboardPage() {
                 ))}
               </ul>
             ) : (
-              <p className="text-muted-foreground">Votre historique est vide.</p>
+              <p className="text-muted-foreground">Votre historique est vide. Il se remplira dès le début de la compétition.</p>
             )}
           </CardContent>
         </Card>
