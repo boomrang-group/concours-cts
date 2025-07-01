@@ -12,11 +12,7 @@ const mockChallengeDetails = {
   id: "1",
   title: "Défi Innovation Tech",
   description: "Votez pour le projet le plus innovant dans la catégorie Technologie.",
-  submissions: [
-    { id: "sub1", name: "Projet Innovant A", image: "https://placehold.co/600x400.png", dataAiHint: "tech project", votes: 120 },
-    { id: "sub2", name: "Solution Tech B", image: "https://placehold.co/600x400.png", dataAiHint: "modern app", votes: 95 },
-    { id: "sub3", name: "Concept Révolutionnaire C", image: "https://placehold.co/600x400.png", dataAiHint: "futuristic ui", votes: 150 },
-  ]
+  submissions: []
 };
 
 export default function VoteChallengePage() {

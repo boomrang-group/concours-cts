@@ -16,10 +16,12 @@ import {
   ArrowRight,
   LogIn,
   Eye,
-  Users
+  Users,
+  Info
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface LiveBattle {
   id: number;
@@ -32,11 +34,7 @@ interface LiveBattle {
   description?: string;
 }
 
-const liveBattles: LiveBattle[] = [
-   { id: 1, title: "Duel des Développeurs: App vs App", time: "Aujourd'hui à 18:00", playerA: "Équipe Alpha", playerB: "Équipe Gamma", image: "https://placehold.co/600x400.png", dataAiHint: "coding screen", description: "Un affrontement épique entre deux applications révolutionnaires. Qui remportera les faveurs du public ?" },
-   { id: 2, title: "Battle Design: UI/UX Challenge", time: "Demain à 16:00", playerA: "Créatifs Unis", playerB: "Pixel Parfait", image: "https://placehold.co/600x400.png", dataAiHint: "design interface", description: "Voyez s'affronter deux visions du design d'interface. Ergonomie contre esthétisme pur !" },
-   { id: 3, title: "Finale Musique: Battle des Meilleurs Talents", time: "Samedi prochain à 20:00", playerA: "Finaliste A (Annonce à venir)", playerB: "Finaliste B (Annonce à venir)", image: "https://placehold.co/600x400.png", dataAiHint: "music concert", description: "La grande finale du Campus de Talents & de Savoir Music Journey ! Ne manquez pas le couronnement du champion musical." },
-];
+const liveBattles: LiveBattle[] = [];
 
 const competitionCategories = [
   { id: "esthetique_mode", name: "Esthétique et Mode", imageUrl: "/icons/categories/esthe.jpg", dataAiHint: "fashion runway" },
@@ -59,9 +57,17 @@ export default function CompetitionPage() {
         <Trophy className="mx-auto h-16 w-16 text-primary mb-4" />
         <h1 className="text-4xl md:text-5xl font-bold font-headline">La Compétition</h1>
         <p className="text-lg text-muted-foreground mt-2 max-w-2xl mx-auto">
-          Choisissez une catégorie pour soumettre votre projet, ou assistez aux battles en direct !
+          La compétition débutera le 1er Août. Préparez-vous à participer !
         </p>
       </div>
+
+      <Alert className="mb-8 border-primary/50 bg-primary/10 text-primary">
+          <Info className="h-5 w-5 text-primary" />
+          <AlertTitle className="font-semibold">La compétition n'a pas encore commencé !</AlertTitle>
+          <AlertDescription>
+            Le coup d'envoi sera donné le 1er Août. Revenez pour soumettre vos projets et assister aux battles.
+          </AlertDescription>
+      </Alert>
 
       <Tabs defaultValue="challenges" className="w-full">
         <TabsList className="grid w-full grid-cols-2 mb-8 max-w-md mx-auto">

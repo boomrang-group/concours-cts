@@ -14,81 +14,58 @@ const mockChallengeData: { [key: string]: any } = {
     id: "c1", 
     title: "Défi Innovation Tech", 
     category: "Technologie", 
-    status: "Ouvert aux votes", 
-    submissionsCount: 25,
+    status: "À venir", 
+    submissionsCount: 0,
     description: "Ce défi vise à récompenser les projets technologiques les plus innovants et impactants. Les participants sont invités à présenter des solutions créatives aux problèmes actuels.",
     image: "https://placehold.co/800x400.png",
     dataAiHint: "technology innovation",
     criteria: ["Originalité", "Faisabilité technique", "Impact potentiel", "Qualité de la présentation"],
-    deadline: "2024-09-15",
+    deadline: "À déterminer",
     sponsorLogos: ["https://placehold.co/100x50.png", "https://placehold.co/100x50.png"] 
   },
   c2: { 
     id: "c2", 
     title: "Concours d'Art Numérique", 
     category: "Art & Culture", 
-    status: "Soumissions en cours", 
-    submissionsCount: 18,
+    status: "À venir", 
+    submissionsCount: 0,
     description: "Exprimez votre créativité à travers l'art numérique. Ce concours est ouvert à toutes les formes d'art digital : illustration, animation, 3D, etc.",
     image: "https://placehold.co/800x400.png",
     dataAiHint: "digital art gallery",
     criteria: ["Concept artistique", "Maîtrise technique", "Originalité", "Impact visuel"],
-    deadline: "2024-09-30",
+    deadline: "À déterminer",
     sponsorLogos: ["https://placehold.co/100x50.png"] 
   },
    c3: { 
     id: "c3", 
     title: "Projet Impact Social", 
     category: "Social", 
-    status: "Évaluation par le jury", 
-    submissionsCount: 32,
+    status: "À venir", 
+    submissionsCount: 0,
     description: "Présentez des projets qui apportent des solutions concrètes à des problématiques sociales. L'objectif est de soutenir les initiatives à fort impact communautaire.",
     image: "https://placehold.co/800x400.png",
     dataAiHint: "community project",
     criteria: ["Pertinence sociale", "Viabilité du projet", "Impact mesurable", "Innovation sociale"],
-    deadline: "2024-08-30",
+    deadline: "À déterminer",
     sponsorLogos: [] 
   },
   'music-journey': {
     id: "music-journey",
     title: "Campus de Talents & de Savoir Music Journey",
     category: "Musique",
-    status: "Semaine 1 - Soumissions & Votes Ouverts",
+    status: "À venir",
     submissionsCount: 0, 
     description: `
 Préparez-vous pour un voyage musical épique sur 4 semaines !
 
-**Semaine 1 : Lancement et Premières Notes**
-- **Type :** Soumission de Vidéo
-- **Période :** Ouvert aux soumissions et aux votes.
-- **Votes :** 75% vote populaire, 25% vote du jury.
-- **Critères d'évaluation :** Originalité, Qualité technique, Interprétation, Potentiel.
-- **Qualification :** Les participants atteignant plus de 50% de score combiné accèdent à la Semaine 2.
+La compétition musicale n'a pas encore commencé. Revenez bientôt pour découvrir le détail des 4 semaines de compétition, des critères d'évaluation et comment vous pourrez soumettre votre performance.
 
-**Semaine 2 : L'Épreuve du Rythme**
-- **Type :** Soumission de Vidéo (peut être une nouvelle soumission ou amélioration)
-- **Période :** (Dates à annoncer)
-- **Votes :** 70% vote populaire, 30% vote du jury.
-- **Qualification :** Les participants atteignant plus de 50% de score combiné accèdent à la Semaine 3.
-
-**Semaine 3 : La Montée en Puissance**
-- **Type :** Soumission de Vidéo (peut être une nouvelle soumission ou amélioration)
-- **Période :** (Dates à annoncer)
-- **Votes :** 60% vote populaire, 40% vote du jury.
-- **Qualification :** Les participants atteignant plus de 50% de score combiné accèdent à la Finale.
-
-**Semaine 4 : La Finale en Direct !**
-- **Type :** Battle en Direct
-- **Période :** (Date à annoncer)
-- **Votes :** Vote populaire en direct.
-- Le grand gagnant de la catégorie Musique sera couronné !
-
-Soumettez votre meilleure performance vidéo pour la phase en cours et laissez le public et le jury découvrir votre talent !
+Le grand gagnant de la catégorie Musique sera couronné à l'issue d'une grande finale en direct !
     `.trim(),
     image: "https://placehold.co/800x400.png",
     dataAiHint: "music stage concert",
     criteria: ["Originalité de la composition/reprise", "Qualité technique vocale/instrumentale", "Présence scénique et Interprétation", "Potentiel artistique et Charisme", "Qualité de la production vidéo"],
-    deadline: "Variable (voir phase actuelle)", 
+    deadline: "À déterminer", 
     sponsorLogos: ["https://placehold.co/100x50.png"] 
   },
 };
@@ -143,7 +120,7 @@ export default function ChallengeDetailsPage() {
                 <CardTitle className="text-lg font-headline">Informations Clés</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2 text-sm">
-                <p><span className="font-semibold">Statut:</span> <span className={`font-medium ${challenge.status.includes("Ouvert") ? "text-green-600" : challenge.status.includes("Soumissions en cours") ? "text-blue-600" : "text-orange-600"}`}>{challenge.status}</span></p>
+                <p><span className="font-semibold">Statut:</span> <span className={`font-medium text-blue-600`}>{challenge.status}</span></p>
                 <p><span className="font-semibold">Soumissions:</span> {challenge.submissionsCount}</p>
                 <p><span className="font-semibold">Date Limite:</span> {challenge.deadline}</p>
               </CardContent>
