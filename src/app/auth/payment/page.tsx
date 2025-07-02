@@ -26,6 +26,7 @@ function PaymentPageContent() {
     setIsLoading(true);
     // Generate a unique reference. The useEffect will trigger the submission.
     const ref = `reg-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+    sessionStorage.setItem('paymentReference', ref);
     setTransactionReference(ref);
   };
   

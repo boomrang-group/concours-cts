@@ -2,7 +2,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { CheckCircle, ExternalLink } from 'lucide-react';
+import { CheckCircle, ExternalLink, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -18,17 +18,30 @@ export default function PaymentSuccessContent() {
   
   const [isProcessing, setIsProcessing] = useState(true);
   const [statusMessage, setStatusMessage] = useState("Finalisation de votre inscription, veuillez patienter...");
+  const [errorOccurred, setErrorOccurred] = useState(false);
+  const [finalReference, setFinalReference] = useState<string | null>(null);
 
-  const reference = searchParams.get('ref');
   const amountInCents = parseInt(searchParams.get('amount') || '200', 10);
   const amountInUSD = amountInCents / 100;
 
-  useEffect(() => {
-    const createAccount = async () => {
-      const pendingRegData = sessionStorage.getItem('pendingRegistration');
+  const urlReference = searchParams.get('ref');
 
+  useEffect(() => {
+    const reference = urlReference || sessionStorage.getItem('paymentReference');
+    setFinalReference(reference);
+
+    const createAccount = async () => {
+      if (!reference) {
+        setStatusMessage("Impossible de vérifier la transaction. Référence de paiement manquante.");
+        setErrorOccurred(true);
+        setIsProcessing(false);
+        return;
+      }
+
+      const pendingRegData = sessionStorage.getItem('pendingRegistration');
       if (!pendingRegData) {
-        setStatusMessage("Paiement confirmé. Si votre compte n'a pas été créé, veuillez contacter le support.");
+        setStatusMessage("Données d'inscription non trouvées. Votre paiement a été reçu, mais la création de compte a échoué. Veuillez contacter le support.");
+        setErrorOccurred(true);
         setIsProcessing(false);
         return;
       }
@@ -37,13 +50,15 @@ export default function PaymentSuccessContent() {
       const { auth, firestore } = getFirebaseServices();
 
       if (!auth || !firestore) {
-          toast({
-              title: "Erreur de configuration",
-              description: "La configuration de Firebase est manquante. Impossible de créer le compte.",
-              variant: "destructive",
-          });
-          setIsProcessing(false);
-          return;
+        toast({
+            title: "Erreur de configuration",
+            description: "La configuration de Firebase est manquante. Impossible de créer le compte.",
+            variant: "destructive",
+        });
+        setErrorOccurred(true);
+        setStatusMessage("Erreur de configuration du serveur. Veuillez contacter le support.");
+        setIsProcessing(false);
+        return;
       }
 
       try {
@@ -61,7 +76,7 @@ export default function PaymentSuccessContent() {
           categories: values.categories,
           createdAt: new Date(),
           paymentStatus: 'completed',
-          paymentReference: reference || null,
+          paymentReference: reference,
           paymentAmount: amountInUSD,
         };
 
@@ -71,41 +86,39 @@ export default function PaymentSuccessContent() {
             title: "Compte créé avec succès !",
             description: "Bienvenue ! Votre inscription est maintenant terminée.",
         });
-
-        sessionStorage.removeItem('pendingRegistration');
+        
         setStatusMessage("Inscription réussie et paiement confirmé !");
 
       } catch (error: any) {
         console.error("Account creation error after payment:", error);
+        setErrorOccurred(true);
         if (error.code === 'auth/email-already-in-use') {
             setStatusMessage("Paiement confirmé. Un compte avec cet email existe déjà.");
             toast({
                 title: "Compte déjà existant",
                 description: "Votre paiement a été confirmé. Veuillez vous connecter.",
             });
-            sessionStorage.removeItem('pendingRegistration');
+            setErrorOccurred(false); 
             router.push('/auth/login');
         } else {
             setStatusMessage("Une erreur est survenue lors de la création de votre compte. Veuillez contacter le support.");
             toast({
                 title: "Erreur de création de compte",
-                description: "Votre paiement a été reçu, mais nous n'avons pas pu créer votre compte. Veuillez nous contacter.",
+                description: `Votre paiement a été reçu (Ref: ${reference}), mais nous n'avons pas pu créer votre compte. Veuillez nous contacter.`,
                 variant: "destructive",
             });
         }
       } finally {
+        sessionStorage.removeItem('pendingRegistration');
+        sessionStorage.removeItem('paymentReference');
         setIsProcessing(false);
       }
     };
 
-    if (reference && isProcessing) {
-      createAccount();
-    } else {
-        setStatusMessage("Paiement confirmé.");
-        setIsProcessing(false);
-    }
+    createAccount();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reference]);
+  }, [urlReference]);
 
   if (isProcessing) {
     return (
@@ -116,20 +129,36 @@ export default function PaymentSuccessContent() {
     );
   }
 
+  if (errorOccurred) {
+    return (
+      <div className="space-y-6 text-center">
+        <AlertTriangle className="mx-auto h-16 w-16 text-destructive" />
+        <p className="text-destructive font-semibold">Une erreur est survenue</p>
+        <p className="text-muted-foreground">{statusMessage}</p>
+        <Link href="/" className="w-full">
+          <Button variant="outline" className="w-full">
+            Retour à l'Accueil
+          </Button>
+        </Link>
+      </div>
+    );
+  }
+
+
   return (
     <div className="space-y-6 text-center">
       <CheckCircle className="mx-auto h-16 w-16 text-green-500" />
       <p className="text-muted-foreground">
         {statusMessage} Votre paiement de <strong>${amountInUSD}</strong> a bien été reçu.
       </p>
-      {reference && (
+      {finalReference && (
         <p className="text-xs text-muted-foreground">
-          Référence de transaction : {reference}
+          Référence de transaction : {finalReference}
         </p>
       )}
       <div className="p-4 bg-secondary/50 rounded-md">
         <p className="text-foreground font-semibold">
-          La compétition officielle démarrera le 17 Juillet.
+          La compétition officielle démarrera le 1er Août.
         </p>
         <p className="text-muted-foreground mt-1">
           Revenez à cette date pour vous connecter et commencer l'aventure !
