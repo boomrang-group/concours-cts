@@ -1,7 +1,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getFirebaseServices } from '@/lib/firebase';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,35 +11,45 @@ export async function POST(request: NextRequest) {
       return new NextResponse('Internal Server Error: Firestore not configured', { status: 500 });
     }
 
-    // MaxiCash sends data as form-data, not JSON
     const formData = await request.formData();
     
-    const reference = formData.get('Reference') as string;
+    const userProfileId = formData.get('Reference') as string;
     const status = formData.get('Status') as string; // e.g., "SUCCESS", "FAILED"
     const amount = formData.get('Amount') as string;
     const currency = formData.get('Currency') as string;
     const operator = formData.get('Operator') as string;
     const phone = formData.get('Telephone') as string;
 
-    if (!reference || !status) {
+    if (!userProfileId || !status) {
       return new NextResponse('Bad Request: Missing Reference or Status', { status: 400 });
     }
 
-    console.log(`Received MaxiCash notification for Ref: ${reference}, Status: ${status}`);
+    console.log(`Received MaxiCash notification for User Profile ID: ${userProfileId}, Status: ${status}`);
 
-    // Store payment information in Firestore
-    const paymentDocRef = doc(firestore, 'payments', reference);
+    const userDocRef = doc(firestore, 'users', userProfileId);
+    const paymentStatus = status === 'SUCCESS' ? 'completed' : 'failed';
+    const parsedAmount = amount ? parseFloat(amount) / 100 : 0;
 
+    // Update the user's document with the payment status
+    await updateDoc(userDocRef, {
+      paymentStatus: paymentStatus,
+      paymentNotifiedAt: serverTimestamp(),
+      paymentAmount: parsedAmount,
+      paymentCurrency: currency,
+    });
+
+    // Also log the full payment details in the 'payments' collection for auditing
+    const paymentDocRef = doc(firestore, 'payments', userProfileId); // Use user ID as doc ID for easy lookup
     await setDoc(paymentDocRef, {
-      reference,
-      status: status === 'SUCCESS' ? 'completed' : 'failed',
-      amount: amount ? parseFloat(amount) / 100 : 0,
+      reference: userProfileId,
+      status: paymentStatus,
+      amount: parsedAmount,
       currency,
       operator,
       phone,
       notifiedAt: serverTimestamp(),
       rawStatus: status,
-    }, { merge: true }); // Use merge to avoid overwriting if doc already exists
+    }, { merge: true });
 
     // Respond to MaxiCash to acknowledge receipt
     return new NextResponse('[OK]', {

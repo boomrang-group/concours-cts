@@ -8,7 +8,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 import { getFirebaseServices } from '@/lib/firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc, onSnapshot } from 'firebase/firestore';
+import { doc, updateDoc, onSnapshot } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 
 export default function PaymentSuccessContent() {
@@ -19,28 +19,16 @@ export default function PaymentSuccessContent() {
   const [isProcessing, setIsProcessing] = useState(true);
   const [statusMessage, setStatusMessage] = useState("Vérification du paiement, veuillez patienter...");
   const [errorOccurred, setErrorOccurred] = useState(false);
-  const [finalReference, setFinalReference] = useState<string | null>(null);
-
+  
+  const userProfileId = searchParams.get('ref');
   const amountInCents = parseInt(searchParams.get('amount') || '200', 10);
   const amountInUSD = amountInCents / 100;
-  const urlReference = searchParams.get('ref');
 
-  // Use a ref to prevent the createAccount function from running multiple times
-  const hasCreatedAccount = useRef(false);
+  const hasProcessed = useRef(false);
 
   useEffect(() => {
-    const reference = urlReference || sessionStorage.getItem('paymentReference');
-    if (!reference) {
+    if (!userProfileId) {
         setStatusMessage("Impossible de vérifier la transaction. Référence de paiement manquante.");
-        setErrorOccurred(true);
-        setIsProcessing(false);
-        return;
-    }
-    setFinalReference(reference);
-
-    const pendingRegData = sessionStorage.getItem('pendingRegistration');
-    if (!pendingRegData) {
-        setStatusMessage("Données d'inscription non trouvées. Votre paiement a peut-être été reçu, mais la création de compte a échoué. Veuillez contacter le support.");
         setErrorOccurred(true);
         setIsProcessing(false);
         return;
@@ -48,119 +36,115 @@ export default function PaymentSuccessContent() {
 
     const { auth, firestore } = getFirebaseServices();
     if (!auth || !firestore) {
-        toast({
-            title: "Erreur de configuration",
-            description: "La configuration de Firebase est manquante. Impossible de créer le compte.",
-            variant: "destructive",
-        });
-        setErrorOccurred(true);
         setStatusMessage("Erreur de configuration du serveur. Veuillez contacter le support.");
+        setErrorOccurred(true);
         setIsProcessing(false);
         return;
     }
 
-    const createAccount = async () => {
-        if (hasCreatedAccount.current) return;
-        hasCreatedAccount.current = true; // Mark as started
+    const userDocRef = doc(firestore, 'users', userProfileId);
 
-        setStatusMessage("Paiement vérifié. Création de votre compte...");
+    const createAuthUser = async () => {
+        if (hasProcessed.current) return;
+        hasProcessed.current = true;
 
-        const values = JSON.parse(pendingRegData);
+        const pendingAuthData = sessionStorage.getItem('pendingAuth');
+        if (!pendingAuthData) {
+            setStatusMessage("Données d'authentification expirées ou introuvables. Votre paiement a été reçu, mais la création du compte a échoué. Veuillez contacter le support.");
+            setErrorOccurred(true);
+            setIsProcessing(false);
+            return;
+        }
+
+        setStatusMessage("Paiement vérifié. Finalisation de la création de votre compte...");
+        const { email, password } = JSON.parse(pendingAuthData);
 
         try {
-            const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
-            const userProfile = {
+            await updateDoc(userDocRef, {
                 uid: user.uid,
-                accountType: values.accountType,
-                name: values.name,
-                email: values.email,
-                phone: values.phone || null,
-                groupName: values.groupName || null,
-                groupMembers: values.accountType === 'group' ? (values.memberDetails || []).concat({name: values.name, email: values.email}) : null,
-                categories: values.categories,
-                createdAt: new Date(),
-                paymentStatus: 'completed',
-                paymentReference: reference,
-                paymentAmount: amountInUSD,
-            };
-
-            await setDoc(doc(firestore, "users", user.uid), userProfile);
+                paymentStatus: 'account_created'
+            });
 
             toast({
                 title: "Compte créé avec succès !",
                 description: "Bienvenue ! Votre inscription est maintenant terminée.",
             });
             setStatusMessage("Inscription réussie et paiement confirmé !");
+
         } catch (error: any) {
             console.error("Account creation error after payment:", error);
-            setErrorOccurred(true);
             if (error.code === 'auth/email-already-in-use') {
-                setStatusMessage("Paiement confirmé. Un compte avec cet email existe déjà.");
-                toast({
+                 setStatusMessage("Paiement confirmé. Un compte avec cet e-mail existe déjà. Veuillez vous connecter.");
+                 toast({
                     title: "Compte déjà existant",
-                    description: "Votre paiement a été confirmé. Veuillez vous connecter.",
+                    description: "Votre paiement a été confirmé. Veuillez vous connecter avec votre compte existant.",
                 });
-                setErrorOccurred(false); 
-                router.push('/auth/login');
             } else {
-                setStatusMessage("Une erreur est survenue lors de la création de votre compte. Veuillez contacter le support.");
-                toast({
+                 setStatusMessage("Une erreur est survenue lors de la création de votre compte. Veuillez contacter le support.");
+                 toast({
                     title: "Erreur de création de compte",
-                    description: `Votre paiement a été reçu (Ref: ${reference}), mais nous n'avons pas pu créer votre compte. Veuillez nous contacter.`,
+                    description: `Votre paiement a été reçu (Ref: ${userProfileId}), mais nous n'avons pas pu créer votre compte. Veuillez nous contacter.`,
                     variant: "destructive",
                 });
+                 setErrorOccurred(true);
             }
         } finally {
-            sessionStorage.removeItem('pendingRegistration');
-            sessionStorage.removeItem('paymentReference');
+            sessionStorage.removeItem('pendingAuth');
             setIsProcessing(false);
         }
     };
     
-    // Listen for payment verification from Firestore
-    const paymentDocRef = doc(firestore, 'payments', reference);
-
-    const timeoutId = setTimeout(() => {
-        unsubscribe();
-        if (!hasCreatedAccount.current) {
-            setStatusMessage("La vérification du paiement a pris trop de temps. Si vous avez été débité, veuillez contacter le support.");
-            setErrorOccurred(true);
-            setIsProcessing(false);
+    const unsubscribe = onSnapshot(userDocRef, async (docSnap) => {
+        if (hasProcessed.current) {
+            unsubscribe();
+            return;
         }
-    }, 45000); // 45-second timeout
 
-    const unsubscribe = onSnapshot(paymentDocRef, (docSnap) => {
-        if (docSnap.exists() && !hasCreatedAccount.current) {
-            const paymentData = docSnap.data();
-            if (paymentData.status === 'completed') {
-                clearTimeout(timeoutId);
+        if (docSnap.exists()) {
+            const userData = docSnap.data();
+            
+            if (userData.paymentStatus === 'completed') {
                 unsubscribe();
-                createAccount();
-            } else if (paymentData.status === 'failed') {
-                clearTimeout(timeoutId);
+                await createAuthUser();
+            } else if (userData.paymentStatus === 'account_created') {
                 unsubscribe();
-                setStatusMessage("Votre paiement a échoué selon la notification du service de paiement.");
+                hasProcessed.current = true;
+                setStatusMessage("Votre compte est déjà créé et prêt !");
+                sessionStorage.removeItem('pendingAuth');
+                setIsProcessing(false);
+            } else if (userData.paymentStatus === 'failed') {
+                unsubscribe();
+                hasProcessed.current = true;
+                setStatusMessage("Votre paiement a échoué. Veuillez réessayer depuis la page d'inscription.");
                 setErrorOccurred(true);
                 setIsProcessing(false);
             }
         }
     }, (error) => {
         console.error("Firestore listener error:", error);
-        clearTimeout(timeoutId);
         unsubscribe();
         setStatusMessage("Erreur lors de la vérification du paiement. Veuillez contacter le support.");
         setErrorOccurred(true);
         setIsProcessing(false);
     });
 
+    const timeoutId = setTimeout(() => {
+        if (!hasProcessed.current) {
+            unsubscribe();
+            setStatusMessage("La vérification du paiement a pris trop de temps. Si vous avez été débité, veuillez contacter le support.");
+            setErrorOccurred(true);
+            setIsProcessing(false);
+        }
+    }, 45000); // 45-second timeout
+
     return () => {
         clearTimeout(timeoutId);
         unsubscribe();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [urlReference]); // Only run on mount and when URL param changes
+  }, [userProfileId, router, toast]);
 
   if (isProcessing) {
     return (
@@ -177,7 +161,7 @@ export default function PaymentSuccessContent() {
         <AlertTriangle className="mx-auto h-16 w-16 text-destructive" />
         <p className="text-destructive font-semibold">Une erreur est survenue</p>
         <p className="text-muted-foreground">{statusMessage}</p>
-        {finalReference && <p className="text-xs text-muted-foreground">Référence de transaction : {finalReference}</p>}
+        {userProfileId && <p className="text-xs text-muted-foreground">Référence de transaction : {userProfileId}</p>}
         <Link href="/" className="w-full">
           <Button variant="outline" className="w-full">
             Retour à l'Accueil
@@ -193,9 +177,9 @@ export default function PaymentSuccessContent() {
       <p className="text-muted-foreground">
         {statusMessage} Votre paiement de <strong>${amountInUSD}</strong> a bien été reçu.
       </p>
-      {finalReference && (
+      {userProfileId && (
         <p className="text-xs text-muted-foreground">
-          Référence de transaction : {finalReference}
+          Référence de transaction : {userProfileId}
         </p>
       )}
       <div className="p-4 bg-secondary/50 rounded-md">

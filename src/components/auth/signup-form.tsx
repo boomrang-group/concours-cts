@@ -22,6 +22,8 @@ import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation"; 
+import { getFirebaseServices } from "@/lib/firebase";
+import { addDoc, collection } from "firebase/firestore";
 
 const categories = [
     { id: "esthetique_mode", name: "Esthétique et Mode" },
@@ -98,7 +100,8 @@ const formSchema = z.object({
 export default function SignupForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const router = useRouter(); 
+  const router = useRouter();
+  const { firestore } = getFirebaseServices();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -143,12 +146,40 @@ export default function SignupForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
 
+    if (!firestore) {
+      toast({
+        title: "Erreur de configuration",
+        description: "La connexion à la base de données a échoué. Veuillez contacter le support.",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      sessionStorage.setItem('pendingRegistration', JSON.stringify(values));
+      // 1. Create a user profile document in Firestore with 'pending' status
+      const userProfileData = {
+        accountType: values.accountType,
+        name: values.name,
+        email: values.email,
+        phone: values.phone || null,
+        groupName: values.groupName || null,
+        groupMembers: values.accountType === 'group' ? (values.memberDetails || []).concat({name: values.name, email: values.email}) : null,
+        categories: values.categories,
+        createdAt: new Date(),
+        paymentStatus: 'pending', // Initial status
+      };
 
+      const userDocRef = await addDoc(collection(firestore, "users"), userProfileData);
+
+      // 2. Store password and email temporarily for auth creation after payment
+      // This is stored in the user's browser, not in the database.
+      sessionStorage.setItem('pendingAuth', JSON.stringify({ email: values.email, password: values.password }));
+
+      // 3. Prepare for redirection to payment
       const membersCount = values.accountType === 'group' ? (values.groupMembers || 1) : 1;
-
       const queryParams = new URLSearchParams({
+        userProfileId: userDocRef.id,
         email: values.email,
         phone: values.phone || '',
         members: membersCount.toString(),
@@ -160,13 +191,14 @@ export default function SignupForm() {
         variant: "default",
       });
 
+      // 4. Redirect to payment page
       router.push(`/auth/payment?${queryParams}`);
 
     } catch (error) {
-      console.error("Redirection to payment error:", error);
+      console.error("Signup process error:", error);
       toast({
-        title: "Erreur",
-        description: "Impossible de procéder au paiement. Veuillez réessayer.",
+        title: "Erreur d'inscription",
+        description: "Une erreur est survenue lors de la création de votre profil. Veuillez réessayer.",
         variant: "destructive",
       });
       setIsLoading(false);
@@ -441,7 +473,7 @@ export default function SignupForm() {
         />
 
         <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90" disabled={isLoading}>
-          {isLoading ? "Redirection vers le paiement..." : "Continuer vers le paiement"}
+          {isLoading ? "Préparation du paiement..." : "Continuer vers le paiement"}
         </Button>
         <p className="text-center text-sm text-muted-foreground">
           Déjà un compte ?{" "}

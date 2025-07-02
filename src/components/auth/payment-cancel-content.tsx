@@ -8,7 +8,7 @@ import { useSearchParams } from 'next/navigation';
 
 export default function PaymentCancelContent() {
   const searchParams = useSearchParams();
-  const referenceId = searchParams.get('ref'); // Changed from 'reference' to 'ref'
+  const userProfileId = searchParams.get('ref');
 
   return (
     <div className="space-y-6 text-center">
@@ -16,9 +16,9 @@ export default function PaymentCancelContent() {
       <p className="text-muted-foreground">
         Vous avez choisi d&apos;annuler le paiement. Votre inscription n&apos;est pas encore finalisée.
       </p>
-      {referenceId && (
+      {userProfileId && (
          <p className="text-xs text-muted-foreground">
-           Référence de transaction concernée : {referenceId}
+           Référence de transaction concernée : {userProfileId}
          </p>
        )}
       <p className="text-muted-foreground">

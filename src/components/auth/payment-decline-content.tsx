@@ -8,7 +8,7 @@ import { useSearchParams } from 'next/navigation';
 
 export default function PaymentDeclineContent() {
   const searchParams = useSearchParams();
-  const referenceId = searchParams.get('ref'); // Changed from 'reference' to 'ref'
+  const userProfileId = searchParams.get('ref');
 
   return (
     <div className="space-y-6 text-center">
@@ -16,9 +16,9 @@ export default function PaymentDeclineContent() {
  <p className="text-muted-foreground">
  Votre paiement pour l'inscription à Campus de Talents & de Savoir n'a pas abouti.
  </p>
- {referenceId && (
+ {userProfileId && (
         <p className="text-xs text-muted-foreground">
-          Référence de transaction concernée : {referenceId}
+          Référence de transaction concernée : {userProfileId}
         </p>
       )}
       <p className="text-muted-foreground">
