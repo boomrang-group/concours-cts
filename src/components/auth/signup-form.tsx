@@ -23,7 +23,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation"; 
 import { getFirebaseServices } from "@/lib/firebase";
-import { addDoc, collection } from "firebase/firestore";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { setDoc, doc } from "firebase/firestore";
 
 const categories = [
     { id: "esthetique_mode", name: "Esthétique et Mode" },
@@ -101,7 +102,6 @@ export default function SignupForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
-  const { firestore } = getFirebaseServices();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -145,8 +145,9 @@ export default function SignupForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
+    const { auth, firestore } = getFirebaseServices();
 
-    if (!firestore) {
+    if (!auth || !firestore) {
       toast({
         title: "Erreur de configuration",
         description: "La connexion à la base de données a échoué. Veuillez contacter le support.",
@@ -157,50 +158,50 @@ export default function SignupForm() {
     }
 
     try {
-      // 1. Create a user profile document in Firestore with 'pending' status
+      // 1. Create user in Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+      const user = userCredential.user;
+
+      // 2. Create user profile in Firestore
       const userProfileData = {
+        uid: user.uid,
         accountType: values.accountType,
         name: values.name,
         email: values.email,
         phone: values.phone || null,
         groupName: values.groupName || null,
-        groupMembers: values.accountType === 'group' ? (values.memberDetails || []).concat({name: values.name, email: values.email}) : null,
+        groupMembers: values.accountType === 'group' 
+            ? [{ name: values.name, email: values.email }].concat(values.memberDetails || []) 
+            : null,
         categories: values.categories,
         createdAt: new Date(),
-        paymentStatus: 'pending', // Initial status
+        paymentStatus: 'unpaid', // Set initial status to unpaid
       };
 
-      const userDocRef = await addDoc(collection(firestore, "users"), userProfileData);
+      // Use user.uid as the document ID for easy lookup
+      await setDoc(doc(firestore, "users", user.uid), userProfileData);
 
-      // 2. Store password and email temporarily for auth creation after payment
-      // This is stored in the user's browser, not in the database.
-      sessionStorage.setItem('pendingAuth', JSON.stringify({ email: values.email, password: values.password }));
-
-      // 3. Prepare for redirection to payment
-      const membersCount = values.accountType === 'group' ? (values.groupMembers || 1) : 1;
-      const queryParams = new URLSearchParams({
-        userProfileId: userDocRef.id,
-        email: values.email,
-        phone: values.phone || '',
-        members: membersCount.toString(),
-      }).toString();
-      
       toast({
-        title: "Inscription presque terminée !",
-        description: "Veuillez procéder au paiement pour finaliser votre inscription.",
+        title: "Inscription Réussie !",
+        description: "Votre compte a été créé. Vous allez être redirigé vers votre tableau de bord.",
         variant: "default",
       });
 
-      // 4. Redirect to payment page
-      router.push(`/auth/payment?${queryParams}`);
+      // 3. Redirect to dashboard
+      router.push("/dashboard");
 
-    } catch (error) {
-      console.error("Signup process error:", error);
+    } catch (error: any) {
+      console.error("Signup error:", error);
+      let errorMessage = "Une erreur est survenue. Veuillez réessayer.";
+      if (error.code === 'auth/email-already-in-use') {
+        errorMessage = "Un compte avec cette adresse e-mail existe déjà.";
+      }
       toast({
         title: "Erreur d'inscription",
-        description: "Une erreur est survenue lors de la création de votre profil. Veuillez réessayer.",
+        description: errorMessage,
         variant: "destructive",
       });
+    } finally {
       setIsLoading(false);
     }
   }
@@ -473,7 +474,7 @@ export default function SignupForm() {
         />
 
         <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90" disabled={isLoading}>
-          {isLoading ? "Préparation du paiement..." : "Continuer vers le paiement"}
+          {isLoading ? "Création du compte..." : "S'inscrire"}
         </Button>
         <p className="text-center text-sm text-muted-foreground">
           Déjà un compte ?{" "}

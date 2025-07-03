@@ -1,28 +1,87 @@
+
+'use client';
+
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { UploadCloud, Badge as BadgeIcon, History, PlusCircle, Eye, ThumbsUp, FileCheck, Info } from "lucide-react";
+import { UploadCloud, Badge as BadgeIcon, History, PlusCircle, Eye, ThumbsUp, FileCheck, Info, CreditCard } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useAuth } from "@/context/auth-context";
+import { useEffect, useState } from "react";
+import { getFirebaseServices } from "@/lib/firebase";
+import { doc, onSnapshot } from "firebase/firestore";
+import { Skeleton } from "@/components/ui/skeleton";
+
 
 // Mock data - reset for pre-competition state
 const userSubmissions: any[] = [];
-
 const userBadges: any[] = [];
-
 const competitionHistory: any[] = [];
 
 export default function DashboardPage() {
+  const { user } = useAuth();
+  const [userProfile, setUserProfile] = useState<any | null>(null);
+  const [loadingProfile, setLoadingProfile] = useState(true);
+
+  useEffect(() => {
+    if (user) {
+      const { firestore } = getFirebaseServices();
+      if (!firestore) {
+        setLoadingProfile(false);
+        return;
+      };
+
+      const userDocRef = doc(firestore, 'users', user.uid);
+      const unsubscribe = onSnapshot(userDocRef, (docSnap) => {
+        if (docSnap.exists()) {
+          setUserProfile(docSnap.data());
+        } else {
+          setUserProfile(null); // User profile doesn't exist
+        }
+        setLoadingProfile(false);
+      }, (error) => {
+        console.error("Error fetching user profile:", error);
+        setLoadingProfile(false);
+      });
+
+      return () => unsubscribe();
+    } else if (user === null) {
+      // If user is not logged in, stop loading
+      setLoadingProfile(false);
+    }
+  }, [user]);
+
   return (
     <div className="container py-8 md:py-12">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold font-headline mb-4 md:mb-0">Mon Tableau de Bord</h1>
-        <Button disabled className="bg-primary/50 cursor-not-allowed">
+        <Button disabled={loadingProfile || userProfile?.paymentStatus !== 'completed'} className="bg-primary text-primary-foreground hover:bg-primary/90 disabled:bg-primary/50 disabled:cursor-not-allowed">
           <PlusCircle className="mr-2 h-5 w-5" />
           Nouvelle Soumission
         </Button>
       </div>
+
+      {loadingProfile && (
+          <Alert className="mb-8"><Skeleton className="h-12 w-full" /></Alert>
+      )}
+
+      {!loadingProfile && userProfile && userProfile.paymentStatus === 'unpaid' && (
+        <Alert variant="destructive" className="mb-8 border-yellow-500/50 bg-yellow-500/10 text-yellow-700 dark:text-yellow-500">
+            <CreditCard className="h-5 w-5 text-yellow-700 dark:text-yellow-500" />
+            <AlertTitle className="font-semibold text-yellow-800 dark:text-yellow-400">Action Requise : Finalisez votre inscription</AlertTitle>
+            <AlertDescription className="text-yellow-700 dark:text-yellow-500/80">
+              Votre compte n'est pas encore actif. Veuillez compléter le paiement pour accéder à toutes les fonctionnalités et participer à la compétition.
+              <Link href={`/auth/payment?userProfileId=${user?.uid}&email=${userProfile.email}&phone=${userProfile.phone || ''}&members=${userProfile.groupMembers?.length || 1}`} passHref>
+                <Button className="mt-4 bg-yellow-600 hover:bg-yellow-700 text-white">
+                  <CreditCard className="mr-2 h-4 w-4" />
+                  Procéder au Paiement
+                </Button>
+              </Link>
+            </AlertDescription>
+        </Alert>
+      )}
 
       <Alert className="mb-8 border-primary/50 bg-primary/10 text-primary">
           <Info className="h-5 w-5 text-primary" />

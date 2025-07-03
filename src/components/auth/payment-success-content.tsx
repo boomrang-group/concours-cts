@@ -7,8 +7,7 @@ import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 import { getFirebaseServices } from '@/lib/firebase';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, updateDoc, onSnapshot } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 
 export default function PaymentSuccessContent() {
@@ -34,8 +33,8 @@ export default function PaymentSuccessContent() {
         return;
     }
 
-    const { auth, firestore } = getFirebaseServices();
-    if (!auth || !firestore) {
+    const { firestore } = getFirebaseServices();
+    if (!firestore) {
         setStatusMessage("Erreur de configuration du serveur. Veuillez contacter le support.");
         setErrorOccurred(true);
         setIsProcessing(false);
@@ -43,59 +42,6 @@ export default function PaymentSuccessContent() {
     }
 
     const userDocRef = doc(firestore, 'users', userProfileId);
-
-    const createAuthUser = async () => {
-        if (hasProcessed.current) return;
-        hasProcessed.current = true;
-
-        const pendingAuthData = sessionStorage.getItem('pendingAuth');
-        if (!pendingAuthData) {
-            setStatusMessage("Données d'authentification expirées ou introuvables. Votre paiement a été reçu, mais la création du compte a échoué. Veuillez contacter le support.");
-            setErrorOccurred(true);
-            setIsProcessing(false);
-            return;
-        }
-
-        setStatusMessage("Paiement vérifié. Finalisation de la création de votre compte...");
-        const { email, password } = JSON.parse(pendingAuthData);
-
-        try {
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
-
-            await updateDoc(userDocRef, {
-                uid: user.uid,
-                paymentStatus: 'account_created'
-            });
-
-            toast({
-                title: "Compte créé avec succès !",
-                description: "Bienvenue ! Votre inscription est maintenant terminée.",
-            });
-            setStatusMessage("Inscription réussie et paiement confirmé !");
-
-        } catch (error: any) {
-            console.error("Account creation error after payment:", error);
-            if (error.code === 'auth/email-already-in-use') {
-                 setStatusMessage("Paiement confirmé. Un compte avec cet e-mail existe déjà. Veuillez vous connecter.");
-                 toast({
-                    title: "Compte déjà existant",
-                    description: "Votre paiement a été confirmé. Veuillez vous connecter avec votre compte existant.",
-                });
-            } else {
-                 setStatusMessage("Une erreur est survenue lors de la création de votre compte. Veuillez contacter le support.");
-                 toast({
-                    title: "Erreur de création de compte",
-                    description: `Votre paiement a été reçu (Ref: ${userProfileId}), mais nous n'avons pas pu créer votre compte. Veuillez nous contacter.`,
-                    variant: "destructive",
-                });
-                 setErrorOccurred(true);
-            }
-        } finally {
-            sessionStorage.removeItem('pendingAuth');
-            setIsProcessing(false);
-        }
-    };
     
     const unsubscribe = onSnapshot(userDocRef, async (docSnap) => {
         if (hasProcessed.current) {
@@ -106,14 +52,15 @@ export default function PaymentSuccessContent() {
         if (docSnap.exists()) {
             const userData = docSnap.data();
             
-            if (userData.paymentStatus === 'completed') {
-                unsubscribe();
-                await createAuthUser();
-            } else if (userData.paymentStatus === 'account_created') {
+            // paymentStatus is 'completed' when maxicash-notify hits, or 'account_created' if user reloads page.
+            if (userData.paymentStatus === 'completed' || userData.paymentStatus === 'account_created') {
                 unsubscribe();
                 hasProcessed.current = true;
-                setStatusMessage("Votre compte est déjà créé et prêt !");
-                sessionStorage.removeItem('pendingAuth');
+                setStatusMessage("Paiement confirmé ! Votre inscription est maintenant complète.");
+                 toast({
+                    title: "Paiement Réussi!",
+                    description: "Bienvenue ! Votre compte est maintenant pleinement actif.",
+                });
                 setIsProcessing(false);
             } else if (userData.paymentStatus === 'failed') {
                 unsubscribe();
@@ -134,7 +81,7 @@ export default function PaymentSuccessContent() {
     const timeoutId = setTimeout(() => {
         if (!hasProcessed.current) {
             unsubscribe();
-            setStatusMessage("La vérification du paiement a pris trop de temps. Si vous avez été débité, veuillez contacter le support.");
+            setStatusMessage("La vérification du paiement a pris trop de temps. Si vous avez été débité, veuillez contacter le support. Votre statut sera mis à jour automatiquement.");
             setErrorOccurred(true);
             setIsProcessing(false);
         }
@@ -187,20 +134,17 @@ export default function PaymentSuccessContent() {
           La compétition officielle démarrera le 1er Août.
         </p>
         <p className="text-muted-foreground mt-1">
-          Revenez à cette date pour vous connecter et commencer l'aventure !
-        </p>
-        <p className="text-muted-foreground mt-3">
-          En attendant, vous pouvez participer à nos quizz quotidiens pour tenter de gagner des prix.
+         Vous pouvez maintenant soumettre vos projets depuis votre tableau de bord.
         </p>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 mt-4">
-        <a href="https://quiz.bantudemy.com" target="_blank" rel="noopener noreferrer" className="w-full">
+        <Link href="/dashboard" className="w-full">
           <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
             <ExternalLink className="mr-2 h-4 w-4" />
-            Participer aux Quizz Quotidiens
+            Aller au Tableau de Bord
           </Button>
-        </a>
+        </Link>
         <Link href="/" className="w-full">
           <Button variant="outline" className="w-full">
             Retour à l'Accueil
