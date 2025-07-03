@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -87,7 +86,7 @@ export default function DashboardPage() {
           <Info className="h-5 w-5 text-primary" />
           <AlertTitle className="font-semibold">La compétition approche !</AlertTitle>
           <AlertDescription>
-            Les soumissions de projets ouvriront le 1er août. Préparez-vous !
+            Les soumissions de projets ouvriront le 4 août. Préparez-vous !
           </AlertDescription>
       </Alert>
 
@@ -151,7 +150,7 @@ export default function DashboardPage() {
                 ))}
               </ul>
             ) : (
-              <p className="text-muted-foreground">Vous n'avez pas encore soumis de projet. Revenez après le 1er août !</p>
+              <p className="text-muted-foreground">Vous n'avez pas encore soumis de projet. Revenez après le 4 août !</p>
             )}
           </CardContent>
         </Card>

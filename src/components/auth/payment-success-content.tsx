@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -131,7 +130,7 @@ export default function PaymentSuccessContent() {
       )}
       <div className="p-4 bg-secondary/50 rounded-md">
         <p className="text-foreground font-semibold">
-          La compétition officielle démarrera le 1er Août.
+          La compétition officielle démarrera le 4 Août.
         </p>
         <p className="text-muted-foreground mt-1">
          Vous pouvez maintenant soumettre vos projets depuis votre tableau de bord.

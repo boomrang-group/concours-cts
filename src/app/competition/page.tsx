@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from "react";
@@ -57,7 +56,7 @@ export default function CompetitionPage() {
         <Trophy className="mx-auto h-16 w-16 text-primary mb-4" />
         <h1 className="text-4xl md:text-5xl font-bold font-headline">La Compétition</h1>
         <p className="text-lg text-muted-foreground mt-2 max-w-2xl mx-auto">
-          La compétition débutera le 1er Août. Préparez-vous à participer !
+          La compétition débutera le 4 Août. Préparez-vous à participer !
         </p>
       </div>
 
@@ -65,7 +64,7 @@ export default function CompetitionPage() {
           <Info className="h-5 w-5 text-primary" />
           <AlertTitle className="font-semibold">La compétition n'a pas encore commencé !</AlertTitle>
           <AlertDescription>
-            Le coup d'envoi sera donné le 1er Août. Revenez pour soumettre vos projets et assister aux battles.
+            Le coup d'envoi sera donné le 4 Août. Revenez pour soumettre vos projets et assister aux battles.
           </AlertDescription>
       </Alert>
 

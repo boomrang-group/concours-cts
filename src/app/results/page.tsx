@@ -20,7 +20,7 @@ export default function ResultsPage() {
           <Info className="h-5 w-5 text-primary" />
           <AlertTitle className="font-semibold">La compétition n'a pas encore commencé !</AlertTitle>
           <AlertDescription>
-            Le coup d'envoi sera donné le 1er Août. Revenez après les phases de vote pour découvrir les gagnants !
+            Le coup d'envoi sera donné le 4 Août. Revenez après les phases de vote pour découvrir les gagnants !
           </AlertDescription>
       </Alert>
       
