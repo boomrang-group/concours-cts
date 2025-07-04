@@ -30,21 +30,26 @@ function PaymentPageContent() {
   useEffect(() => {
     const fetchLocation = async () => {
       try {
-        const response = await fetch('https://ip-api.com/json/?fields=status,countryCode,country');
+        // Switched to a different geolocation API for better reliability
+        const response = await fetch('https://ipapi.co/json/');
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error(`Network response was not ok, status: ${response.status}`);
         }
         const data = await response.json();
-        if (data.status === 'success') {
-          setUserCountry(data.country);
-          if (data.countryCode !== 'CD') {
+
+        if (data && data.country_code) {
+          setUserCountry(data.country_name);
+          if (data.country_code !== 'CD') { // Check for Congo DRC
             setPricePerMember(10); // $10 for international users
           }
-          // If countryCode is 'CD', price remains the default $2
+          // If country_code is 'CD', price remains the default $2
+        } else {
+          // Handle cases where the API response is not in the expected format
+          throw new Error('Unexpected API response format');
         }
       } catch (error) {
         console.error("Failed to fetch location, defaulting to local price:", error);
-        // On error, price remains the default $2 to not block users
+        // On error, the price remains the default $2 to not block users, which is the desired fallback.
       } finally {
         setIsLocationLoading(false);
       }
