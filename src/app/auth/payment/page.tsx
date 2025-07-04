@@ -5,12 +5,15 @@ import { useSearchParams } from 'next/navigation';
 import { useState, useEffect, Suspense } from 'react';
 import AuthLayout from '@/components/auth/auth-layout';
 import { Button } from '@/components/ui/button';
-import { CreditCard, Loader2, Users, AlertTriangle } from 'lucide-react';
+import { CreditCard, Loader2, Users, AlertTriangle, Globe } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 function PaymentPageContent() {
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
+  const [isLocationLoading, setIsLocationLoading] = useState(true);
+  const [pricePerMember, setPricePerMember] = useState<number>(2); // Default to local price, $2
+  const [userCountry, setUserCountry] = useState<string | null>(null);
   
   const userProfileId = searchParams.get('userProfileId');
   const userEmail = searchParams.get('email') || '';
@@ -24,13 +27,41 @@ function PaymentPageContent() {
     }
   }, []);
 
+  useEffect(() => {
+    const fetchLocation = async () => {
+      try {
+        const response = await fetch('https://ip-api.com/json/?fields=status,countryCode,country');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        if (data.status === 'success') {
+          setUserCountry(data.country);
+          if (data.countryCode !== 'CD') {
+            setPricePerMember(10); // $10 for international users
+          }
+          // If countryCode is 'CD', price remains the default $2
+        }
+      } catch (error) {
+        console.error("Failed to fetch location, defaulting to local price:", error);
+        // On error, price remains the default $2 to not block users
+      } finally {
+        setIsLocationLoading(false);
+      }
+    };
+
+    fetchLocation();
+  }, []);
+
   const handlePayment = () => {
     setIsLoading(true);
   };
 
-  if (!origin) {
+  if (!origin || isLocationLoading) {
     return (
       <div className="space-y-4 text-center">
+        <Loader2 className="h-8 w-8 mx-auto animate-spin text-primary" />
+        <p className="text-muted-foreground">Détermination des frais de participation...</p>
         <Skeleton className="h-5 w-3/4 mx-auto" />
         <Skeleton className="h-4 w-full mx-auto" />
         <Skeleton className="h-12 w-full" />
@@ -49,8 +80,8 @@ function PaymentPageContent() {
      );
   }
 
-  const amountInCents = 200 * membersCount;
-  const amountInUSD = amountInCents / 100;
+  const amountInCents = pricePerMember * membersCount * 100;
+  const amountInUSD = pricePerMember * membersCount;
   
   const successUrl = `${origin}/auth/payment-success?amount=${amountInCents}&ref=${userProfileId}`;
   const cancelUrl = `${origin}/auth/payment-cancel?ref=${userProfileId}`;
@@ -65,8 +96,14 @@ function PaymentPageContent() {
             <p>Inscription de groupe pour <strong>{membersCount} membres</strong>.</p>
         </div>
       )}
+      
+      <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground bg-secondary/30 p-3 rounded-md">
+        <Globe className="h-5 w-5" />
+        <p>Pays détecté : <strong>{userCountry || 'Inconnu'}</strong>. Frais : <strong>${pricePerMember}/participant</strong>.</p>
+      </div>
+
       <p className="text-muted-foreground">
-        Pour finaliser votre inscription, veuillez procéder au paiement sécurisé des frais de participation de <strong>${amountInUSD}</strong> ({membersCount > 1 ? `$2 x ${membersCount} membres` : '$2'}).
+        Pour finaliser votre inscription, veuillez procéder au paiement sécurisé des frais de participation de <strong>${amountInUSD}</strong> ({membersCount > 1 ? `$${pricePerMember} x ${membersCount} membres` : `$${pricePerMember}`}).
       </p>
 
       <form 
